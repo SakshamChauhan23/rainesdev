@@ -1,0 +1,17 @@
+[build]
+  command = "npx prisma generate && npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  # Use legacy peer deps for dependency installation
+  NPM_FLAGS = "--legacy-peer-deps"
+
+  # Skip static page generation errors (pages will be rendered at request time)
+  NEXT_PRIVATE_SKIP_BUILD_ERRORS = "true"
+
+[functions]
+  # Configure serverless functions
+  node_bundler = "esbuild"
