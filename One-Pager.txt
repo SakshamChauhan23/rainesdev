@@ -1,0 +1,270 @@
+Absolutely. Below is a **simple, execution-ready PRD** — scoped strictly to MVP, clean enough for engineers, and clear enough for stakeholders.
+
+You can paste this directly into **Notion / Google Docs / Jira**.
+
+---
+
+# **PRD — AI Agent Marketplace (MVP)**
+
+## **1. Platform Idea**
+
+Build a curated marketplace where AI Engineers can list **ready-to-use AI agent workflows**.
+Buyers can discover, purchase, and unlock **step-by-step setup guides**.
+Optional **paid tech support** helps buyers implement agents without friction.
+
+The platform does **not host or execute agents**. It acts as:
+
+* Discovery layer
+* Trust & quality layer
+* Knowledge delivery layer
+* Support enablement layer
+
+---
+
+## **2. User Workflows**
+
+---
+
+### **2.1 Buyer Workflow**
+
+1. Visit Landing Page
+2. Browse Categories
+3. View Agent Product Page
+4. Purchase Agent
+5. Unlock Workflow & Setup Guide
+6. (Optional) Purchase Tech Support Add-on
+
+---
+
+### **2.2 Seller Workflow**
+
+1. Sign up as Seller
+2. Create Seller Profile (Public Portfolio)
+3. Submit AI Agent
+
+   * Workflow explanation
+   * Setup guide
+   * Demo video
+4. Agent goes to **Under Review**
+5. Admin approves or rejects
+6. Approved agent goes live
+7. Seller tracks views & purchases
+
+---
+
+### **2.3 Admin Workflow**
+
+1. Login to Admin Panel
+2. View Agent Submissions
+3. Review:
+
+   * Workflow clarity
+   * Setup completeness
+   * Video demo
+4. Approve or Reject with feedback
+5. Manage categories & featured agents
+6. Monitor orders & support requests
+
+---
+
+## **3. Features (MVP Scope)**
+
+1. Buyer Browsing & Checkout
+2. Locked Post-Purchase Content
+3. Seller Agent Submission
+4. Seller Public Portfolio Page
+5. Admin Review & Moderation
+6. Payments & Support Add-On
+
+---
+
+## **4. Feature-wise User Stories & Acceptance Criteria**
+
+---
+
+### **Feature 1: Buyer Browsing & Checkout**
+
+#### **User Story 1**
+
+As a buyer, I want to browse agents by category so I can find relevant solutions.
+
+**Acceptance Criteria**
+
+* Categories page is accessible without login
+* Each agent card shows title, price, and use-case
+* Clicking opens product page
+
+---
+
+#### **User Story 2**
+
+As a buyer, I want to see agent details before purchase.
+
+**Acceptance Criteria**
+
+* Product page displays:
+
+  * Pricing
+  * Workflow overview
+  * Demo video
+  * Testimonials
+* Setup details are hidden before purchase
+
+---
+
+#### **User Story 3**
+
+As a buyer, I want to purchase an agent securely.
+
+**Acceptance Criteria**
+
+* Checkout completes successfully
+* Payment confirmation shown
+* Agent added to buyer’s library
+
+---
+
+### **Feature 2: Locked Post-Purchase Content**
+
+#### **User Story 4**
+
+As a buyer, I want access to setup instructions only after purchase.
+
+**Acceptance Criteria**
+
+* Locked content hidden pre-purchase
+* Content unlocked immediately after payment
+* Accessible from dashboard anytime
+
+---
+
+### **Feature 3: Seller Agent Submission**
+
+#### **User Story 5**
+
+As a seller, I want to submit an agent for review.
+
+**Acceptance Criteria**
+
+* Submission form includes:
+
+  * Workflow description
+  * Setup guide
+  * Demo video link
+* Submission status shown as “Under Review”
+
+---
+
+#### **User Story 6**
+
+As a seller, I want to receive feedback if my agent is rejected.
+
+**Acceptance Criteria**
+
+* Rejection reason visible in dashboard
+* Seller can resubmit after edits
+
+---
+
+### **Feature 4: Seller Public Portfolio Page**
+
+#### **User Story 7**
+
+As a seller, I want a public portfolio page to share my agents.
+
+**Acceptance Criteria**
+
+* Page accessible without login
+* Displays seller bio & listed agents
+* Unique shareable URL
+
+---
+
+### **Feature 5: Admin Review & Moderation**
+
+#### **User Story 8**
+
+As an admin, I want to review agent submissions.
+
+**Acceptance Criteria**
+
+* Admin can approve or reject agents
+* Status updates visible to seller
+* Approved agents go live immediately
+
+---
+
+### **Feature 6: Payments & Support Add-On**
+
+#### **User Story 9**
+
+As a buyer, I want optional tech support during purchase.
+
+**Acceptance Criteria**
+
+* Support add-on visible at checkout
+* Add-on price clearly shown
+* Purchase confirmation includes support details
+
+---
+
+#### **User Story 10**
+
+As an admin, I want to manage support requests.
+
+**Acceptance Criteria**
+
+* Support purchases visible in admin panel
+* Buyer contact details accessible
+* Status can be marked as “In Progress” or “Completed”
+
+---
+
+## **5. Edge Cases**
+
+1. **Payment succeeds but content not unlocked**
+
+   * Auto retry content unlock
+   * Admin override available
+
+2. **Seller submits incomplete setup guide**
+
+   * Admin rejection with mandatory feedback
+
+3. **Buyer purchases wrong agent**
+
+   * No refunds by default
+   * Manual admin exception flow
+
+4. **Duplicate agent submissions**
+
+   * Admin flags duplicates
+   * Seller notified
+
+5. **Seller deletes agent after purchases**
+
+   * Agent hidden from marketplace
+   * Still accessible to previous buyers
+
+6. **Support add-on purchased but seller unavailable**
+
+   * Platform assigns internal support
+   * Buyer notified of timeline
+
+---
+
+## **Out of Scope (Explicitly)**
+
+* Agent hosting
+* Runtime execution
+* Custom integrations per buyer
+* Messaging between buyer & seller
+
+---
+
+## **Success Metrics**
+
+* Agent purchases
+* Setup guide completion rate
+* Support add-on attach rate
+* Time to agent approval

@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String           @id
+  email                   String           @unique
+  role                    UserRole         @default(BUYER)
+  name                    String?
+  avatarUrl               String?          @map("avatar_url")
+  createdAt               DateTime         @default(now()) @map("created_at")
+  updatedAt               DateTime         @updatedAt @map("updated_at")
+  adminLogs               AdminLog[]
+  agentsCreated           Agent[]          @relation("SellerAgents")
+  purchases               Purchase[]
+  reviews                 Review[]
+  sellerProfile           SellerProfile?
+  supportRequestsAssigned SupportRequest[] @relation("AssignedSupport")
+  supportRequestsAsBuyer  SupportRequest[] @relation("BuyerSupport")
+  supportRequestsAsSeller SupportRequest[] @relation("SellerSupport")
+
+  @@map("users")
+}
+
+model SellerProfile {
+  id                 String             @id @default(cuid())
+  userId             String             @unique @map("user_id")
+  bio                String?
+  portfolioUrlSlug   String             @unique @map("portfolio_url_slug")
+  socialLinks        Json?              @map("social_links")
+  verificationStatus VerificationStatus @default(PENDING) @map("verification_status")
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @updatedAt @map("updated_at")
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("seller_profiles")
+}
+
+model Category {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  slug         String   @unique
+  description  String?
+  iconUrl      String?  @map("icon_url")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  agents       Agent[]
+
+  @@map("categories")
+}
+
+model Agent {
+  id                String           @id @default(cuid())
+  sellerId          String           @map("seller_id")
+  categoryId        String           @map("category_id")
+  title             String
+  slug              String           @unique
+  shortDescription  String           @map("short_description")
+  workflowOverview  String           @map("workflow_overview")
+  useCase           String           @map("use_case")
+  price             Decimal          @db.Decimal(10, 2)
+  supportAddonPrice Decimal          @default(0) @map("support_addon_price") @db.Decimal(10, 2)
+  demoVideoUrl      String?          @map("demo_video_url")
+  thumbnailUrl      String?          @map("thumbnail_url")
+  status            AgentStatus      @default(DRAFT)
+  rejectionReason   String?          @map("rejection_reason")
+  setupGuide        String           @map("setup_guide")
+  workflowDetails   Json?            @map("workflow_details")
+  viewCount         Int              @default(0) @map("view_count")
+  purchaseCount     Int              @default(0) @map("purchase_count")
+  featured          Boolean          @default(false)
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+  approvedAt        DateTime?        @map("approved_at")
+  hasActiveUpdate   Boolean          @default(false) @map("has_active_update")
+  isLatestVersion   Boolean          @default(true) @map("is_latest_version")
+  parentAgentId     String?          @map("parent_agent_id")
+  version           Int              @default(1)
+  category          Category         @relation(fields: [categoryId], references: [id])
+  parentAgent       Agent?           @relation("AgentVersions", fields: [parentAgentId], references: [id])
+  childVersions     Agent[]          @relation("AgentVersions")
+  seller            User             @relation("SellerAgents", fields: [sellerId], references: [id], onDelete: Cascade)
+  purchases         Purchase[]
+  reviews           Review[]
+  supportRequests   SupportRequest[]
+
+  @@index([sellerId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([featured])
+  @@index([slug])
+  @@index([parentAgentId])
+  @@index([isLatestVersion])
+  @@map("agents")
+}
+
+model Purchase {
+  id                    String           @id @default(cuid())
+  buyerId               String           @map("buyer_id")
+  agentId               String           @map("agent_id")
+  amountPaid            Decimal          @map("amount_paid") @db.Decimal(10, 2)
+  supportAddonPurchased Boolean          @default(false) @map("support_addon_purchased")
+  stripePaymentIntentId String?          @unique @map("stripe_payment_intent_id")
+  status                PurchaseStatus   @default(PENDING)
+  purchasedAt           DateTime         @default(now()) @map("purchased_at")
+  createdAt             DateTime         @default(now()) @map("created_at")
+  agentVersionId        String           @map("agent_version_id")
+  source                PurchaseSource   @default(TEST_MODE)
+  agent                 Agent            @relation(fields: [agentId], references: [id])
+  buyer                 User             @relation(fields: [buyerId], references: [id])
+  supportRequests       SupportRequest[]
+
+  @@unique([buyerId, agentVersionId])
+  @@index([buyerId])
+  @@index([agentId])
+  @@index([agentVersionId])
+  @@index([status])
+  @@map("purchases")
+}
+
+model SupportRequest {
+  id           String        @id @default(cuid())
+  purchaseId   String        @map("purchase_id")
+  buyerId      String        @map("buyer_id")
+  sellerId     String        @map("seller_id")
+  agentId      String        @map("agent_id")
+  status       SupportStatus @default(PENDING)
+  buyerMessage String?       @map("buyer_message")
+  adminNotes   String?       @map("admin_notes")
+  assignedToId String?       @map("assigned_to_id")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  resolvedAt   DateTime?     @map("resolved_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  agent        Agent         @relation(fields: [agentId], references: [id])
+  assignedTo   User?         @relation("AssignedSupport", fields: [assignedToId], references: [id])
+  buyer        User          @relation("BuyerSupport", fields: [buyerId], references: [id])
+  purchase     Purchase      @relation(fields: [purchaseId], references: [id])
+  seller       User          @relation("SellerSupport", fields: [sellerId], references: [id])
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([agentId])
+  @@index([status])
+  @@map("support_requests")
+}
+
+model Review {
+  id               String   @id @default(cuid())
+  agentId          String   @map("agent_id")
+  buyerId          String   @map("buyer_id")
+  rating           Int
+  comment          String?
+  verifiedPurchase Boolean  @default(false) @map("verified_purchase")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  agent            Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  buyer            User     @relation(fields: [buyerId], references: [id])
+
+  @@unique([agentId, buyerId])
+  @@index([agentId])
+  @@index([buyerId])
+  @@map("reviews")
+}
+
+model AdminLog {
+  id         String      @id @default(cuid())
+  adminId    String      @map("admin_id")
+  action     AdminAction
+  entityType String      @map("entity_type")
+  entityId   String      @map("entity_id")
+  metadata   Json?
+  createdAt  DateTime    @default(now()) @map("created_at")
+  admin      User        @relation(fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("admin_logs")
+}
+
+enum UserRole {
+  BUYER
+  SELLER
+  ADMIN
+}
+
+enum AgentStatus {
+  DRAFT
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  ARCHIVED
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+}
+
+enum PurchaseSource {
+  TEST_MODE
+  STRIPE
+}
+
+enum SupportStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+}
+
+enum AdminAction {
+  APPROVE_AGENT
+  REJECT_AGENT
+  FEATURE_AGENT
+  DELETE_AGENT
+  BAN_USER
+  REFUND_PURCHASE
+  ASSIGN_SUPPORT
+  UPDATE_CATEGORY
+}
