@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Container } from '@/components/layout/container'
 import { AgentGrid } from '@/components/agent/agent-grid'
@@ -33,7 +33,7 @@ type Category = {
   slug: string
 }
 
-export default function AgentsPage() {
+function AgentsPageContent() {
   const searchParams = useSearchParams()
   const [agents, setAgents] = useState<Agent[]>([])
   const [categories, setCategories] = useState<Category[]>([])
@@ -217,5 +217,13 @@ export default function AgentsPage() {
         )}
       </Container>
     </div>
+  )
+}
+
+export default function AgentsPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
+      <AgentsPageContent />
+    </Suspense>
   )
 }
