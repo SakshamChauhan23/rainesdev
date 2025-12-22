@@ -54,58 +54,40 @@ function AgentsPageContent() {
     }
   }, [searchParams])
 
-  // Fetch Categories
+  // Fetch data in parallel on mount and when filters change
   useEffect(() => {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(res => {
-        if (res.success) setCategories(res.data)
-      })
-      .catch(err => console.error('Failed to load categories', err))
-  }, [])
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        // Fetch categories and agents in parallel
+        const [categoriesRes, agentsRes] = await Promise.all([
+          fetch('/api/categories'),
+          fetch(`/api/agents?page=${currentPage}&limit=12${searchQuery ? `&search=${searchQuery}` : ''}${selectedCategorySlug ? `&categorySlug=${selectedCategorySlug}` : ''}`)
+        ])
 
-  // Fetch Agents
-  const fetchAgents = useCallback(async () => {
-    setLoading(true)
-    try {
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: '12',
-      })
+        const [categoriesData, agentsData] = await Promise.all([
+          categoriesRes.json(),
+          agentsRes.json()
+        ])
 
-      if (searchQuery) params.append('search', searchQuery)
-      // Note: API expects categoryId, but let's see if we can pass slug or need to lookup ID
-      // The current API implementation at /api/agents check for 'categoryId'.
-      // But our UI uses slugs usually. 
-      // Let's assume for now we filter by ID in the UI since we have the ID from the category list.
-      if (selectedCategorySlug) {
-        // Find ID from slug
-        const cat = categories.find(c => c.slug === selectedCategorySlug)
-        if (cat) params.append('categoryId', cat.id)
+        if (categoriesData.success) {
+          setCategories(categoriesData.data)
+        }
+
+        if (agentsData.success) {
+          setAgents(agentsData.data)
+          setTotalPages(agentsData.pagination.totalPages)
+          setTotalAgents(agentsData.pagination.total)
+        }
+      } catch (error) {
+        console.error('Failed to fetch data', error)
+      } finally {
+        setLoading(false)
       }
-
-      const res = await fetch(`/api/agents?${params.toString()}`)
-      const data = await res.json()
-
-      if (data.success) {
-        setAgents(data.data)
-        setTotalPages(data.pagination.totalPages)
-        setTotalAgents(data.pagination.total)
-      }
-    } catch (error) {
-      console.error('Failed to fetch agents', error)
-    } finally {
-      setLoading(false)
     }
-  }, [currentPage, searchQuery, selectedCategorySlug, categories])
 
-  useEffect(() => {
-    // Only fetch if we have categories loaded (so we can map slug to ID if needed)
-    // Or if categories failed, we still fetch agents
-    if (categories.length > 0 || !loading) {
-      fetchAgents()
-    }
-  }, [fetchAgents, categories.length])
+    fetchData()
+  }, [currentPage, searchQuery, selectedCategorySlug])
 
 
   const handleSearch = (query: string) => {

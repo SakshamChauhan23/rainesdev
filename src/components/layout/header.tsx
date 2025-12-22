@@ -51,10 +51,26 @@ export function Header() {
 
   const fetchUserRole = async (userId: string) => {
     try {
+      // Check cache first (5 minute TTL)
+      const cacheKey = `user_role_${userId}`
+      const cached = localStorage.getItem(cacheKey)
+      if (cached) {
+        const { role, timestamp } = JSON.parse(cached)
+        if (Date.now() - timestamp < 5 * 60 * 1000) { // 5 minutes
+          setUserRole(role)
+          return
+        }
+      }
+
       const response = await fetch(`/api/user/role?userId=${userId}`)
       if (response.ok) {
         const data = await response.json()
         setUserRole(data.role)
+        // Cache the role
+        localStorage.setItem(cacheKey, JSON.stringify({
+          role: data.role,
+          timestamp: Date.now()
+        }))
       }
     } catch (error) {
       console.error('Error fetching user role:', error)
@@ -65,6 +81,10 @@ export function Header() {
     await logoutAction()
     setUser(null)
     setUserRole(null)
+    // Clear cached role on logout
+    if (user?.id) {
+      localStorage.removeItem(`user_role_${user.id}`)
+    }
     // Use window.location for hard redirect to ensure session is cleared
     window.location.href = '/'
   }

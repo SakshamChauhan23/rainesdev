@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '12')
     const search = searchParams.get('search') || ''
     const categoryId = searchParams.get('categoryId') || ''
+    const categorySlug = searchParams.get('categorySlug') || ''
     const featured = searchParams.get('featured') === 'true'
 
     const skip = (page - 1) * limit
@@ -31,6 +32,11 @@ export async function GET(request: NextRequest) {
 
     if (categoryId) {
       where.categoryId = categoryId
+    } else if (categorySlug) {
+      // Support filtering by slug
+      where.category = {
+        slug: categorySlug
+      }
     }
 
     if (featured) {

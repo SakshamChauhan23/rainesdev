@@ -4,6 +4,9 @@ import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
+// Cache categories for 5 minutes
+export const revalidate = 300
+
 export async function GET() {
   try {
     const categories = await prisma.category.findMany({
