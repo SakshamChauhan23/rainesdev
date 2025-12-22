@@ -60,15 +60,39 @@ export function CategoryGrid() {
     const fetchCounts = async () => {
       const counts: Record<string, number> = {}
 
-      for (const category of categoryDefinitions) {
-        try {
-          const response = await fetch(`/api/agents?category=${category.slug}`)
-          const data = await response.json()
-          counts[category.slug] = data.total || 0
-        } catch (error) {
-          console.error(`Error fetching count for ${category.slug}:`, error)
-          counts[category.slug] = 0
+      // First, fetch categories to get their IDs
+      try {
+        const categoriesResponse = await fetch('/api/categories')
+        const categoriesData = await categoriesResponse.json()
+
+        // Create a map of slug to ID
+        const categoryMap = new Map(
+          categoriesData.data?.map((cat: any) => [cat.slug, cat.id]) || []
+        )
+
+        // Fetch agent counts for each category
+        for (const category of categoryDefinitions) {
+          const categoryId = categoryMap.get(category.slug)
+
+          if (categoryId) {
+            try {
+              const response = await fetch(`/api/agents?categoryId=${categoryId}`)
+              const data = await response.json()
+              counts[category.slug] = data.pagination?.total || 0
+            } catch (error) {
+              console.error(`Error fetching count for ${category.slug}:`, error)
+              counts[category.slug] = 0
+            }
+          } else {
+            counts[category.slug] = 0
+          }
         }
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+        // Set all counts to 0 if categories fetch fails
+        categoryDefinitions.forEach(cat => {
+          counts[cat.slug] = 0
+        })
       }
 
       setCategoryCounts(counts)
