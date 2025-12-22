@@ -1,8 +1,6 @@
 
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-
-const prisma = new PrismaClient();
 
 // Cache categories for 5 minutes
 export const revalidate = 300
