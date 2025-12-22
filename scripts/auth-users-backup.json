@@ -1,0 +1,174 @@
+[
+  {
+    "id": "73978ec2-cff0-462c-b805-a85a0bf7feb9",
+    "email": "saksham23022001@gmail.com",
+    "email_confirmed_at": "2025-12-21T18:30:58.908163Z",
+    "phone": "",
+    "created_at": "2025-12-21T18:30:58.863018Z",
+    "updated_at": "2025-12-21T18:30:58.942672Z",
+    "last_sign_in_at": "2025-12-21T18:30:58.924768Z",
+    "app_metadata": {
+      "provider": "email",
+      "providers": [
+        "email"
+      ]
+    },
+    "user_metadata": {
+      "email": "saksham23022001@gmail.com",
+      "email_verified": true,
+      "name": "Purush Rawal",
+      "phone_verified": false,
+      "sub": "73978ec2-cff0-462c-b805-a85a0bf7feb9"
+    }
+  },
+  {
+    "id": "111ccf36-755a-4d70-99e8-c8e1f212f4eb",
+    "email": "zuvystudent02@gmail.com",
+    "email_confirmed_at": "2025-12-21T18:10:24.102879Z",
+    "phone": "",
+    "created_at": "2025-12-21T18:10:24.07064Z",
+    "updated_at": "2025-12-21T18:10:24.122103Z",
+    "last_sign_in_at": "2025-12-21T18:10:24.11286Z",
+    "app_metadata": {
+      "provider": "email",
+      "providers": [
+        "email"
+      ]
+    },
+    "user_metadata": {
+      "email": "zuvystudent02@gmail.com",
+      "email_verified": true,
+      "name": "Prajwal",
+      "phone_verified": false,
+      "sub": "111ccf36-755a-4d70-99e8-c8e1f212f4eb"
+    }
+  },
+  {
+    "id": "7746bdd6-216e-4bcc-bbc0-5429f9da8a4c",
+    "email": "schauhan@rainesdev.ai",
+    "email_confirmed_at": "2025-12-21T16:24:09.521667Z",
+    "phone": "",
+    "created_at": "2025-12-21T16:24:09.515543Z",
+    "updated_at": "2025-12-21T17:05:03.29329Z",
+    "last_sign_in_at": "2025-12-21T17:05:03.249788Z",
+    "app_metadata": {
+      "provider": "email",
+      "providers": [
+        "email"
+      ]
+    },
+    "user_metadata": {
+      "email": "schauhan@rainesdev.ai",
+      "email_verified": true,
+      "name": "RainesDev",
+      "phone_verified": false,
+      "sub": "7746bdd6-216e-4bcc-bbc0-5429f9da8a4c"
+    }
+  },
+  {
+    "id": "a17a023f-5bd7-4a34-92dd-576cee242675",
+    "email": "zuvystudent01@gmail.com",
+    "email_confirmed_at": "2025-12-21T16:23:06.348478Z",
+    "phone": "",
+    "created_at": "2025-12-21T16:04:35.618696Z",
+    "updated_at": "2025-12-22T17:25:19.404423Z",
+    "last_sign_in_at": "2025-12-22T17:25:19.401697Z",
+    "app_metadata": {
+      "provider": "email",
+      "providers": [
+        "email"
+      ]
+    },
+    "user_metadata": {
+      "email": "zuvystudent01@gmail.com",
+      "email_verified": true,
+      "phone_verified": false,
+      "sub": "a17a023f-5bd7-4a34-92dd-576cee242675"
+    }
+  },
+  {
+    "id": "d2c73f4b-c828-4161-9e8d-b7bd0f6e0aa4",
+    "email": "saksham1931109@akgec.ac.in",
+    "email_confirmed_at": "2025-12-20T21:02:36.537676Z",
+    "phone": "",
+    "created_at": "2025-12-20T21:02:09.964789Z",
+    "updated_at": "2025-12-22T17:24:57.247168Z",
+    "last_sign_in_at": "2025-12-22T17:24:57.210214Z",
+    "app_metadata": {
+      "provider": "email",
+      "providers": [
+        "email"
+      ]
+    },
+    "user_metadata": {
+      "email": "saksham1931109@akgec.ac.in",
+      "email_verified": true,
+      "phone_verified": false,
+      "sub": "d2c73f4b-c828-4161-9e8d-b7bd0f6e0aa4"
+    }
+  },
+  {
+    "id": "27d7cf7f-c549-401a-bca9-eefff21c2ec8",
+    "email": "saksham@socialripple.ai",
+    "email_confirmed_at": "2025-12-20T19:21:31.135596Z",
+    "phone": "",
+    "created_at": "2025-12-20T19:21:17.118895Z",
+    "updated_at": "2025-12-22T16:33:57.496117Z",
+    "last_sign_in_at": "2025-12-22T14:57:43.692922Z",
+    "app_metadata": {
+      "provider": "email",
+      "providers": [
+        "email"
+      ]
+    },
+    "user_metadata": {
+      "email": "saksham@socialripple.ai",
+      "email_verified": true,
+      "phone_verified": false,
+      "role": "ADMIN",
+      "sub": "27d7cf7f-c549-401a-bca9-eefff21c2ec8"
+    }
+  },
+  {
+    "id": "2e8636d4-1969-47e6-8f4e-00fe9e6b765b",
+    "email": "saksham.c@navgurukul.org",
+    "email_confirmed_at": "2025-12-20T01:59:07.462007Z",
+    "phone": "",
+    "created_at": "2025-12-20T01:57:10.178712Z",
+    "updated_at": "2025-12-20T02:04:11.89743Z",
+    "last_sign_in_at": "2025-12-20T02:04:11.892887Z",
+    "app_metadata": {
+      "provider": "email",
+      "providers": [
+        "email"
+      ]
+    },
+    "user_metadata": {
+      "email": "saksham.c@navgurukul.org",
+      "email_verified": true,
+      "phone_verified": false,
+      "sub": "2e8636d4-1969-47e6-8f4e-00fe9e6b765b"
+    }
+  },
+  {
+    "id": "7522627a-ee5b-44b2-b3b7-6fea85456913",
+    "email": "sakshamchauhan23@gmail.com",
+    "email_confirmed_at": "2025-12-20T01:36:12.365384Z",
+    "phone": "",
+    "created_at": "2025-12-20T01:35:48.878826Z",
+    "updated_at": "2025-12-21T17:47:20.227661Z",
+    "last_sign_in_at": "2025-12-21T17:47:20.182864Z",
+    "app_metadata": {
+      "provider": "email",
+      "providers": [
+        "email"
+      ]
+    },
+    "user_metadata": {
+      "email": "sakshamchauhan23@gmail.com",
+      "email_verified": true,
+      "phone_verified": false,
+      "sub": "7522627a-ee5b-44b2-b3b7-6fea85456913"
+    }
+  }
+]
