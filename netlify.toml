@@ -9,17 +9,8 @@
   # Use legacy peer deps for dependency installation
   NPM_FLAGS = "--legacy-peer-deps"
 
-  # Skip static page generation errors (pages will be rendered at request time)
-  NEXT_PRIVATE_SKIP_BUILD_ERRORS = "true"
-
 [functions]
   # Configure serverless functions
   node_bundler = "esbuild"
-  # Increase function timeout to 26 seconds (max for free tier)
+  external_node_modules = ["@prisma/client", "@prisma/engines"]
   included_files = ["node_modules/@prisma/engines/**"]
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-  force = false
