@@ -11,6 +11,7 @@ import { Plus, LayoutDashboard, Settings, Package, ExternalLink, AlertCircle, Ch
 import Link from 'next/link'
 import { formatPrice } from '@/lib/utils'
 import { RequestUpdateButton } from '@/components/agent/request-update-button'
+import { SellerReviews } from '@/components/dashboard/seller-reviews'
 
 export default async function DashboardPage({ searchParams }: { searchParams?: { success?: string } }) {
     const supabase = createClient()
@@ -247,6 +248,12 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
                         ))}
                     </div>
                 )}
+
+                {/* Reviews Section */}
+                <div className="mt-12">
+                    <h2 className="mb-4 text-xl font-semibold">Reviews</h2>
+                    <SellerReviews sellerId={user.id} />
+                </div>
             </Container>
         </div>
     )

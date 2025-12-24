@@ -11,6 +11,8 @@ import { PurchaseSuccessBanner } from '@/components/agent/purchase-success-banne
 import { getAgentBySlug } from '@/lib/agents';
 import { hasPurchased } from '@/lib/purchases';
 import { createClient } from '@/lib/supabase/server';
+import { getUserWithRole } from '@/lib/user-sync';
+import { ReviewSection } from '@/components/reviews/review-section';
 import { Metadata } from 'next';
 
 interface AgentPageProps {
@@ -50,6 +52,9 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
     const { data: { user } } = await supabase.auth.getUser();
     const isPurchased = user ? await hasPurchased(user.id, agent.id) : false;
     const showSuccessBanner = searchParams?.unlocked === 'true';
+
+    // Get user role for review section
+    const userWithRole = user ? await getUserWithRole(user.id) : null;
 
     return (
         <div className="bg-white">
@@ -93,6 +98,13 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
                                 isApproved={agent.status === 'APPROVED'}
                             />
                         )}
+
+                        {/* Reviews Section */}
+                        <ReviewSection
+                            agentId={agent.id}
+                            userId={user?.id || null}
+                            userRole={userWithRole?.role}
+                        />
                     </div>
 
                     {/* Sidebar (Right Column) */}

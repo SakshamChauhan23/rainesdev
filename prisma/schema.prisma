@@ -154,6 +154,7 @@ model Review {
   id               String   @id @default(cuid())
   agentId          String   @map("agent_id")
   buyerId          String   @map("buyer_id")
+  agentVersionId   String   @map("agent_version_id")
   rating           Int
   comment          String?
   verifiedPurchase Boolean  @default(false) @map("verified_purchase")
@@ -162,9 +163,10 @@ model Review {
   agent            Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
   buyer            User     @relation(fields: [buyerId], references: [id])
 
-  @@unique([agentId, buyerId])
+  @@unique([agentVersionId, buyerId])
   @@index([agentId])
   @@index([buyerId])
+  @@index([agentVersionId])
   @@map("reviews")
 }
 
