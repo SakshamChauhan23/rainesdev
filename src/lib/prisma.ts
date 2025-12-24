@@ -4,20 +4,22 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-// Optimized for serverless/edge environments
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
+// Create Prisma client with connection pool limits for serverless
+const createPrismaClient = () => {
+  return new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    // Optimize for serverless - shorter connection timeout
     datasources: {
       db: {
         url: process.env.DATABASE_URL,
       },
     },
   })
+}
 
-// Cache the Prisma client globally in non-production
-if (process.env.NODE_ENV !== 'production') {
+// Use singleton pattern to prevent connection exhaustion
+export const prisma = globalForPrisma.prisma ?? createPrismaClient()
+
+// Always cache globally (both dev and production)
+if (!globalForPrisma.prisma) {
   globalForPrisma.prisma = prisma
 }
