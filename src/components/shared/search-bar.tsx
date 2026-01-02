@@ -8,12 +8,14 @@ interface SearchBarProps {
   onSearch: (query: string) => void
   placeholder?: string
   defaultValue?: string
+  className?: string
 }
 
 export function SearchBar({
   onSearch,
   placeholder = 'Search agents...',
   defaultValue = '',
+  className = '',
 }: SearchBarProps) {
   const [value, setValue] = useState(defaultValue)
 
@@ -34,7 +36,7 @@ export function SearchBar({
         placeholder={placeholder}
         value={value}
         onChange={e => setValue(e.target.value)}
-        className="pl-10"
+        className={`pl-10 ${className}`}
       />
     </div>
   )
