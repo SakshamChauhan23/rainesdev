@@ -1,25 +1,17 @@
 import { Hero } from '@/components/landing/hero'
-import { WhyExists } from '@/components/landing/why-exists'
-import { BusinessValue } from '@/components/landing/business-value'
+import { PlatformFeatures } from '@/components/landing/platform-features'
+import { HowItWorksTimeline } from '@/components/landing/how-it-works-timeline'
 import { CategoryGrid } from '@/components/landing/category-grid'
-import { HowItWorks } from '@/components/landing/how-it-works'
-import { Personas } from '@/components/landing/personas'
-import { Differentiation } from '@/components/landing/differentiation'
-import { RainesDevContext } from '@/components/landing/rainesdev-context'
-import { Principles } from '@/components/landing/principles'
+import { FAQSection } from '@/components/landing/faq-section'
 
 export default function Home() {
   return (
-    <>
+    <div className="scroll-smooth">
       <Hero />
-      <WhyExists />
-      <BusinessValue />
+      <PlatformFeatures />
+      <HowItWorksTimeline />
       <CategoryGrid />
-      <HowItWorks />
-      <Personas />
-      <Differentiation />
-      <RainesDevContext />
-      <Principles />
-    </>
+      <FAQSection />
+    </div>
   )
 }
