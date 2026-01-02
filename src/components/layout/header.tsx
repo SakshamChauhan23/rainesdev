@@ -1,9 +1,10 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Container } from './container'
 import { Button } from '@/components/ui/button'
-import { Bot, Menu, X } from 'lucide-react'
+import { Bot, Menu, X, Sparkles } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -89,36 +90,55 @@ export function Header() {
     window.location.href = '/'
   }
 
+  const getRoleBadgeStyle = () => {
+    switch (userRole) {
+      case 'ADMIN':
+        return 'bg-brand-orange/10 text-brand-orange border-brand-orange/20'
+      case 'SELLER':
+        return 'bg-brand-teal/10 text-brand-teal border-brand-teal/20'
+      default:
+        return 'bg-brand-slate/10 text-brand-slate border-brand-slate/20'
+    }
+  }
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-brand-slate/10 bg-white/80 backdrop-blur-lg supports-[backdrop-filter]:bg-white/60">
       <Container>
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <Bot className="h-6 w-6" />
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange/80 shadow-md transition-transform group-hover:scale-105">
+              <Image
+                src="/logo.png"
+                alt="Hire Your AI"
+                width={24}
+                height={24}
+                className="text-white"
+              />
+            </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold">Neura</span>
-              <span className="text-[10px] font-light text-gray-500">powered by RainesDev</span>
+              <span className="text-xl font-bold text-brand-slate">HireYourAI</span>
+              <span className="text-[10px] font-medium text-brand-slate/50">powered by RainesDev</span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden items-center space-x-6 md:flex">
+          <nav className="hidden items-center space-x-8 md:flex">
             <Link
               href="/agents"
-              className="text-sm font-normal transition-colors hover:text-[#8DEC42]"
+              className="text-sm font-medium text-brand-slate/70 transition-all hover:text-brand-orange hover:scale-105"
             >
               Browse Agents
             </Link>
             <Link
               href="/agents"
-              className="text-sm font-normal transition-colors hover:text-[#8DEC42]"
+              className="text-sm font-medium text-brand-slate/70 transition-all hover:text-brand-orange hover:scale-105"
             >
               Categories
             </Link>
             <Link
               href="/about"
-              className="text-sm font-normal transition-colors hover:text-[#8DEC42]"
+              className="text-sm font-medium text-brand-slate/70 transition-all hover:text-brand-orange hover:scale-105"
             >
               How It Works
             </Link>
@@ -129,31 +149,43 @@ export function Header() {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
+                  <Button variant="ghost" className="relative h-10 gap-2 rounded-xl px-3 hover:bg-brand-cream">
+                    <Avatar className="h-8 w-8 border-2 border-brand-orange/20">
                       <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email} />
-                      <AvatarFallback>{user.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                      <AvatarFallback className="bg-brand-orange text-white font-semibold">
+                        {user.email?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
+                    {userRole && (
+                      <span className={`hidden sm:inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-xs font-medium ${getRoleBadgeStyle()}`}>
+                        {userRole === 'ADMIN' && <Sparkles className="h-3 w-3" />}
+                        {userRole.charAt(0)}{userRole.slice(1).toLowerCase()}
+                      </span>
+                    )}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">Account</p>
-                      <p className="text-xs leading-none text-muted-foreground">
+                <DropdownMenuContent className="w-64 rounded-2xl border-brand-slate/10 p-2" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal p-3">
+                    <div className="flex flex-col space-y-2">
+                      <p className="text-sm font-semibold text-brand-slate">Account</p>
+                      <p className="text-xs text-brand-slate/60 truncate">
                         {user.email}
                       </p>
                       {userRole && (
-                        <p className="text-xs leading-none text-muted-foreground capitalize">
-                          Role: {userRole.toLowerCase()}
-                        </p>
+                        <span className={`inline-flex w-fit items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium ${getRoleBadgeStyle()}`}>
+                          {userRole === 'ADMIN' && <Sparkles className="h-3 w-3" />}
+                          {userRole.charAt(0)}{userRole.slice(1).toLowerCase()}
+                        </span>
                       )}
                     </div>
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="bg-brand-slate/10" />
                   <UserNavItems role={userRole || undefined} />
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut}>
+                  <DropdownMenuSeparator className="bg-brand-slate/10" />
+                  <DropdownMenuItem
+                    onClick={handleSignOut}
+                    className="rounded-xl text-red-600 focus:bg-red-50 focus:text-red-600 cursor-pointer"
+                  >
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -161,10 +193,17 @@ export function Header() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" className="font-normal">Login</Button>
+                  <Button
+                    variant="ghost"
+                    className="rounded-xl font-medium text-brand-slate hover:bg-brand-cream hover:text-brand-orange"
+                  >
+                    Login
+                  </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button className="bg-[#8DEC42] font-normal hover:bg-[#7ACC3B]">Get Started</Button>
+                  <Button className="rounded-xl bg-brand-orange font-semibold text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90 hover:shadow-xl hover:shadow-brand-orange/40 hover:-translate-y-0.5 transition-all">
+                    Get Started
+                  </Button>
                 </Link>
               </>
             )}
@@ -172,62 +211,81 @@ export function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden"
+            className="md:hidden rounded-xl p-2 hover:bg-brand-cream transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6 text-brand-slate" />
+            ) : (
+              <Menu className="h-6 w-6 text-brand-slate" />
+            )}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="border-t py-4 md:hidden">
-            <nav className="flex flex-col space-y-4">
+          <div className="border-t border-brand-slate/10 py-4 md:hidden animate-fade-in">
+            <nav className="flex flex-col space-y-1">
               <Link
                 href="/agents"
-                className="text-sm font-normal transition-colors hover:text-[#8DEC42]"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-slate/70 transition-colors hover:bg-brand-cream hover:text-brand-orange"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Browse Agents
               </Link>
               <Link
                 href="/agents"
-                className="text-sm font-normal transition-colors hover:text-[#8DEC42]"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-slate/70 transition-colors hover:bg-brand-cream hover:text-brand-orange"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Categories
               </Link>
               <Link
                 href="/about"
-                className="text-sm font-normal transition-colors hover:text-[#8DEC42]"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-slate/70 transition-colors hover:bg-brand-cream hover:text-brand-orange"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 How It Works
               </Link>
-              
-              {user && (
+
+              {user && userRole && (
                 <>
-                  <div className="border-t pt-4">
+                  <div className="border-t border-brand-slate/10 pt-2 mt-2">
+                    <div className="px-4 py-2">
+                      <span className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium ${getRoleBadgeStyle()}`}>
+                        {userRole === 'ADMIN' && <Sparkles className="h-3 w-3" />}
+                        {userRole.charAt(0)}{userRole.slice(1).toLowerCase()}
+                      </span>
+                    </div>
                     <MobileNavItems role={userRole || undefined} onNavigate={() => setMobileMenuOpen(false)} />
                   </div>
                 </>
               )}
 
-              <div className="flex flex-col space-y-2 pt-4 border-t">
+              <div className="flex flex-col space-y-2 pt-4 border-t border-brand-slate/10 mt-2">
                 {user ? (
-                  <Button variant="ghost" className="w-full justify-start" onClick={handleSignOut}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start rounded-xl text-red-600 hover:bg-red-50 hover:text-red-600"
+                    onClick={handleSignOut}
+                  >
                     Log out
                   </Button>
                 ) : (
                   <>
                     <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="ghost" className="w-full font-normal">
+                      <Button
+                        variant="ghost"
+                        className="w-full rounded-xl font-medium hover:bg-brand-cream hover:text-brand-orange"
+                      >
                         Login
                       </Button>
                     </Link>
                     <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
-                      <Button className="w-full bg-[#8DEC42] font-normal hover:bg-[#7ACC3B]">Get Started</Button>
+                      <Button className="w-full rounded-xl bg-brand-orange font-semibold text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90">
+                        Get Started
+                      </Button>
                     </Link>
                   </>
                 )}
