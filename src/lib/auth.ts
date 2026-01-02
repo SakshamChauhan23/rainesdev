@@ -18,7 +18,14 @@ export const authOptions: NextAuthOptions = {
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
-          include: { sellerProfile: true },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+            passwordHash: true,
+            sellerProfile: true,
+          },
         })
 
         if (!user) {
