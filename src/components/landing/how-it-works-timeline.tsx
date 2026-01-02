@@ -79,7 +79,7 @@ export function HowItWorksTimeline() {
   ]
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-brand-cream py-20 sm:py-28 lg:py-32">
+    <section id="how-it-works" ref={sectionRef} className="relative overflow-hidden bg-brand-cream py-20 sm:py-28 lg:py-32 scroll-mt-20">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 left-1/4 h-full w-px bg-gradient-to-b from-transparent via-brand-orange/20 to-transparent" />

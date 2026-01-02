@@ -131,13 +131,7 @@ export function Header() {
               Browse Agents
             </Link>
             <Link
-              href="/agents"
-              className="text-sm font-medium text-brand-slate/70 transition-all hover:text-brand-orange hover:scale-105"
-            >
-              Categories
-            </Link>
-            <Link
-              href="/about"
+              href="/#how-it-works"
               className="text-sm font-medium text-brand-slate/70 transition-all hover:text-brand-orange hover:scale-105"
             >
               How It Works
@@ -235,14 +229,7 @@ export function Header() {
                 Browse Agents
               </Link>
               <Link
-                href="/agents"
-                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-slate/70 transition-colors hover:bg-brand-cream hover:text-brand-orange"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Categories
-              </Link>
-              <Link
-                href="/about"
+                href="/#how-it-works"
                 className="rounded-xl px-4 py-3 text-sm font-medium text-brand-slate/70 transition-colors hover:bg-brand-cream hover:text-brand-orange"
                 onClick={() => setMobileMenuOpen(false)}
               >

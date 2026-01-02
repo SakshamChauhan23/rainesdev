@@ -7,8 +7,11 @@ import { Footer } from '@/components/layout/footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Neura | AI Agent Marketplace',
+  title: 'HireYourAI | AI Agent Marketplace',
   description: 'Discover and deploy ready-to-use AI agent workflows - powered by RainesDev',
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export default function RootLayout({
