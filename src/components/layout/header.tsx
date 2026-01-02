@@ -106,20 +106,15 @@ export function Header() {
       <Container>
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange/80 shadow-md transition-transform group-hover:scale-105">
-              <Image
-                src="/logo.png"
-                alt="Hire Your AI"
-                width={24}
-                height={24}
-                className="text-white"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold text-brand-slate">HireYourAI</span>
-              <span className="text-[10px] font-medium text-brand-slate/50">powered by RainesDev</span>
-            </div>
+          <Link href="/" className="flex items-center group">
+            <Image
+              src="/logo.png"
+              alt="Rouze.ai"
+              width={180}
+              height={50}
+              className="h-14 w-auto transition-transform group-hover:scale-105"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}

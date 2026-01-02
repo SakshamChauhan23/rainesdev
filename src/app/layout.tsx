@@ -7,10 +7,15 @@ import { Footer } from '@/components/layout/footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'HireYourAI | AI Agent Marketplace',
+  title: 'Build Teams of AI Agents | Rouze.ai',
   description: 'Discover and deploy ready-to-use AI agent workflows - powered by RainesDev',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png', sizes: '32x32' },
+    ],
+    shortcut: '/favicon.png',
+    apple: '/apple-touch-icon.png',
   },
 }
 

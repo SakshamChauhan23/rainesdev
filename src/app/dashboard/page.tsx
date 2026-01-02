@@ -1,17 +1,16 @@
-
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { Container } from '@/components/layout/container'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { StatusBadge } from '@/components/ui/status-badge'
-import { Plus, LayoutDashboard, Settings, Package, ExternalLink, AlertCircle, CheckCircle } from 'lucide-react'
+import { Plus, LayoutDashboard, Package, ExternalLink, AlertCircle, CheckCircle, TrendingUp, DollarSign, Eye, ShoppingBag, Sparkles, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { formatPrice } from '@/lib/utils'
 import { RequestUpdateButton } from '@/components/agent/request-update-button'
 import { SellerReviews } from '@/components/dashboard/seller-reviews'
+import { PerformanceCharts } from '@/components/dashboard/performance-charts'
 
 export default async function DashboardPage({ searchParams }: { searchParams?: { success?: string } }) {
     const supabase = createClient()
@@ -27,17 +26,15 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
     console.log('✅ User authenticated:', user.email)
 
     // Fetch user's agents
-    // Show: 1) Latest versions (approved/under review)
-    //       2) Draft versions that are updates to approved agents
     const agents = await prisma.agent.findMany({
         where: {
             sellerId: user.id,
             OR: [
-                { isLatestVersion: true }, // Latest approved/under review versions
+                { isLatestVersion: true },
                 {
                     AND: [
-                        { parentAgentId: { not: null } }, // Has a parent (is an update)
-                        { status: { in: ['DRAFT', 'UNDER_REVIEW', 'REJECTED'] } } // Not approved yet
+                        { parentAgentId: { not: null } },
+                        { status: { in: ['DRAFT', 'UNDER_REVIEW', 'REJECTED'] } }
                     ]
                 }
             ]
@@ -58,6 +55,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
             version: true,
             hasActiveUpdate: true,
             parentAgentId: true,
+            thumbnailUrl: true,
             category: {
                 select: {
                     id: true,
@@ -71,20 +69,35 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
     // Calculate stats
     const totalViews = agents.reduce((acc, agent) => acc + agent.viewCount, 0)
     const totalSales = agents.reduce((acc, agent) => acc + agent.purchaseCount, 0)
-    const totalRevenue = 0 // We don't have purchase amounts stored historically yet without a Purchases table query
+    const totalRevenue = agents.reduce((acc, agent) => acc + (agent.purchaseCount * Number(agent.price)), 0)
+    const approvedAgents = agents.filter(a => a.status === 'APPROVED').length
 
     return (
-        <div className="flex min-h-[calc(100vh-4rem)] flex-col">
-            <div className="border-b bg-muted/40 p-8">
-                <Container>
-                    <div className="flex items-center justify-between">
+        <div className="min-h-screen bg-brand-cream">
+            {/* Header Section */}
+            <div className="relative overflow-hidden bg-gradient-to-br from-brand-orange/5 via-brand-cream to-brand-teal/5 border-b border-brand-slate/10">
+                <div className="absolute inset-0 -z-10">
+                    <div className="absolute top-10 right-10 h-72 w-72 rounded-full bg-brand-orange/10 blur-3xl" />
+                    <div className="absolute bottom-10 left-10 h-72 w-72 rounded-full bg-brand-teal/10 blur-3xl" />
+                </div>
+
+                <Container className="py-12">
+                    <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                            <h1 className="text-3xl font-bold tracking-tight">Seller Dashboard</h1>
-                            <p className="text-muted-foreground">Manage your AI agents and track performance</p>
+                            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-brand-orange/10 border border-brand-orange/20 px-4 py-2 text-sm font-medium text-brand-orange">
+                                <Sparkles className="h-4 w-4" />
+                                <span>Seller Dashboard</span>
+                            </div>
+                            <h1 className="mb-2 text-4xl font-bold tracking-tight text-brand-slate">
+                                Welcome back!
+                            </h1>
+                            <p className="text-brand-slate/60">
+                                Manage your AI agents and track your performance
+                            </p>
                         </div>
                         <Link href="/submit-agent">
-                            <Button>
-                                <Plus className="mr-2 h-4 w-4" />
+                            <Button className="h-12 rounded-xl bg-brand-orange font-semibold text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90 hover:shadow-xl hover:shadow-brand-orange/40 hover:-translate-y-0.5 transition-all">
+                                <Plus className="mr-2 h-5 w-5" />
                                 Create New Agent
                             </Button>
                         </Link>
@@ -92,166 +105,251 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
                 </Container>
             </div>
 
-            <Container className="py-8">
+            <Container className="py-12">
                 {/* Success Banner */}
                 {searchParams?.success === 'created' && (
-                    <Card className="mb-6 border-green-200 bg-green-50">
-                        <CardContent className="flex items-center gap-3 p-4">
-                            <div className="rounded-full bg-green-100 p-2">
-                                <CheckCircle className="h-5 w-5 text-green-600" />
+                    <div className="mb-8 rounded-3xl bg-gradient-to-br from-green-50 to-green-100/50 border-2 border-green-200 p-6 shadow-lg animate-fade-in">
+                        <div className="flex items-start gap-4">
+                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-green-400 to-green-600 shadow-lg shadow-green-500/30">
+                                <CheckCircle className="h-6 w-6 text-white" />
                             </div>
-                            <div className="flex-1">
-                                <p className="font-semibold text-green-900">
+                            <div>
+                                <p className="mb-1 text-lg font-semibold text-green-900">
                                     Agent created successfully!
                                 </p>
                                 <p className="text-sm text-green-700">
                                     Preview your agent and submit it for review when ready.
                                 </p>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
                 )}
 
-                {/* Stats Overview */}
-                <div className="mb-8 grid gap-4 md:grid-cols-3">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Agents</CardTitle>
-                            <Package className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{agents.length}</div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-                            <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{totalViews}</div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
-                            <Settings className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{totalSales}</div>
-                        </CardContent>
-                    </Card>
+                {/* Analytics Stats Grid */}
+                <div className="mb-12">
+                    <h2 className="mb-6 text-2xl font-bold text-brand-slate">Analytics Overview</h2>
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {/* Total Revenue */}
+                        <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-orange to-brand-orange/90 p-6 text-white shadow-lg transition-all hover:shadow-xl hover:-translate-y-1">
+                            <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+                            <div className="relative">
+                                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                                    <DollarSign className="h-6 w-6" />
+                                </div>
+                                <p className="mb-1 text-sm font-medium text-white/80">Total Revenue</p>
+                                <p className="text-3xl font-bold">{formatPrice(totalRevenue)}</p>
+                                <div className="mt-3 flex items-center gap-1 text-xs text-white/70">
+                                    <TrendingUp className="h-3 w-3" />
+                                    <span>From {totalSales} sales</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Total Views */}
+                        <div className="group relative overflow-hidden rounded-3xl bg-white border-2 border-brand-slate/10 p-6 shadow-lg transition-all hover:shadow-xl hover:border-brand-teal/30 hover:-translate-y-1">
+                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-teal/10">
+                                <Eye className="h-6 w-6 text-brand-teal" />
+                            </div>
+                            <p className="mb-1 text-sm font-medium text-brand-slate/70">Total Views</p>
+                            <p className="text-3xl font-bold text-brand-slate">{totalViews.toLocaleString()}</p>
+                            <div className="mt-3 flex items-center gap-1 text-xs text-brand-slate/60">
+                                <ArrowUpRight className="h-3 w-3" />
+                                <span>Across all agents</span>
+                            </div>
+                        </div>
+
+                        {/* Total Sales */}
+                        <div className="group relative overflow-hidden rounded-3xl bg-white border-2 border-brand-slate/10 p-6 shadow-lg transition-all hover:shadow-xl hover:border-brand-orange/30 hover:-translate-y-1">
+                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-orange/10">
+                                <ShoppingBag className="h-6 w-6 text-brand-orange" />
+                            </div>
+                            <p className="mb-1 text-sm font-medium text-brand-slate/70">Total Sales</p>
+                            <p className="text-3xl font-bold text-brand-slate">{totalSales}</p>
+                            <div className="mt-3 flex items-center gap-1 text-xs text-brand-slate/60">
+                                <TrendingUp className="h-3 w-3" />
+                                <span>All time</span>
+                            </div>
+                        </div>
+
+                        {/* Active Agents */}
+                        <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-teal to-brand-teal/90 p-6 text-white shadow-lg transition-all hover:shadow-xl hover:-translate-y-1">
+                            <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+                            <div className="relative">
+                                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                                    <Package className="h-6 w-6" />
+                                </div>
+                                <p className="mb-1 text-sm font-medium text-white/80">Active Agents</p>
+                                <p className="text-3xl font-bold">{approvedAgents}</p>
+                                <div className="mt-3 flex items-center gap-1 text-xs text-white/70">
+                                    <LayoutDashboard className="h-3 w-3" />
+                                    <span>Live on marketplace</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Agents List */}
-                <h2 className="mb-4 text-xl font-semibold">My Agents</h2>
-                {agents.length === 0 ? (
-                    <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center animate-in fade-in-50">
-                        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                            <Package className="h-6 w-6 text-primary" />
-                        </div>
-                        <h3 className="mt-4 text-lg font-semibold">No agents created yet</h3>
-                        <p className="mb-4 mt-2 text-sm text-muted-foreground max-w-sm">
-                            Start selling your AI workflows today. Create your first agent to get started.
-                        </p>
-                        <Link href="/submit-agent">
-                            <Button>Create Agent</Button>
-                        </Link>
-                    </div>
-                ) : (
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {agents.map((agent) => (
-                            <Card key={agent.id} className="flex flex-col">
-                                <CardHeader>
-                                    <div className="flex items-start justify-between gap-2">
-                                        <div className="flex items-center gap-2">
-                                            <StatusBadge status={agent.status as any} />
-                                            <Badge variant="secondary" className="text-xs">
-                                                v{agent.version}
-                                            </Badge>
-                                        </div>
-                                        <Badge variant="outline" className="ml-auto">{formatPrice(Number(agent.price))}</Badge>
-                                    </div>
-                                    <CardTitle className="mt-4 line-clamp-1">{agent.title}</CardTitle>
-                                    <CardDescription className="line-clamp-2">{agent.shortDescription}</CardDescription>
-                                    {agent.status === 'APPROVED' && agent.hasActiveUpdate && (
-                                        <div className="mt-3 flex items-start gap-2 rounded-md bg-amber-50 border border-amber-200 p-3">
-                                            <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                                            <p className="text-xs text-amber-800">
-                                                <strong>Hidden from marketplace.</strong> This version is temporarily hidden while your update is under review.
-                                            </p>
-                                        </div>
-                                    )}
-                                </CardHeader>
-                                <CardContent className="flex-1 space-y-4">
-                                    <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
-                                        <div className="flex flex-col">
-                                            <span className="font-semibold text-foreground">{agent.viewCount}</span>
-                                            <span>Views</span>
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <span className="font-semibold text-foreground">{agent.purchaseCount}</span>
-                                            <span>Sales</span>
-                                        </div>
-                                    </div>
-                                    <div className="pt-2 border-t text-xs text-muted-foreground">
-                                        Last Updated: {new Date(agent.updatedAt).toLocaleDateString('en-US', {
-                                            month: 'short',
-                                            day: 'numeric',
-                                            year: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        })}
-                                    </div>
-                                </CardContent>
-                                <CardFooter className="border-t bg-muted/50 p-4">
-                                    <div className="flex w-full gap-2">
-                                        <Button variant="outline" size="sm" className="w-full" asChild>
-                                            <Link href={`/agents/${agent.slug}`}>
-                                                <ExternalLink className="mr-2 h-3 w-3" />
-                                                View
-                                            </Link>
-                                        </Button>
-                                        {agent.status === 'DRAFT' && (
-                                            <Button size="sm" className="w-full" variant="default" asChild>
-                                                <Link href={`/dashboard/agents/${agent.id}/edit`}>
-                                                    Edit & Submit
-                                                </Link>
-                                            </Button>
-                                        )}
-                                        {agent.status === 'REJECTED' && (
-                                            <Button size="sm" className="w-full" variant="destructive" asChild>
-                                                <Link href={`/dashboard/agents/${agent.id}/edit`}>
-                                                    Fix & Resubmit
-                                                </Link>
-                                            </Button>
-                                        )}
-                                        {agent.status === 'UNDER_REVIEW' && (
-                                            <Button size="sm" className="w-full" variant="secondary" disabled>
-                                                Under Review
-                                            </Button>
-                                        )}
-                                        {agent.status === 'APPROVED' && !agent.hasActiveUpdate && (
-                                            <RequestUpdateButton
-                                                agentId={agent.id}
-                                                agentTitle={agent.title}
-                                            />
-                                        )}
-                                        {agent.status === 'APPROVED' && agent.hasActiveUpdate && (
-                                            <Button size="sm" className="w-full" variant="secondary" disabled>
-                                                Update Pending
-                                            </Button>
-                                        )}
-                                    </div>
-                                </CardFooter>
-                            </Card>
-                        ))}
+                {/* Performance Charts */}
+                {agents.length > 0 && (
+                    <div className="mb-12">
+                        <h2 className="mb-6 text-2xl font-bold text-brand-slate">Performance Insights</h2>
+                        <PerformanceCharts
+                            agents={agents.map(agent => ({
+                                title: agent.title,
+                                viewCount: agent.viewCount,
+                                purchaseCount: agent.purchaseCount,
+                                price: Number(agent.price)
+                            }))}
+                        />
                     </div>
                 )}
 
+                {/* My Agents Section */}
+                <div>
+                    <div className="mb-6 flex items-center justify-between">
+                        <h2 className="text-2xl font-bold text-brand-slate">My Agents</h2>
+                        <Badge className="rounded-lg bg-brand-slate/10 text-brand-slate border-brand-slate/20">
+                            {agents.length} Total
+                        </Badge>
+                    </div>
+
+                    {agents.length === 0 ? (
+                        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-brand-slate/20 bg-white p-12 text-center">
+                            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-orange/10">
+                                <Package className="h-8 w-8 text-brand-orange" />
+                            </div>
+                            <h3 className="mb-2 text-xl font-bold text-brand-slate">No agents yet</h3>
+                            <p className="mb-6 text-brand-slate/60 max-w-sm">
+                                Start selling your AI workflows today. Create your first agent to get started.
+                            </p>
+                            <Link href="/submit-agent">
+                                <Button className="h-12 rounded-xl bg-brand-orange font-semibold text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90">
+                                    <Plus className="mr-2 h-5 w-5" />
+                                    Create Your First Agent
+                                </Button>
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            {agents.map((agent) => (
+                                <div
+                                    key={agent.id}
+                                    className="group relative overflow-hidden rounded-3xl bg-white border-2 border-brand-slate/10 shadow-lg transition-all hover:shadow-xl hover:border-brand-teal/30 hover:-translate-y-1"
+                                >
+                                    {/* Thumbnail */}
+                                    {agent.thumbnailUrl && (
+                                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-brand-orange/5 to-brand-teal/5">
+                                            <img
+                                                src={agent.thumbnailUrl}
+                                                alt={agent.title}
+                                                className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                                        </div>
+                                    )}
+
+                                    <div className="p-6">
+                                        {/* Status & Version Badges */}
+                                        <div className="mb-4 flex flex-wrap items-center gap-2">
+                                            <StatusBadge status={agent.status as any} />
+                                            <Badge className="rounded-lg bg-brand-slate/10 text-brand-slate border-brand-slate/20 text-xs">
+                                                v{agent.version}
+                                            </Badge>
+                                            <Badge className="ml-auto rounded-lg bg-brand-orange/10 text-brand-orange border-brand-orange/20 font-semibold">
+                                                {formatPrice(Number(agent.price))}
+                                            </Badge>
+                                        </div>
+
+                                        {/* Title & Description */}
+                                        <h3 className="mb-2 text-xl font-bold text-brand-slate line-clamp-1">
+                                            {agent.title}
+                                        </h3>
+                                        <p className="mb-4 text-sm text-brand-slate/60 line-clamp-2">
+                                            {agent.shortDescription}
+                                        </p>
+
+                                        {/* Update Warning */}
+                                        {agent.status === 'APPROVED' && agent.hasActiveUpdate && (
+                                            <div className="mb-4 flex items-start gap-2 rounded-2xl bg-amber-50 border-2 border-amber-200 p-3">
+                                                <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                <p className="text-xs text-amber-800">
+                                                    <strong>Hidden from marketplace.</strong> Update under review.
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {/* Stats */}
+                                        <div className="mb-6 flex items-center gap-4 rounded-2xl bg-brand-cream p-4">
+                                            <div className="flex-1 text-center">
+                                                <p className="text-2xl font-bold text-brand-slate">{agent.viewCount}</p>
+                                                <p className="text-xs text-brand-slate/60">Views</p>
+                                            </div>
+                                            <div className="h-8 w-px bg-brand-slate/10" />
+                                            <div className="flex-1 text-center">
+                                                <p className="text-2xl font-bold text-brand-slate">{agent.purchaseCount}</p>
+                                                <p className="text-xs text-brand-slate/60">Sales</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Last Updated */}
+                                        <div className="mb-4 text-xs text-brand-slate/50">
+                                            Updated {new Date(agent.updatedAt).toLocaleDateString('en-US', {
+                                                month: 'short',
+                                                day: 'numeric',
+                                                year: 'numeric'
+                                            })}
+                                        </div>
+
+                                        {/* Actions */}
+                                        <div className="flex gap-2 border-t-2 border-brand-slate/10 pt-4">
+                                            <Button variant="outline" size="sm" className="flex-1 rounded-xl border-2 hover:border-brand-teal hover:bg-brand-teal/5" asChild>
+                                                <Link href={`/agents/${agent.slug}`}>
+                                                    <ExternalLink className="mr-2 h-4 w-4" />
+                                                    View
+                                                </Link>
+                                            </Button>
+
+                                            {agent.status === 'DRAFT' && (
+                                                <Button size="sm" className="flex-1 rounded-xl bg-brand-orange text-white hover:bg-brand-orange/90" asChild>
+                                                    <Link href={`/dashboard/agents/${agent.id}/edit`}>
+                                                        Edit & Submit
+                                                    </Link>
+                                                </Button>
+                                            )}
+                                            {agent.status === 'REJECTED' && (
+                                                <Button size="sm" className="flex-1 rounded-xl bg-red-500 text-white hover:bg-red-600" asChild>
+                                                    <Link href={`/dashboard/agents/${agent.id}/edit`}>
+                                                        Fix & Resubmit
+                                                    </Link>
+                                                </Button>
+                                            )}
+                                            {agent.status === 'UNDER_REVIEW' && (
+                                                <Button size="sm" className="flex-1 rounded-xl bg-brand-slate/20 text-brand-slate" disabled>
+                                                    Under Review
+                                                </Button>
+                                            )}
+                                            {agent.status === 'APPROVED' && !agent.hasActiveUpdate && (
+                                                <RequestUpdateButton
+                                                    agentId={agent.id}
+                                                    agentTitle={agent.title}
+                                                />
+                                            )}
+                                            {agent.status === 'APPROVED' && agent.hasActiveUpdate && (
+                                                <Button size="sm" className="flex-1 rounded-xl bg-brand-slate/20 text-brand-slate" disabled>
+                                                    Update Pending
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
                 {/* Reviews Section */}
-                <div className="mt-12">
-                    <h2 className="mb-4 text-xl font-semibold">Reviews</h2>
+                <div className="mt-16">
+                    <h2 className="mb-6 text-2xl font-bold text-brand-slate">Customer Reviews</h2>
                     <SellerReviews sellerId={user.id} />
                 </div>
             </Container>

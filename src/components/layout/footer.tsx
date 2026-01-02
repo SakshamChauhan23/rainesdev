@@ -1,34 +1,34 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Container } from './container'
-import { Bot } from 'lucide-react'
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-300 bg-white">
+    <footer className="border-t border-brand-slate/10 bg-white">
       <Container>
         <div className="py-12">
           <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
             {/* Categories */}
             <div>
-              <h3 className="mb-4 text-sm font-normal text-black">Categories</h3>
+              <h3 className="mb-4 text-sm font-semibold text-brand-slate">Categories</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="/agents?category=customer-support" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/agents?category=customer-support" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Customer Support
                   </Link>
                 </li>
                 <li>
-                  <Link href="/agents?category=sales-marketing" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/agents?category=sales-marketing" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Sales & Marketing
                   </Link>
                 </li>
                 <li>
-                  <Link href="/agents?category=data-analysis" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/agents?category=data-analysis" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Data Analysis
                   </Link>
                 </li>
                 <li>
-                  <Link href="/agents?category=content-creation" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/agents?category=content-creation" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Content Creation
                   </Link>
                 </li>
@@ -37,20 +37,20 @@ export function Footer() {
 
             {/* For Clients */}
             <div>
-              <h3 className="mb-4 text-sm font-normal text-black">For Clients</h3>
+              <h3 className="mb-4 text-sm font-semibold text-brand-slate">For Clients</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="/agents" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/agents" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Browse Agents
                   </Link>
                 </li>
                 <li>
-                  <Link href="/about" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/#how-it-works" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     How It Works
                   </Link>
                 </li>
                 <li>
-                  <Link href="/library" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/library" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Your Purchases
                   </Link>
                 </li>
@@ -59,20 +59,20 @@ export function Footer() {
 
             {/* For Sellers */}
             <div>
-              <h3 className="mb-4 text-sm font-normal text-black">For Sellers</h3>
+              <h3 className="mb-4 text-sm font-semibold text-brand-slate">For Sellers</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="/signup" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/signup" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Become a Seller
                   </Link>
                 </li>
                 <li>
-                  <Link href="/submit-agent" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/submit-agent" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Submit Agent
                   </Link>
                 </li>
                 <li>
-                  <Link href="/dashboard" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/dashboard" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Seller Dashboard
                   </Link>
                 </li>
@@ -81,15 +81,15 @@ export function Footer() {
 
             {/* Business Solutions */}
             <div>
-              <h3 className="mb-4 text-sm font-normal text-black">Business Solutions</h3>
+              <h3 className="mb-4 text-sm font-semibold text-brand-slate">Business Solutions</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="/enterprise" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/enterprise" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Enterprise
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/contact" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Contact Sales
                   </Link>
                 </li>
@@ -98,20 +98,20 @@ export function Footer() {
 
             {/* Company */}
             <div>
-              <h3 className="mb-4 text-sm font-normal text-black">Company</h3>
+              <h3 className="mb-4 text-sm font-semibold text-brand-slate">Company</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="/about" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/about" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="/legal/privacy" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/legal/privacy" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="/legal/terms" className="font-light text-gray-700 transition-colors hover:text-[#8DEC42]">
+                  <Link href="/legal/terms" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
                     Terms of Service
                   </Link>
                 </li>
@@ -119,16 +119,20 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="mt-12 flex flex-col gap-4 border-t border-gray-300 pt-8 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center space-x-2">
-              <Bot className="h-5 w-5 text-gray-600" />
-              <div className="flex flex-col">
-                <span className="text-sm font-normal text-black">Neura</span>
-                <span className="text-xs font-light text-gray-600">powered by RainesDev</span>
-              </div>
+          <div className="mt-12 flex flex-col gap-6 border-t border-brand-slate/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center">
+              <Link href="/" className="transition-transform hover:scale-105">
+                <Image
+                  src="/logo.png"
+                  alt="Rouze.ai"
+                  width={160}
+                  height={45}
+                  className="h-12 w-auto"
+                />
+              </Link>
             </div>
-            <span className="text-sm font-light text-gray-600">
-              © {new Date().getFullYear()} All rights reserved
+            <span className="text-sm text-brand-slate/60">
+              © {new Date().getFullYear()} Rouze.ai. All rights reserved.
             </span>
           </div>
         </div>

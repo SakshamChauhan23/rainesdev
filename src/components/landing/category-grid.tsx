@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { Container } from '@/components/layout/container'
-import { Card, CardContent } from '@/components/ui/card'
 import {
   MessageSquare,
   TrendingUp,
@@ -10,6 +9,7 @@ import {
   FileText,
   Code,
   Zap,
+  ArrowRight,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -19,41 +19,52 @@ const categoryDefinitions = [
     slug: 'customer-support',
     description: 'Handle FAQs, tickets, and follow-ups automatically — 24/7 support without hiring.',
     icon: MessageSquare,
+    color: 'orange'
   },
   {
     name: 'Sales & Lead Follow-Up Agents',
     slug: 'sales-marketing',
     description: 'Capture leads, send follow-ups, and book meetings automatically.',
     icon: TrendingUp,
+    color: 'teal'
   },
   {
     name: 'Operations & Insights Agents',
     slug: 'data-analysis',
     description: 'Turn raw business data into daily summaries and actionable insights.',
     icon: BarChart3,
+    color: 'orange'
   },
   {
     name: 'Marketing Content Agents',
     slug: 'content-creation',
     description: 'Create emails, website copy, and social posts consistently without an in-house marketer.',
     icon: FileText,
+    color: 'teal'
   },
   {
     name: 'Internal Tools & Automation Agents',
     slug: 'development-tools',
     description: 'Automate repetitive internal tasks — reports, syncs, and workflows.',
     icon: Code,
+    color: 'orange'
   },
   {
     name: 'Productivity & Admin Agents',
     slug: 'productivity',
     description: 'Scheduling, reminders, task routing, and internal coordination handled automatically.',
     icon: Zap,
+    color: 'teal'
   },
 ]
 
 export function CategoryGrid() {
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
 
   useEffect(() => {
     // Fetch agent counts for each category
@@ -113,38 +124,89 @@ export function CategoryGrid() {
   }, [])
 
   return (
-    <section className="bg-white py-20">
+    <section className="relative overflow-hidden bg-white py-20 sm:py-28 lg:py-32">
+      {/* Background decoration */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-0 right-1/4 h-full w-px bg-gradient-to-b from-transparent via-brand-orange/10 to-transparent" />
+        <div className="absolute top-0 left-1/4 h-full w-px bg-gradient-to-b from-transparent via-brand-teal/10 to-transparent" />
+      </div>
+
       <Container>
-        <div className="mb-16 text-center">
-          <h2 className="mb-3 text-3xl font-light tracking-tight text-black sm:text-4xl">
-            Popular services
+        {/* Section Header */}
+        <div className={`mx-auto max-w-3xl text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-brand-slate sm:text-4xl md:text-5xl">
+            Popular{' '}
+            <span className="relative inline-block">
+              <span className="relative z-10 text-brand-orange">Services</span>
+              <span className="absolute bottom-2 left-0 right-0 h-3 bg-brand-orange/20 -z-0" />
+            </span>
           </h2>
+          <p className="text-lg text-brand-slate/70 sm:text-xl">
+            Explore AI agents across different categories
+          </p>
         </div>
 
-        <div className="space-y-3">
-          {categoryDefinitions.map(category => {
+        {/* Category Cards Grid */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {categoryDefinitions.map((category, index) => {
             const Icon = category.icon
             const count = categoryCounts[category.slug] ?? 0
+            const isOrange = category.color === 'orange'
+
             return (
               <Link
                 key={category.slug}
                 href={`/agents?category=${category.slug}`}
-                className="group block border-b border-gray-300 pb-3 transition-all duration-300 hover:border-[#8DEC42]/30 hover:pl-2"
+                className={`group relative overflow-hidden rounded-3xl bg-white border-2 border-brand-slate/10 p-6 shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-2 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                style={{ transitionDelay: `${200 + index * 100}ms` }}
               >
-                <div className="flex items-center justify-between gap-6">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gray-100 transition-all duration-300 group-hover:bg-[#8DEC42]/10 group-hover:scale-110">
-                      <Icon className="h-6 w-6 text-gray-700 transition-all duration-300 group-hover:text-[#8DEC42]" />
-                    </div>
-                    <div>
-                      <h3 className="mb-1 text-base font-normal text-black transition-all duration-300 group-hover:text-[#8DEC42]">
-                        {category.name}
-                      </h3>
-                      <p className="text-sm font-light text-gray-700">{category.description}</p>
-                    </div>
+                {/* Hover gradient overlay */}
+                <div className={`absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 ${
+                  isOrange
+                    ? 'bg-gradient-to-br from-brand-orange/5 to-brand-orange/10'
+                    : 'bg-gradient-to-br from-brand-teal/5 to-brand-teal/10'
+                }`} />
+
+                <div className="relative">
+                  {/* Icon */}
+                  <div className={`mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-500 ${
+                    isOrange
+                      ? 'bg-brand-orange/10 group-hover:bg-brand-orange group-hover:shadow-lg group-hover:shadow-brand-orange/30'
+                      : 'bg-brand-teal/10 group-hover:bg-brand-teal group-hover:shadow-lg group-hover:shadow-brand-teal/30'
+                  }`}>
+                    <Icon className={`h-8 w-8 transition-colors duration-500 ${
+                      isOrange
+                        ? 'text-brand-orange group-hover:text-white'
+                        : 'text-brand-teal group-hover:text-white'
+                    }`} />
                   </div>
-                  <div className="shrink-0 text-sm font-light text-gray-600 transition-colors group-hover:text-[#8DEC42]">
-                    {count} {count === 1 ? 'agent' : 'agents'}
+
+                  {/* Content */}
+                  <div className="mb-4">
+                    <h3 className="mb-3 text-xl font-bold text-brand-slate transition-colors group-hover:text-brand-orange">
+                      {category.name}
+                    </h3>
+                    <p className="text-sm text-brand-slate/70 leading-relaxed">
+                      {category.description}
+                    </p>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between pt-4 border-t-2 border-brand-slate/10">
+                    <div className={`flex items-center gap-2 text-sm font-semibold ${
+                      isOrange ? 'text-brand-orange' : 'text-brand-teal'
+                    }`}>
+                      <span>{count}</span>
+                      <span className="text-brand-slate/60 font-normal">
+                        {count === 1 ? 'agent' : 'agents'}
+                      </span>
+                    </div>
+                    <div className={`flex items-center gap-1 text-sm font-medium transition-transform group-hover:translate-x-1 ${
+                      isOrange ? 'text-brand-orange' : 'text-brand-teal'
+                    }`}>
+                      <span>Explore</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </div>
                   </div>
                 </div>
               </Link>

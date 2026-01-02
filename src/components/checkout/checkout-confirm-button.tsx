@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { processTestPurchase } from '@/app/checkout/actions'
 import { useRouter } from 'next/navigation'
-import { Loader2, ShoppingCart } from 'lucide-react'
+import { Loader2, ShoppingCart, AlertCircle } from 'lucide-react'
 
 interface CheckoutConfirmButtonProps {
     agentId: string
@@ -36,18 +36,18 @@ export function CheckoutConfirmButton({ agentId, agentSlug }: CheckoutConfirmBut
     }
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-4">
             {error && (
-                <div className="rounded-md bg-destructive/10 border border-destructive/20 p-3">
-                    <p className="text-sm text-destructive">{error}</p>
+                <div className="flex items-center gap-3 rounded-2xl border-2 border-red-200 bg-red-50 p-4 text-sm text-red-600 animate-fade-in">
+                    <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                    <span>{error}</span>
                 </div>
             )}
 
             <Button
                 onClick={handleConfirm}
                 disabled={isPending}
-                className="w-full"
-                size="lg"
+                className="h-14 w-full rounded-xl bg-brand-teal font-semibold text-white shadow-lg shadow-brand-teal/30 hover:bg-brand-teal/90 hover:shadow-xl hover:shadow-brand-teal/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-base"
             >
                 {isPending ? (
                     <>
@@ -57,13 +57,20 @@ export function CheckoutConfirmButton({ agentId, agentSlug }: CheckoutConfirmBut
                 ) : (
                     <>
                         <ShoppingCart className="mr-2 h-5 w-5" />
-                        Confirm & Unlock (Test Mode)
+                        Confirm & Unlock
                     </>
                 )}
             </Button>
 
-            <p className="text-xs text-center text-muted-foreground">
-                By confirming, you agree to our Terms of Service and Refund Policy
+            <p className="text-xs text-center text-white/60">
+                By confirming, you agree to our{' '}
+                <a href="#" className="text-brand-teal hover:text-brand-teal/80 transition-colors">
+                    Terms of Service
+                </a>{' '}
+                and{' '}
+                <a href="#" className="text-brand-teal hover:text-brand-teal/80 transition-colors">
+                    Refund Policy
+                </a>
             </p>
         </div>
     )
