@@ -19,7 +19,7 @@ export function BookCallCard() {
       </CardHeader>
       <CardContent>
         <Link
-          href="https://calendar.app.google/EZur5Njhj9Wfjedy7"
+          href="https://calendar.app.google/QyuK9XKQ52r6dNPD6"
           target="_blank"
           rel="noopener noreferrer"
           className="block"
