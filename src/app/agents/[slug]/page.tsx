@@ -14,7 +14,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getUserWithRole } from '@/lib/user-sync';
 import { ReviewSection } from '@/components/reviews/review-section';
 import { AssistedSetupConfig } from '@/components/admin/assisted-setup-config';
-import { AssistedSetupOption } from '@/components/agent/assisted-setup-option';
+import { AssistedSetupWrapper } from '@/components/agent/assisted-setup-wrapper';
 import { SetupStatus } from '@/components/agent/setup-status';
 import { BookCallCard } from '@/components/agent/book-call-card';
 import { prisma } from '@/lib/prisma';
@@ -120,15 +120,10 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
 
                         {/* Assisted Setup Option - Show only if not purchased */}
                         {!isPurchased && agent.assistedSetupEnabled && (
-                            <AssistedSetupOption
+                            <AssistedSetupWrapper
                                 enabled={agent.assistedSetupEnabled}
                                 price={Number(agent.assistedSetupPrice)}
-                                onSelectionChange={(selected) => {
-                                    // Store selection in session storage for checkout page
-                                    if (typeof window !== 'undefined') {
-                                        sessionStorage.setItem(`assistedSetup_${agent.id}`, selected.toString());
-                                    }
-                                }}
+                                agentId={agent.id}
                             />
                         )}
 
