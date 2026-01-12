@@ -15,10 +15,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { formatPrice } from '@/lib/utils'
 import { Clock, CheckCircle2, Sparkles } from 'lucide-react'
 import Link from 'next/link'
+import { Decimal } from '@prisma/client/runtime/library'
 
 interface SetupRequest {
   id: string
-  setupCost: number
+  setupCost: Decimal
   status: 'PENDING' | 'COMPLETED'
   complexity: 'QUICK' | 'STANDARD' | 'COMPLEX' | null
   adminNotes: string | null
