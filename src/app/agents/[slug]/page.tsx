@@ -93,6 +93,7 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
                     agentSlug={agent.slug}
                     isPurchased={isPurchased}
                     isApproved={agent.status === 'APPROVED'}
+                    bookCallEnabled={agent.bookCallEnabled}
                 />
 
                 <div className="mt-8 grid gap-8 lg:grid-cols-3">
@@ -127,11 +128,6 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
                             />
                         )}
 
-                        {/* Book a Call Card - Show to buyers (not admins) */}
-                        {userWithRole?.role !== 'ADMIN' && userWithRole?.role !== 'SELLER' && (
-                            <BookCallCard />
-                        )}
-
                         {/* Setup Guide - Locked or Unlocked */}
                         {isPurchased ? (
                             <UnlockedSetupGuide setupGuide={agent.setupGuide} />
@@ -158,6 +154,7 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
                                 agentId={agent.id}
                                 currentEnabled={agent.assistedSetupEnabled}
                                 currentPrice={Number(agent.assistedSetupPrice)}
+                                currentBookCallEnabled={agent.bookCallEnabled}
                             />
                         )}
 

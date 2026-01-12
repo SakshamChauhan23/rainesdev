@@ -69,6 +69,7 @@ model Agent {
   supportAddonPrice    Decimal          @default(0) @map("support_addon_price") @db.Decimal(10, 2)
   assistedSetupEnabled Boolean          @default(false) @map("assisted_setup_enabled")
   assistedSetupPrice   Decimal          @default(0) @map("assisted_setup_price") @db.Decimal(10, 2)
+  bookCallEnabled      Boolean          @default(false) @map("book_call_enabled")
   demoVideoUrl         String?          @map("demo_video_url")
   thumbnailUrl         String?          @map("thumbnail_url")
   status               AgentStatus      @default(DRAFT)

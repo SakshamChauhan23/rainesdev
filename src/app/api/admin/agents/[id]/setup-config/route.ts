@@ -30,11 +30,18 @@ export async function POST(
 
     // Parse request body
     const body = await request.json()
-    const { assistedSetupEnabled, assistedSetupPrice } = body
+    const { assistedSetupEnabled, assistedSetupPrice, bookCallEnabled } = body
 
     if (typeof assistedSetupEnabled !== 'boolean') {
       return NextResponse.json(
         { error: 'assistedSetupEnabled must be a boolean' },
+        { status: 400 }
+      )
+    }
+
+    if (bookCallEnabled !== undefined && typeof bookCallEnabled !== 'boolean') {
+      return NextResponse.json(
+        { error: 'bookCallEnabled must be a boolean' },
         { status: 400 }
       )
     }
@@ -48,17 +55,24 @@ export async function POST(
     }
 
     // Update agent configuration
+    const updateData: any = {
+      assistedSetupEnabled,
+      assistedSetupPrice: price,
+    }
+
+    if (bookCallEnabled !== undefined) {
+      updateData.bookCallEnabled = bookCallEnabled
+    }
+
     const agent = await prisma.agent.update({
       where: { id: params.id },
-      data: {
-        assistedSetupEnabled,
-        assistedSetupPrice: price,
-      },
+      data: updateData,
       select: {
         id: true,
         title: true,
         assistedSetupEnabled: true,
         assistedSetupPrice: true,
+        bookCallEnabled: true,
       },
     })
 
@@ -72,6 +86,7 @@ export async function POST(
         metadata: {
           assistedSetupEnabled,
           assistedSetupPrice: price,
+          bookCallEnabled: bookCallEnabled !== undefined ? bookCallEnabled : null,
         },
       },
     })

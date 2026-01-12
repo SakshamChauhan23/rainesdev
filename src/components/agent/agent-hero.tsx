@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { PurchaseConfirmationModal } from './purchase-confirmation-modal';
 
 interface AgentHeroProps {
     title: string;
@@ -26,15 +27,21 @@ interface AgentHeroProps {
     agentSlug: string;
     isPurchased: boolean;
     isApproved: boolean;
+    bookCallEnabled: boolean;
 }
 
-export function AgentHero({ title, shortDescription, price, category, viewCount, purchaseCount, agentId, agentSlug, isPurchased, isApproved }: AgentHeroProps) {
+export function AgentHero({ title, shortDescription, price, category, viewCount, purchaseCount, agentId, agentSlug, isPurchased, isApproved, bookCallEnabled }: AgentHeroProps) {
     const [copied, setCopied] = useState(false);
     const [shareDialogOpen, setShareDialogOpen] = useState(false);
+    const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
     const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/agents/${agentSlug}` : '';
 
     const handleShare = () => {
         setShareDialogOpen(true);
+    };
+
+    const handlePurchaseClick = () => {
+        setPurchaseModalOpen(true);
     };
 
     const copyToClipboard = async () => {
@@ -95,11 +102,13 @@ export function AgentHero({ title, shortDescription, price, category, viewCount,
                                 Already Unlocked
                             </Button>
                         ) : isApproved ? (
-                            <Link href={`/checkout/${agentId}`}>
-                                <Button size="lg" className="w-full sm:w-auto bg-[#8DEC42] font-normal hover:bg-[#7ACC3B]">
-                                    Unlock Setup Guide
-                                </Button>
-                            </Link>
+                            <Button
+                                size="lg"
+                                className="w-full sm:w-auto bg-[#8DEC42] font-normal hover:bg-[#7ACC3B]"
+                                onClick={handlePurchaseClick}
+                            >
+                                Unlock Setup Guide
+                            </Button>
                         ) : (
                             <Button size="lg" className="w-full sm:w-auto bg-[#D1D5DB] text-gray-600" disabled>
                                 Not Available
@@ -137,6 +146,15 @@ export function AgentHero({ title, shortDescription, price, category, viewCount,
                     )}
                 </DialogContent>
             </Dialog>
+
+            {/* Purchase Confirmation Modal */}
+            <PurchaseConfirmationModal
+                isOpen={purchaseModalOpen}
+                onClose={() => setPurchaseModalOpen(false)}
+                agentId={agentId}
+                agentTitle={title}
+                bookCallEnabled={bookCallEnabled}
+            />
         </div>
     );
 }

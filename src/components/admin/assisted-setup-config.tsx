@@ -12,15 +12,18 @@ interface AssistedSetupConfigProps {
   agentId: string
   currentEnabled: boolean
   currentPrice: number
+  currentBookCallEnabled: boolean
 }
 
 export function AssistedSetupConfig({
   agentId,
   currentEnabled,
-  currentPrice
+  currentPrice,
+  currentBookCallEnabled
 }: AssistedSetupConfigProps) {
   const [enabled, setEnabled] = useState(currentEnabled)
   const [price, setPrice] = useState(currentPrice.toString())
+  const [bookCallEnabled, setBookCallEnabled] = useState(currentBookCallEnabled)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -37,6 +40,7 @@ export function AssistedSetupConfig({
         body: JSON.stringify({
           assistedSetupEnabled: enabled,
           assistedSetupPrice: parseFloat(price) || 0,
+          bookCallEnabled: bookCallEnabled,
         }),
       })
 
@@ -85,6 +89,24 @@ export function AssistedSetupConfig({
             id="enabled"
             checked={enabled}
             onCheckedChange={setEnabled}
+            className="data-[state=checked]:bg-brand-orange"
+          />
+        </div>
+
+        {/* Book Call Toggle */}
+        <div className="flex items-center justify-between rounded-2xl bg-brand-orange/5 p-4 border-2 border-brand-orange/20">
+          <div className="space-y-0.5">
+            <Label htmlFor="bookCall" className="text-base font-semibold text-brand-slate">
+              Enable Book a Call
+            </Label>
+            <p className="text-sm text-brand-slate/60">
+              Show booking option in purchase modal for buyers
+            </p>
+          </div>
+          <Switch
+            id="bookCall"
+            checked={bookCallEnabled}
+            onCheckedChange={setBookCallEnabled}
             className="data-[state=checked]:bg-brand-orange"
           />
         </div>
