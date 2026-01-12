@@ -16,6 +16,7 @@ import { ReviewSection } from '@/components/reviews/review-section';
 import { AssistedSetupConfig } from '@/components/admin/assisted-setup-config';
 import { AssistedSetupOption } from '@/components/agent/assisted-setup-option';
 import { SetupStatus } from '@/components/agent/setup-status';
+import { BookCallCard } from '@/components/agent/book-call-card';
 import { prisma } from '@/lib/prisma';
 import { Metadata } from 'next';
 
@@ -129,6 +130,11 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
                                     }
                                 }}
                             />
+                        )}
+
+                        {/* Book a Call Card - Show to buyers (not admins) */}
+                        {userWithRole?.role !== 'ADMIN' && userWithRole?.role !== 'SELLER' && (
+                            <BookCallCard />
                         )}
 
                         {/* Setup Guide - Locked or Unlocked */}
