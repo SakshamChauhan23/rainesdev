@@ -23,6 +23,7 @@ model User {
   supportRequestsAssigned SupportRequest[] @relation("AssignedSupport")
   supportRequestsAsBuyer  SupportRequest[] @relation("BuyerSupport")
   supportRequestsAsSeller SupportRequest[] @relation("SellerSupport")
+  setupRequests           SetupRequest[]
 
   @@map("users")
 }
@@ -56,39 +57,42 @@ model Category {
 }
 
 model Agent {
-  id                String           @id @default(cuid())
-  sellerId          String           @map("seller_id")
-  categoryId        String           @map("category_id")
-  title             String
-  slug              String           @unique
-  shortDescription  String           @map("short_description")
-  workflowOverview  String           @map("workflow_overview")
-  useCase           String           @map("use_case")
-  price             Decimal          @db.Decimal(10, 2)
-  supportAddonPrice Decimal          @default(0) @map("support_addon_price") @db.Decimal(10, 2)
-  demoVideoUrl      String?          @map("demo_video_url")
-  thumbnailUrl      String?          @map("thumbnail_url")
-  status            AgentStatus      @default(DRAFT)
-  rejectionReason   String?          @map("rejection_reason")
-  setupGuide        String           @map("setup_guide")
-  workflowDetails   Json?            @map("workflow_details")
-  viewCount         Int              @default(0) @map("view_count")
-  purchaseCount     Int              @default(0) @map("purchase_count")
-  featured          Boolean          @default(false)
-  createdAt         DateTime         @default(now()) @map("created_at")
-  updatedAt         DateTime         @updatedAt @map("updated_at")
-  approvedAt        DateTime?        @map("approved_at")
-  hasActiveUpdate   Boolean          @default(false) @map("has_active_update")
-  isLatestVersion   Boolean          @default(true) @map("is_latest_version")
-  parentAgentId     String?          @map("parent_agent_id")
-  version           Int              @default(1)
-  category          Category         @relation(fields: [categoryId], references: [id])
-  parentAgent       Agent?           @relation("AgentVersions", fields: [parentAgentId], references: [id])
-  childVersions     Agent[]          @relation("AgentVersions")
-  seller            User             @relation("SellerAgents", fields: [sellerId], references: [id], onDelete: Cascade)
-  purchases         Purchase[]
-  reviews           Review[]
-  supportRequests   SupportRequest[]
+  id                   String           @id @default(cuid())
+  sellerId             String           @map("seller_id")
+  categoryId           String           @map("category_id")
+  title                String
+  slug                 String           @unique
+  shortDescription     String           @map("short_description")
+  workflowOverview     String           @map("workflow_overview")
+  useCase              String           @map("use_case")
+  price                Decimal          @db.Decimal(10, 2)
+  supportAddonPrice    Decimal          @default(0) @map("support_addon_price") @db.Decimal(10, 2)
+  assistedSetupEnabled Boolean          @default(false) @map("assisted_setup_enabled")
+  assistedSetupPrice   Decimal          @default(0) @map("assisted_setup_price") @db.Decimal(10, 2)
+  demoVideoUrl         String?          @map("demo_video_url")
+  thumbnailUrl         String?          @map("thumbnail_url")
+  status               AgentStatus      @default(DRAFT)
+  rejectionReason      String?          @map("rejection_reason")
+  setupGuide           String           @map("setup_guide")
+  workflowDetails      Json?            @map("workflow_details")
+  viewCount            Int              @default(0) @map("view_count")
+  purchaseCount        Int              @default(0) @map("purchase_count")
+  featured             Boolean          @default(false)
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @updatedAt @map("updated_at")
+  approvedAt           DateTime?        @map("approved_at")
+  hasActiveUpdate      Boolean          @default(false) @map("has_active_update")
+  isLatestVersion      Boolean          @default(true) @map("is_latest_version")
+  parentAgentId        String?          @map("parent_agent_id")
+  version              Int              @default(1)
+  category             Category         @relation(fields: [categoryId], references: [id])
+  parentAgent          Agent?           @relation("AgentVersions", fields: [parentAgentId], references: [id])
+  childVersions        Agent[]          @relation("AgentVersions")
+  seller               User             @relation("SellerAgents", fields: [sellerId], references: [id], onDelete: Cascade)
+  purchases            Purchase[]
+  reviews              Review[]
+  supportRequests      SupportRequest[]
+  setupRequests        SetupRequest[]
 
   @@index([sellerId])
   @@index([categoryId])
@@ -106,6 +110,7 @@ model Purchase {
   agentId               String           @map("agent_id")
   amountPaid            Decimal          @map("amount_paid") @db.Decimal(10, 2)
   supportAddonPurchased Boolean          @default(false) @map("support_addon_purchased")
+  assistedSetupRequested Boolean         @default(false) @map("assisted_setup_requested")
   stripePaymentIntentId String?          @unique @map("stripe_payment_intent_id")
   status                PurchaseStatus   @default(PENDING)
   purchasedAt           DateTime         @default(now()) @map("purchased_at")
@@ -115,6 +120,7 @@ model Purchase {
   agent                 Agent            @relation(fields: [agentId], references: [id])
   buyer                 User             @relation(fields: [buyerId], references: [id])
   supportRequests       SupportRequest[]
+  setupRequest          SetupRequest?
 
   @@unique([buyerId, agentVersionId])
   @@index([buyerId])
@@ -168,6 +174,31 @@ model Review {
   @@index([buyerId])
   @@index([agentVersionId])
   @@map("reviews")
+}
+
+model SetupRequest {
+  id              String           @id @default(cuid())
+  purchaseId      String           @unique @map("purchase_id")
+  buyerId         String           @map("buyer_id")
+  agentId         String           @map("agent_id")
+  agentVersionId  String           @map("agent_version_id")
+  setupType       SetupType        @default(ADMIN_ASSISTED) @map("setup_type")
+  setupCost       Decimal          @default(0) @map("setup_cost") @db.Decimal(10, 2)
+  status          SetupStatus      @default(PENDING)
+  complexity      SetupComplexity? @map("complexity")
+  adminNotes      String?          @map("admin_notes")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  completedAt     DateTime?        @map("completed_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  agent           Agent            @relation(fields: [agentId], references: [id])
+  buyer           User             @relation(fields: [buyerId], references: [id])
+  purchase        Purchase         @relation(fields: [purchaseId], references: [id])
+
+  @@index([buyerId])
+  @@index([agentId])
+  @@index([status])
+  @@index([complexity])
+  @@map("setup_requests")
 }
 
 model AdminLog {
@@ -231,4 +262,19 @@ enum AdminAction {
   REFUND_PURCHASE
   ASSIGN_SUPPORT
   UPDATE_CATEGORY
+}
+
+enum SetupType {
+  ADMIN_ASSISTED
+}
+
+enum SetupStatus {
+  PENDING
+  COMPLETED
+}
+
+enum SetupComplexity {
+  QUICK
+  STANDARD
+  COMPLEX
 }
