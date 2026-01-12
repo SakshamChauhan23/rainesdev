@@ -9,9 +9,10 @@ import { Loader2, ShoppingCart, AlertCircle } from 'lucide-react'
 interface CheckoutConfirmButtonProps {
     agentId: string
     agentSlug: string
+    assistedSetupRequested?: boolean
 }
 
-export function CheckoutConfirmButton({ agentId, agentSlug }: CheckoutConfirmButtonProps) {
+export function CheckoutConfirmButton({ agentId, agentSlug, assistedSetupRequested = false }: CheckoutConfirmButtonProps) {
     const [isPending, startTransition] = useTransition()
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
@@ -20,7 +21,7 @@ export function CheckoutConfirmButton({ agentId, agentSlug }: CheckoutConfirmBut
         setError(null)
         startTransition(async () => {
             try {
-                const result = await processTestPurchase(agentId)
+                const result = await processTestPurchase(agentId, assistedSetupRequested)
 
                 if (result.success) {
                     // Redirect to agent page with success param

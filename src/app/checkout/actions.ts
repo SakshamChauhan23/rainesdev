@@ -9,7 +9,7 @@ import { revalidatePath } from 'next/cache'
 /**
  * Process a test mode purchase (no Stripe)
  */
-export async function processTestPurchase(agentId: string) {
+export async function processTestPurchase(agentId: string, assistedSetupRequested: boolean = false) {
     const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
@@ -17,7 +17,7 @@ export async function processTestPurchase(agentId: string) {
         redirect('/login?next=/checkout/' + agentId)
     }
 
-    console.log('🛒 Processing test purchase:', { userId: user.id, agentId })
+    console.log('🛒 Processing test purchase:', { userId: user.id, agentId, assistedSetupRequested })
 
     try {
         // Verify agent exists and is approved
@@ -28,7 +28,9 @@ export async function processTestPurchase(agentId: string) {
                 title: true,
                 slug: true,
                 price: true,
-                status: true
+                status: true,
+                assistedSetupEnabled: true,
+                assistedSetupPrice: true
             }
         })
 
@@ -40,15 +42,47 @@ export async function processTestPurchase(agentId: string) {
             throw new Error('This agent is not available for purchase')
         }
 
-        // Create purchase
-        const purchase = await createTestPurchase(
-            user.id,
-            agent.id,
-            agent.id, // Using agentId as versionId for now (latest approved version)
-            Number(agent.price)
-        )
+        // Validate assisted setup request
+        if (assistedSetupRequested && !agent.assistedSetupEnabled) {
+            throw new Error('Assisted setup is not available for this agent')
+        }
+
+        // Calculate total amount
+        const agentPrice = Number(agent.price)
+        const setupPrice = assistedSetupRequested ? Number(agent.assistedSetupPrice) : 0
+        const totalAmount = agentPrice + setupPrice
+
+        // Create purchase with assisted setup flag
+        const purchase = await prisma.purchase.create({
+            data: {
+                buyerId: user.id,
+                agentId: agent.id,
+                agentVersionId: agent.id, // Using agentId as versionId for now
+                amountPaid: totalAmount,
+                status: 'COMPLETED',
+                source: 'TEST_MODE',
+                assistedSetupRequested: assistedSetupRequested
+            }
+        })
 
         console.log('✅ Test purchase created:', purchase.id)
+
+        // Create SetupRequest if assisted setup was requested
+        if (assistedSetupRequested) {
+            const setupRequest = await prisma.setupRequest.create({
+                data: {
+                    purchaseId: purchase.id,
+                    buyerId: user.id,
+                    agentId: agent.id,
+                    agentVersionId: agent.id,
+                    setupType: 'ADMIN_ASSISTED',
+                    setupCost: setupPrice,
+                    status: 'PENDING'
+                }
+            })
+
+            console.log('✅ Setup request created:', setupRequest.id)
+        }
 
         // Revalidate paths
         revalidatePath(`/agents/${agent.slug}`)

@@ -13,6 +13,10 @@ import { hasPurchased } from '@/lib/purchases';
 import { createClient } from '@/lib/supabase/server';
 import { getUserWithRole } from '@/lib/user-sync';
 import { ReviewSection } from '@/components/reviews/review-section';
+import { AssistedSetupConfig } from '@/components/admin/assisted-setup-config';
+import { AssistedSetupOption } from '@/components/agent/assisted-setup-option';
+import { SetupStatus } from '@/components/agent/setup-status';
+import { prisma } from '@/lib/prisma';
 import { Metadata } from 'next';
 
 interface AgentPageProps {
@@ -56,6 +60,20 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
     // Get user role for review section
     const userWithRole = user ? await getUserWithRole(user.id) : null;
 
+    // Check if user has an active setup request for this agent
+    let setupRequest = null;
+    if (user && isPurchased) {
+        setupRequest = await prisma.setupRequest.findFirst({
+            where: {
+                buyerId: user.id,
+                agentId: agent.id
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+    }
+
     return (
         <div className="bg-white">
             <Container className="py-12 md:py-16">
@@ -89,6 +107,30 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
                             useCase={agent.useCase}
                         />
 
+                        {/* Setup Status - Show if purchased with assisted setup */}
+                        {isPurchased && setupRequest && (
+                            <SetupStatus
+                                status={setupRequest.status}
+                                setupCost={Number(setupRequest.setupCost)}
+                                completedAt={setupRequest.completedAt}
+                                adminNotes={setupRequest.adminNotes}
+                            />
+                        )}
+
+                        {/* Assisted Setup Option - Show only if not purchased */}
+                        {!isPurchased && agent.assistedSetupEnabled && (
+                            <AssistedSetupOption
+                                enabled={agent.assistedSetupEnabled}
+                                price={Number(agent.assistedSetupPrice)}
+                                onSelectionChange={(selected) => {
+                                    // Store selection in session storage for checkout page
+                                    if (typeof window !== 'undefined') {
+                                        sessionStorage.setItem(`assistedSetup_${agent.id}`, selected.toString());
+                                    }
+                                }}
+                            />
+                        )}
+
                         {/* Setup Guide - Locked or Unlocked */}
                         {isPurchased ? (
                             <UnlockedSetupGuide setupGuide={agent.setupGuide} />
@@ -109,6 +151,15 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
 
                     {/* Sidebar (Right Column) */}
                     <div className="space-y-6">
+                        {/* Admin: Assisted Setup Configuration */}
+                        {userWithRole?.role === 'ADMIN' && (
+                            <AssistedSetupConfig
+                                agentId={agent.id}
+                                currentEnabled={agent.assistedSetupEnabled}
+                                currentPrice={Number(agent.assistedSetupPrice)}
+                            />
+                        )}
+
                         <SellerCard
                             name={agent.seller.name || 'Anonymous Seller'}
                             avatarUrl={agent.seller.avatarUrl}

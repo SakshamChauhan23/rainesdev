@@ -1,0 +1,304 @@
+'use client'
+
+import { useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { formatPrice } from '@/lib/utils'
+import { Clock, CheckCircle2, Sparkles } from 'lucide-react'
+import Link from 'next/link'
+
+interface SetupRequest {
+  id: string
+  setupCost: number
+  status: 'PENDING' | 'COMPLETED'
+  complexity: 'QUICK' | 'STANDARD' | 'COMPLEX' | null
+  adminNotes: string | null
+  createdAt: Date
+  completedAt: Date | null
+  buyer: {
+    id: string
+    name: string | null
+    email: string
+  }
+  agent: {
+    id: string
+    title: string
+    slug: string
+  }
+  purchase: {
+    id: string
+    purchasedAt: Date
+  }
+}
+
+interface SetupRequestsTableProps {
+  initialRequests: SetupRequest[]
+}
+
+export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps) {
+  const [requests, setRequests] = useState(initialRequests)
+  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({})
+  const [expandedRequest, setExpandedRequest] = useState<string | null>(null)
+  const [editingNotes, setEditingNotes] = useState<Record<string, string>>({})
+
+  const updateRequest = async (
+    requestId: string,
+    updates: {
+      status?: string
+      complexity?: string | null
+      adminNotes?: string
+    }
+  ) => {
+    setLoadingStates(prev => ({ ...prev, [requestId]: true }))
+
+    try {
+      const response = await fetch(`/api/admin/setup-requests/${requestId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update setup request')
+      }
+
+      const { setupRequest } = await response.json()
+
+      setRequests(prev =>
+        prev.map(req => (req.id === requestId ? setupRequest : req))
+      )
+
+      // Clear editing state for this request
+      setEditingNotes(prev => {
+        const newNotes = { ...prev }
+        delete newNotes[requestId]
+        return newNotes
+      })
+    } catch (error) {
+      console.error('Error updating setup request:', error)
+      alert('Failed to update setup request')
+    } finally {
+      setLoadingStates(prev => ({ ...prev, [requestId]: false }))
+    }
+  }
+
+  const handleComplexityChange = (requestId: string, complexity: string) => {
+    updateRequest(requestId, { complexity: complexity === 'none' ? null : complexity })
+  }
+
+  const handleMarkComplete = (requestId: string) => {
+    if (confirm('Mark this setup request as completed?')) {
+      updateRequest(requestId, { status: 'COMPLETED' })
+    }
+  }
+
+  const handleSaveNotes = (requestId: string) => {
+    const notes = editingNotes[requestId]
+    updateRequest(requestId, { adminNotes: notes })
+  }
+
+  const pendingRequests = requests.filter(r => r.status === 'PENDING')
+  const completedRequests = requests.filter(r => r.status === 'COMPLETED')
+
+  return (
+    <div className="space-y-8">
+      {/* Pending Requests */}
+      <div>
+        <div className="mb-4 flex items-center gap-2">
+          <Clock className="h-5 w-5 text-orange-600" />
+          <h2 className="text-xl font-semibold text-gray-900">
+            Pending ({pendingRequests.length})
+          </h2>
+        </div>
+
+        {pendingRequests.length === 0 ? (
+          <Card className="p-8 text-center">
+            <p className="text-gray-500">No pending setup requests</p>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {pendingRequests.map(request => (
+              <Card key={request.id} className="p-6">
+                <div className="space-y-4">
+                  {/* Header */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <Sparkles className="h-5 w-5 text-teal-600" />
+                        <Link
+                          href={`/agents/${request.agent.slug}`}
+                          className="text-lg font-semibold text-gray-900 hover:text-teal-600 transition-colors"
+                        >
+                          {request.agent.title}
+                        </Link>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        <p>
+                          Buyer: {request.buyer.name || request.buyer.email}
+                        </p>
+                        <p>
+                          Purchased:{' '}
+                          {new Date(request.purchase.purchasedAt).toLocaleDateString()}
+                        </p>
+                        <p>
+                          Setup Cost:{' '}
+                          {Number(request.setupCost) === 0
+                            ? 'Free'
+                            : formatPrice(Number(request.setupCost))}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Badge className="bg-orange-100 text-orange-700 border-orange-300">
+                      Pending
+                    </Badge>
+                  </div>
+
+                  {/* Complexity Selector */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Complexity
+                    </label>
+                    <Select
+                      value={request.complexity || 'none'}
+                      onValueChange={(value) => handleComplexityChange(request.id, value)}
+                      disabled={loadingStates[request.id]}
+                    >
+                      <SelectTrigger className="w-48">
+                        <SelectValue placeholder="Select complexity" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Not set</SelectItem>
+                        <SelectItem value="QUICK">⚡ Quick (under 30 min)</SelectItem>
+                        <SelectItem value="STANDARD">⏱️ Standard (30-60 min)</SelectItem>
+                        <SelectItem value="COMPLEX">🔧 Complex (1+ hour)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Admin Notes */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Admin Notes
+                    </label>
+                    <Textarea
+                      placeholder="Add notes about the setup process..."
+                      className="min-h-[80px]"
+                      value={editingNotes[request.id] ?? request.adminNotes ?? ''}
+                      onChange={(e) =>
+                        setEditingNotes(prev => ({
+                          ...prev,
+                          [request.id]: e.target.value
+                        }))
+                      }
+                      disabled={loadingStates[request.id]}
+                    />
+                    {editingNotes[request.id] !== undefined &&
+                      editingNotes[request.id] !== (request.adminNotes ?? '') && (
+                        <Button
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => handleSaveNotes(request.id)}
+                          disabled={loadingStates[request.id]}
+                        >
+                          Save Notes
+                        </Button>
+                      )}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      onClick={() => handleMarkComplete(request.id)}
+                      disabled={loadingStates[request.id]}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <CheckCircle2 className="mr-2 h-4 w-4" />
+                      Mark as Completed
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Completed Requests */}
+      <div>
+        <div className="mb-4 flex items-center gap-2">
+          <CheckCircle2 className="h-5 w-5 text-green-600" />
+          <h2 className="text-xl font-semibold text-gray-900">
+            Completed ({completedRequests.length})
+          </h2>
+        </div>
+
+        {completedRequests.length === 0 ? (
+          <Card className="p-8 text-center">
+            <p className="text-gray-500">No completed setup requests yet</p>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {completedRequests.map(request => (
+              <Card key={request.id} className="p-6 bg-gray-50">
+                <div className="space-y-3">
+                  {/* Header */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <Link
+                          href={`/agents/${request.agent.slug}`}
+                          className="text-lg font-semibold text-gray-900 hover:text-teal-600 transition-colors"
+                        >
+                          {request.agent.title}
+                        </Link>
+                        {request.complexity && (
+                          <Badge variant="outline" className="text-xs">
+                            {request.complexity === 'QUICK' && '⚡ Quick'}
+                            {request.complexity === 'STANDARD' && '⏱️ Standard'}
+                            {request.complexity === 'COMPLEX' && '🔧 Complex'}
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        <p>
+                          Buyer: {request.buyer.name || request.buyer.email}
+                        </p>
+                        <p>
+                          Completed:{' '}
+                          {request.completedAt
+                            ? new Date(request.completedAt).toLocaleDateString()
+                            : 'N/A'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Badge className="bg-green-100 text-green-700 border-green-300">
+                      Completed
+                    </Badge>
+                  </div>
+
+                  {/* Admin Notes (if any) */}
+                  {request.adminNotes && (
+                    <div className="mt-2 p-3 bg-white rounded-lg border">
+                      <p className="text-sm text-gray-700">{request.adminNotes}</p>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
