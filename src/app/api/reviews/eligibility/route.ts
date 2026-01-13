@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
@@ -89,7 +91,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('[Review Eligibility API] Error:', error)
+    logger.error('[Review Eligibility API] Error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to check review eligibility' },
       { status: 500 }

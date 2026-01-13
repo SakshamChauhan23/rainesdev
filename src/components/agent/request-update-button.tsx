@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
@@ -30,7 +32,7 @@ export function RequestUpdateButton({ agentId, agentTitle }: RequestUpdateButton
                 await requestAgentUpdate(agentId)
                 // Action will redirect, so no need to handle success here
             } catch (error) {
-                console.error('Failed to request update:', error)
+                logger.error('Failed to request update:', error)
                 alert(error instanceof Error ? error.message : 'Failed to request update')
                 setOpen(false)
             }

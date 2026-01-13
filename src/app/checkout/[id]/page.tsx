@@ -84,5 +84,12 @@ export default async function CheckoutPage({ params }: { params: { id: string } 
         )
     }
 
-    return <CheckoutContent agent={agent} />
+    // Convert Decimal to number for component
+    const agentWithNumberPrice = {
+        ...agent,
+        price: Number(agent.price),
+        assistedSetupPrice: Number(agent.assistedSetupPrice)
+    }
+
+    return <CheckoutContent agent={agentWithNumberPrice} />
 }

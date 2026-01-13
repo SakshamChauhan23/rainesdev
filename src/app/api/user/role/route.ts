@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { getUserWithRole } from '@/lib/user-sync'
 
@@ -20,7 +22,7 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({ role: user.role })
     } catch (error) {
-        console.error('Error fetching user role:', error)
+        logger.error('Error fetching user role:', error)
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
 }

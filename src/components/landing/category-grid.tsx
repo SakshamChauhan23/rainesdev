@@ -67,7 +67,7 @@ export function CategoryGrid() {
   }, [])
 
   useEffect(() => {
-    // Fetch agent counts for each category
+    // Fetch agent counts for all categories in a single request
     const fetchCounts = async () => {
       // Check cache first (1 minute TTL for homepage stats)
       const cacheKey = 'category_counts'
@@ -84,40 +84,35 @@ export function CategoryGrid() {
         }
       }
 
-      const counts: Record<string, number> = {}
-
       try {
-        // Fetch all category counts in parallel using slug-based queries
-        const countPromises = categoryDefinitions.map(async (category) => {
-          try {
-            const response = await fetch(`/api/agents?categorySlug=${category.slug}&limit=1`)
-            const data = await response.json()
-            return { slug: category.slug, count: data.pagination?.total || 0 }
-          } catch (error) {
-            console.error(`Error fetching count for ${category.slug}:`, error)
-            return { slug: category.slug, count: 0 }
-          }
-        })
+        // Single API call to get all category counts (replaces 6 separate calls)
+        const response = await fetch('/api/categories/stats')
+        const data = await response.json()
 
-        const results = await Promise.all(countPromises)
-        results.forEach(({ slug, count }) => {
-          counts[slug] = count
-        })
+        if (data.success && data.counts) {
+          setCategoryCounts(data.counts)
 
-        // Cache the results
-        sessionStorage.setItem(cacheKey, JSON.stringify({
-          counts,
-          timestamp: Date.now()
-        }))
+          // Cache the results
+          sessionStorage.setItem(cacheKey, JSON.stringify({
+            counts: data.counts,
+            timestamp: Date.now()
+          }))
+        } else {
+          // Set all counts to 0 if fetch fails
+          const counts: Record<string, number> = {}
+          categoryDefinitions.forEach(cat => {
+            counts[cat.slug] = 0
+          })
+          setCategoryCounts(counts)
+        }
       } catch (error) {
-        console.error('Error fetching category counts:', error)
         // Set all counts to 0 if fetch fails
+        const counts: Record<string, number> = {}
         categoryDefinitions.forEach(cat => {
           counts[cat.slug] = 0
         })
+        setCategoryCounts(counts)
       }
-
-      setCategoryCounts(counts)
     }
 
     fetchCounts()

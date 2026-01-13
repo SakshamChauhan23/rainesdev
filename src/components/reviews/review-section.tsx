@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import { useEffect, useState } from 'react'
 import { ReviewForm } from './review-form'
@@ -42,7 +44,7 @@ export function ReviewSection({ agentId, userId, userRole }: ReviewSectionProps)
         setEligibility(data)
       }
     } catch (error) {
-      console.error('Error checking review eligibility:', error)
+      logger.error('Error checking review eligibility:', error)
     } finally {
       setLoading(false)
     }

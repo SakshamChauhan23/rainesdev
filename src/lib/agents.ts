@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 
 import { prisma } from './prisma';
 
@@ -35,7 +37,7 @@ export async function getAgentBySlug(slug: string) {
 
         return agent;
     } catch (error) {
-        console.error('Error fetching agent:', error);
+        logger.error('Error fetching agent:', error);
         return null;
     }
 }
@@ -111,7 +113,7 @@ export async function getAllAgents({
 
         return { agents, total };
     } catch (error) {
-        console.error('Error fetching agents:', error);
+        logger.error('Error fetching agents:', error);
         return { agents: [], total: 0 };
     }
 }
@@ -148,7 +150,7 @@ export async function getRelatedAgents(categoryId: string, currentAgentId: strin
 
         return agents;
     } catch (error) {
-        console.error('Error fetching related agents:', error);
+        logger.error('Error fetching related agents:', error);
         return [];
     }
 }

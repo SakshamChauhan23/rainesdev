@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
@@ -30,18 +32,11 @@ export async function POST(
 
     // Parse request body
     const body = await request.json()
-    const { assistedSetupEnabled, assistedSetupPrice, bookCallEnabled } = body
+    const { assistedSetupEnabled, assistedSetupPrice } = body
 
     if (typeof assistedSetupEnabled !== 'boolean') {
       return NextResponse.json(
         { error: 'assistedSetupEnabled must be a boolean' },
-        { status: 400 }
-      )
-    }
-
-    if (bookCallEnabled !== undefined && typeof bookCallEnabled !== 'boolean') {
-      return NextResponse.json(
-        { error: 'bookCallEnabled must be a boolean' },
         { status: 400 }
       )
     }
@@ -55,24 +50,17 @@ export async function POST(
     }
 
     // Update agent configuration
-    const updateData: any = {
-      assistedSetupEnabled,
-      assistedSetupPrice: price,
-    }
-
-    if (bookCallEnabled !== undefined) {
-      updateData.bookCallEnabled = bookCallEnabled
-    }
-
     const agent = await prisma.agent.update({
       where: { id: params.id },
-      data: updateData,
+      data: {
+        assistedSetupEnabled,
+        assistedSetupPrice: price,
+      },
       select: {
         id: true,
         title: true,
         assistedSetupEnabled: true,
         assistedSetupPrice: true,
-        bookCallEnabled: true,
       },
     })
 
@@ -86,7 +74,6 @@ export async function POST(
         metadata: {
           assistedSetupEnabled,
           assistedSetupPrice: price,
-          bookCallEnabled: bookCallEnabled !== undefined ? bookCallEnabled : null,
         },
       },
     })
@@ -96,7 +83,7 @@ export async function POST(
       agent,
     })
   } catch (error) {
-    console.error('Error updating assisted setup config:', error)
+    logger.error('Error updating assisted setup config:', error)
     return NextResponse.json(
       { error: 'Failed to update configuration' },
       { status: 500 }

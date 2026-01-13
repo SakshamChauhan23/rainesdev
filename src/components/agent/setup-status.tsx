@@ -3,14 +3,14 @@ import { Badge } from '@/components/ui/badge'
 import { Clock, CheckCircle2, Sparkles } from 'lucide-react'
 
 interface SetupStatusProps {
-  status: 'PENDING' | 'COMPLETED'
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED'
   setupCost: number
   completedAt: Date | null
   adminNotes: string | null
 }
 
 export function SetupStatus({ status, setupCost, completedAt, adminNotes }: SetupStatusProps) {
-  const isPending = status === 'PENDING'
+  const isPending = status === 'PENDING' || status === 'IN_PROGRESS'
 
   return (
     <Card className={`p-6 ${isPending ? 'border-2 border-orange-300 bg-orange-50' : 'border-2 border-green-300 bg-green-50'}`}>

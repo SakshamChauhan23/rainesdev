@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
@@ -77,7 +79,7 @@ export async function GET(request: NextRequest) {
     return response
 
   } catch (error) {
-    console.error('[Reviews API GET] Error:', error)
+    logger.error('[Reviews API GET] Error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to fetch reviews' },
       { status: 500 }
@@ -227,7 +229,7 @@ export async function POST(request: NextRequest) {
     }, { status: 201 })
 
   } catch (error) {
-    console.error('[Reviews API POST] Error:', error)
+    logger.error('[Reviews API POST] Error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to submit review' },
       { status: 500 }

@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -27,10 +29,10 @@ interface AgentHeroProps {
     agentSlug: string;
     isPurchased: boolean;
     isApproved: boolean;
-    bookCallEnabled: boolean;
+    assistedSetupEnabled: boolean;
 }
 
-export function AgentHero({ title, shortDescription, price, category, viewCount, purchaseCount, agentId, agentSlug, isPurchased, isApproved, bookCallEnabled }: AgentHeroProps) {
+export function AgentHero({ title, shortDescription, price, category, viewCount, purchaseCount, agentId, agentSlug, isPurchased, isApproved, assistedSetupEnabled }: AgentHeroProps) {
     const [copied, setCopied] = useState(false);
     const [shareDialogOpen, setShareDialogOpen] = useState(false);
     const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
@@ -53,7 +55,7 @@ export function AgentHero({ title, shortDescription, price, category, viewCount,
                 setShareDialogOpen(false);
             }, 1500);
         } catch (err) {
-            console.error('Failed to copy:', err);
+            logger.error('Failed to copy:', err);
         }
     };
 
@@ -153,7 +155,7 @@ export function AgentHero({ title, shortDescription, price, category, viewCount,
                 onClose={() => setPurchaseModalOpen(false)}
                 agentId={agentId}
                 agentTitle={title}
-                bookCallEnabled={bookCallEnabled}
+                assistedSetupEnabled={assistedSetupEnabled}
             />
         </div>
     );

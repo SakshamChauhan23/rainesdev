@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 import { prisma } from './prisma'
 import { User as SupabaseUser } from '@supabase/supabase-js'
 
@@ -42,10 +44,10 @@ export async function syncUserToPrisma(supabaseUser: SupabaseUser) {
             }
         })
 
-        console.log('✅ New user synced to Prisma:', newUser.id)
+        logger.info('✅ New user synced to Prisma:', newUser.id)
         return newUser
     } catch (error) {
-        console.error('❌ Error syncing user to Prisma:', error)
+        logger.error('❌ Error syncing user to Prisma:', error)
         throw error
     }
 }
@@ -75,7 +77,7 @@ export async function getUserWithRole(userId: string) {
 
         return user
     } catch (error) {
-        console.error('❌ Error fetching user with role:', error)
+        logger.error('❌ Error fetching user with role:', error)
         return null
     }
 }
@@ -90,10 +92,10 @@ export async function updateUserRole(userId: string, role: 'BUYER' | 'SELLER' | 
             data: { role }
         })
 
-        console.log(`✅ User ${userId} role updated to ${role}`)
+        logger.info(`✅ User ${userId} role updated to ${role}`)
         return user
     } catch (error) {
-        console.error('❌ Error updating user role:', error)
+        logger.error('❌ Error updating user role:', error)
         throw error
     }
 }

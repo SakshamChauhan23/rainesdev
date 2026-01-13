@@ -52,27 +52,60 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
         notFound();
     }
 
-    // Check if user is logged in and has purchased
+    // Check if user is logged in
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    const isPurchased = user ? await hasPurchased(user.id, agent.id) : false;
     const showSuccessBanner = searchParams?.unlocked === 'true';
 
-    // Get user role for review section
-    const userWithRole = user ? await getUserWithRole(user.id) : null;
-
-    // Check if user has an active setup request for this agent
+    // Optimize: Combine all user-related queries into one using Promise.all
+    let isPurchased = false;
+    let userWithRole = null;
     let setupRequest = null;
-    if (user && isPurchased) {
-        setupRequest = await prisma.setupRequest.findFirst({
-            where: {
-                buyerId: user.id,
-                agentId: agent.id
-            },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        });
+
+    if (user) {
+        const [purchaseData, userData, setupData] = await Promise.all([
+            // Check if purchased
+            prisma.purchase.findFirst({
+                where: {
+                    buyerId: user.id,
+                    agentId: agent.id,
+                    status: 'COMPLETED'
+                },
+                select: { id: true }
+            }),
+            // Get user with role
+            prisma.user.findUnique({
+                where: { id: user.id },
+                select: {
+                    id: true,
+                    email: true,
+                    name: true,
+                    avatarUrl: true,
+                    role: true,
+                    sellerProfile: {
+                        select: {
+                            id: true,
+                            portfolioUrlSlug: true,
+                        }
+                    }
+                }
+            }),
+            // Get setup request (only if conditions might be met)
+            prisma.setupRequest.findFirst({
+                where: {
+                    buyerId: user.id,
+                    agentId: agent.id
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            })
+        ]);
+
+        isPurchased = !!purchaseData;
+        userWithRole = userData;
+        // Only use setupRequest if user has actually purchased
+        setupRequest = isPurchased ? setupData : null;
     }
 
     return (
@@ -93,7 +126,7 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
                     agentSlug={agent.slug}
                     isPurchased={isPurchased}
                     isApproved={agent.status === 'APPROVED'}
-                    bookCallEnabled={agent.bookCallEnabled}
+                    assistedSetupEnabled={agent.assistedSetupEnabled}
                 />
 
                 <div className="mt-8 grid gap-8 lg:grid-cols-3">
@@ -148,13 +181,17 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
 
                     {/* Sidebar (Right Column) */}
                     <div className="space-y-6">
+                        {/* Book a Call - Show if purchased with assisted setup and book call requested */}
+                        {isPurchased && setupRequest && setupRequest.bookCallRequested && (
+                            <BookCallCard />
+                        )}
+
                         {/* Admin: Assisted Setup Configuration */}
                         {userWithRole?.role === 'ADMIN' && (
                             <AssistedSetupConfig
                                 agentId={agent.id}
                                 currentEnabled={agent.assistedSetupEnabled}
                                 currentPrice={Number(agent.assistedSetupPrice)}
-                                currentBookCallEnabled={agent.bookCallEnabled}
                             />
                         )}
 

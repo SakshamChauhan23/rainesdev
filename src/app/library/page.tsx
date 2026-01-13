@@ -5,10 +5,11 @@ import { Container } from '@/components/layout/container'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Package, Calendar } from 'lucide-react'
+import { Package, Calendar, Phone } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import { formatPrice } from '@/lib/utils'
+import { prisma } from '@/lib/prisma'
 
 export default async function LibraryPage() {
     const supabase = createClient()
@@ -18,7 +19,25 @@ export default async function LibraryPage() {
         redirect('/login?next=/library')
     }
 
-    const purchases = await getBuyerPurchases(user.id)
+    // Optimize: Combine both queries into one using Promise.all
+    const [purchases, setupRequestsWithBookCall] = await Promise.all([
+        getBuyerPurchases(user.id),
+        prisma.setupRequest.findMany({
+            where: {
+                buyerId: user.id,
+                bookCallRequested: true
+            },
+            include: {
+                agent: {
+                    select: {
+                        id: true,
+                        title: true,
+                        slug: true
+                    }
+                }
+            }
+        })
+    ])
 
     return (
         <div className="min-h-screen bg-muted/40">
@@ -32,6 +51,53 @@ export default async function LibraryPage() {
             </div>
 
             <Container className="py-8">
+                {/* Book Call Banner - Show if user has any agents with book call requested */}
+                {setupRequestsWithBookCall.length > 0 && (
+                    <Card className="mb-6 border-2 border-brand-orange/30 bg-gradient-to-br from-brand-orange/5 to-brand-orange/10">
+                        <CardHeader>
+                            <div className="flex items-start gap-4">
+                                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-brand-orange/20">
+                                    <Phone className="h-6 w-6 text-brand-orange" />
+                                </div>
+                                <div className="flex-1">
+                                    <CardTitle className="text-xl text-brand-slate mb-2">
+                                        Schedule Your Admin Consultation
+                                    </CardTitle>
+                                    <CardDescription className="text-brand-slate/70">
+                                        You requested admin assistance for {setupRequestsWithBookCall.length} agent{setupRequestsWithBookCall.length !== 1 ? 's' : ''}.
+                                        Book a call with our team to get personalized setup help.
+                                    </CardDescription>
+                                    <ul className="mt-3 space-y-1">
+                                        {setupRequestsWithBookCall.map((request) => (
+                                            <li key={request.id} className="text-sm text-brand-slate/80">
+                                                • {request.agent.title}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <Link
+                                href="https://calendar.app.google/QyuK9XKQ52r6dNPD6"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <Button
+                                    size="lg"
+                                    className="w-full bg-brand-orange hover:bg-brand-orange/90 text-white font-semibold shadow-lg shadow-brand-orange/30 hover:shadow-xl hover:shadow-brand-orange/40 transition-all"
+                                >
+                                    <Calendar className="mr-2 h-5 w-5" />
+                                    Book a Call Now
+                                </Button>
+                            </Link>
+                            <p className="text-xs text-brand-slate/60 mt-3 text-center">
+                                Free consultation • 30-minute session • Discuss all your agents
+                            </p>
+                        </CardContent>
+                    </Card>
+                )}
+
                 {purchases.length === 0 ? (
                     <Card>
                         <CardContent className="flex min-h-[400px] flex-col items-center justify-center text-center">

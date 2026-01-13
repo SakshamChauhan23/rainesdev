@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import {
     Dialog,
@@ -38,7 +40,7 @@ export function SubmitConfirmationDialog({
             onClose()
             router.refresh()
         } catch (err: any) {
-            console.error('Failed to submit agent:', err)
+            logger.error('Failed to submit agent:', err)
             setError(err.message || 'Failed to submit agent for review')
             setLoading(false)
         }

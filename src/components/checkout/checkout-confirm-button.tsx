@@ -21,9 +21,15 @@ export function CheckoutConfirmButton({ agentId, agentSlug, assistedSetupRequest
         setError(null)
         startTransition(async () => {
             try {
-                const result = await processTestPurchase(agentId, assistedSetupRequested)
+                // If assisted setup is requested, enable book call option (they can book after purchase)
+                const bookCallRequested = assistedSetupRequested
+
+                const result = await processTestPurchase(agentId, assistedSetupRequested, bookCallRequested)
 
                 if (result.success) {
+                    // Clear session storage
+                    sessionStorage.removeItem(`assistedSetup_${agentId}`)
+
                     // Redirect to agent page with success param
                     router.push(result.redirectUrl!)
                     router.refresh()

@@ -1,4 +1,5 @@
 import { prisma } from './prisma'
+import { logger } from './logger'
 
 /**
  * Check if a buyer has purchased a specific agent version
@@ -15,7 +16,7 @@ export async function hasPurchased(buyerId: string, agentId: string): Promise<bo
 
         return !!purchase
     } catch (error) {
-        console.error('Error checking purchase:', error)
+        logger.error('Error checking purchase:', error)
         return false
     }
 }
@@ -35,7 +36,7 @@ export async function hasPurchasedVersion(buyerId: string, agentVersionId: strin
 
         return !!purchase
     } catch (error) {
-        console.error('Error checking version purchase:', error)
+        logger.error('Error checking version purchase:', error)
         return false
     }
 }
@@ -74,7 +75,7 @@ export async function getBuyerPurchases(buyerId: string) {
 
         return purchases
     } catch (error) {
-        console.error('Error fetching buyer purchases:', error)
+        logger.error('Error fetching buyer purchases:', error)
         return []
     }
 }
@@ -126,7 +127,7 @@ export async function createTestPurchase(
 
         return purchase
     } catch (error) {
-        console.error('Error creating test purchase:', error)
+        logger.error('Error creating test purchase:', error)
         throw error
     }
 }

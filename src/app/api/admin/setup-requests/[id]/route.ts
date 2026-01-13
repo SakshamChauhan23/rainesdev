@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getUserWithRole } from '@/lib/user-sync'
@@ -23,16 +25,21 @@ export async function PATCH(
     }
 
     const body = await request.json()
-    const { status, complexity, adminNotes } = body
+    const { status, complexity, adminNotes, callStatus } = body
 
     // Validate status if provided
-    if (status && !['PENDING', 'COMPLETED'].includes(status)) {
+    if (status && !['PENDING', 'IN_PROGRESS', 'COMPLETED'].includes(status)) {
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
     }
 
     // Validate complexity if provided
     if (complexity && !['QUICK', 'STANDARD', 'COMPLEX', null].includes(complexity)) {
       return NextResponse.json({ error: 'Invalid complexity' }, { status: 400 })
+    }
+
+    // Validate callStatus if provided
+    if (callStatus && !['PENDING', 'SCHEDULED', 'COMPLETED'].includes(callStatus)) {
+      return NextResponse.json({ error: 'Invalid call status' }, { status: 400 })
     }
 
     // Build update data
@@ -51,6 +58,10 @@ export async function PATCH(
 
     if (adminNotes !== undefined) {
       updateData.adminNotes = adminNotes
+    }
+
+    if (callStatus !== undefined) {
+      updateData.callStatus = callStatus
     }
 
     // Update setup request
@@ -77,7 +88,7 @@ export async function PATCH(
 
     return NextResponse.json({ setupRequest })
   } catch (error) {
-    console.error('Error updating setup request:', error)
+    logger.error('Error updating setup request:', error)
     return NextResponse.json(
       { error: 'Failed to update setup request' },
       { status: 500 }

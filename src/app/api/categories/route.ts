@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
@@ -23,7 +25,7 @@ export async function GET() {
     });
 
     const queryTime = Date.now() - startTime
-    console.log(`[Categories API] Query completed in ${queryTime}ms`)
+    logger.info(`[Categories API] Query completed in ${queryTime}ms`)
 
     const response = NextResponse.json({ success: true, data: categories })
 
@@ -32,7 +34,7 @@ export async function GET() {
 
     return response
   } catch (error) {
-    console.error('[Categories API] Error:', error)
+    logger.error('[Categories API] Error:', error)
     return NextResponse.json({ success: false, error: 'Failed to fetch categories' }, { status: 500 });
   }
 }

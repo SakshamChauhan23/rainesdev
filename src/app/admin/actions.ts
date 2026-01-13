@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { getUserWithRole } from '@/lib/user-sync'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { logger } from '@/lib/logger'
 
 /**
  * Approve an agent
@@ -49,7 +50,7 @@ export async function approveAgent(agentId: string) {
 
         return { success: true }
     } catch (error) {
-        console.error('Error approving agent:', error)
+        logger.error('Error approving agent:', error)
         return { success: false, error: 'Failed to approve agent' }
     }
 }
@@ -98,7 +99,7 @@ export async function rejectAgent(agentId: string, reason: string) {
 
         return { success: true }
     } catch (error) {
-        console.error('Error rejecting agent:', error)
+        logger.error('Error rejecting agent:', error)
         return { success: false, error: 'Failed to reject agent' }
     }
 }

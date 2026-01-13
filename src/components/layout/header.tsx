@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import Link from 'next/link'
 import Image from 'next/image'
@@ -74,7 +76,7 @@ export function Header() {
         }))
       }
     } catch (error) {
-      console.error('Error fetching user role:', error)
+      logger.error('Error fetching user role:', error)
     }
   }
 

@@ -8,6 +8,7 @@ import { SearchBar } from '@/components/shared/search-bar'
 import { Pagination } from '@/components/shared/pagination'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { logger } from '@/lib/logger'
 import { SlidersHorizontal, X, Sparkles, TrendingUp } from 'lucide-react'
 
 type Agent = {
@@ -83,7 +84,7 @@ function AgentsPageContent() {
           setTotalAgents(agentsData.pagination.total)
         }
       } catch (error) {
-        console.error('Failed to fetch data', error)
+        logger.error('Failed to fetch data', error)
       } finally {
         setLoading(false)
       }

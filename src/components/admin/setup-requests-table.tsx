@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import { useState } from 'react'
 import { Card } from '@/components/ui/card'
@@ -13,16 +15,18 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { formatPrice } from '@/lib/utils'
-import { Clock, CheckCircle2, Sparkles } from 'lucide-react'
+import { Clock, CheckCircle2, Sparkles, Phone, Calendar } from 'lucide-react'
 import Link from 'next/link'
 import { Decimal } from '@prisma/client/runtime/library'
 
 interface SetupRequest {
   id: string
   setupCost: Decimal
-  status: 'PENDING' | 'COMPLETED'
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED'
   complexity: 'QUICK' | 'STANDARD' | 'COMPLEX' | null
   adminNotes: string | null
+  bookCallRequested: boolean
+  callStatus: 'PENDING' | 'SCHEDULED' | 'COMPLETED'
   createdAt: Date
   completedAt: Date | null
   buyer: {
@@ -57,6 +61,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
       status?: string
       complexity?: string | null
       adminNotes?: string
+      callStatus?: string
     }
   ) => {
     setLoadingStates(prev => ({ ...prev, [requestId]: true }))
@@ -85,7 +90,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
         return newNotes
       })
     } catch (error) {
-      console.error('Error updating setup request:', error)
+      logger.error('Error updating setup request:', error)
       alert('Failed to update setup request')
     } finally {
       setLoadingStates(prev => ({ ...prev, [requestId]: false }))
@@ -102,12 +107,21 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
     }
   }
 
+  const handleMarkInProgress = (requestId: string) => {
+    updateRequest(requestId, { status: 'IN_PROGRESS' })
+  }
+
+  const handleCallStatusChange = (requestId: string, callStatus: string) => {
+    updateRequest(requestId, { callStatus })
+  }
+
   const handleSaveNotes = (requestId: string) => {
     const notes = editingNotes[requestId]
     updateRequest(requestId, { adminNotes: notes })
   }
 
   const pendingRequests = requests.filter(r => r.status === 'PENDING')
+  const inProgressRequests = requests.filter(r => r.status === 'IN_PROGRESS')
   const completedRequests = requests.filter(r => r.status === 'COMPLETED')
 
   return (
@@ -186,6 +200,38 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                     </Select>
                   </div>
 
+                  {/* Call Status - Only show if buyer requested book call */}
+                  {request.bookCallRequested && (
+                    <div className="rounded-lg border-2 border-orange-200 bg-orange-50 p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Phone className="h-5 w-5 text-orange-600" />
+                        <span className="font-medium text-gray-900">Book a Call Requested</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <label className="text-sm font-medium text-gray-700">
+                          Call Status:
+                        </label>
+                        <Select
+                          value={request.callStatus}
+                          onValueChange={(value) => handleCallStatusChange(request.id, value)}
+                          disabled={loadingStates[request.id]}
+                        >
+                          <SelectTrigger className="w-48 bg-white">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="PENDING">⏳ Pending</SelectItem>
+                            <SelectItem value="SCHEDULED">📅 Scheduled</SelectItem>
+                            <SelectItem value="COMPLETED">✅ Completed</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-2">
+                        Buyer can book via: https://calendar.app.google/QyuK9XKQ52r6dNPD6
+                      </p>
+                    </div>
+                  )}
+
                   {/* Admin Notes */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -219,9 +265,108 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                   {/* Actions */}
                   <div className="flex gap-2 pt-2">
                     <Button
+                      onClick={() => handleMarkInProgress(request.id)}
+                      disabled={loadingStates[request.id]}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <Clock className="mr-2 h-4 w-4" />
+                      Mark as In Progress
+                    </Button>
+                    <Button
                       onClick={() => handleMarkComplete(request.id)}
                       disabled={loadingStates[request.id]}
                       className="bg-green-600 hover:bg-green-700"
+                    >
+                      <CheckCircle2 className="mr-2 h-4 w-4" />
+                      Mark as Completed
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* In Progress Requests */}
+      <div>
+        <div className="mb-4 flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-blue-600" />
+          <h2 className="text-xl font-semibold text-gray-900">
+            In Progress ({inProgressRequests.length})
+          </h2>
+        </div>
+
+        {inProgressRequests.length === 0 ? (
+          <Card className="p-8 text-center">
+            <p className="text-gray-500">No setup requests in progress</p>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {inProgressRequests.map(request => (
+              <Card key={request.id} className="p-6 border-blue-200 bg-blue-50">
+                <div className="space-y-4">
+                  {/* Header */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <Link
+                          href={`/agents/${request.agent.slug}`}
+                          className="text-lg font-semibold text-gray-900 hover:text-teal-600 transition-colors"
+                        >
+                          {request.agent.title}
+                        </Link>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        <p>
+                          Buyer: {request.buyer.name || request.buyer.email}
+                        </p>
+                        <p>
+                          Purchased:{' '}
+                          {new Date(request.purchase.purchasedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Badge className="bg-blue-100 text-blue-700 border-blue-300">
+                      In Progress
+                    </Badge>
+                  </div>
+
+                  {/* Call Status - Only show if buyer requested book call */}
+                  {request.bookCallRequested && (
+                    <div className="rounded-lg border-2 border-orange-200 bg-white p-3">
+                      <div className="flex items-center gap-3">
+                        <Phone className="h-4 w-4 text-orange-600" />
+                        <span className="text-sm font-medium text-gray-700">Call Status:</span>
+                        <Badge
+                          variant={
+                            request.callStatus === 'COMPLETED' ? 'default' :
+                            request.callStatus === 'SCHEDULED' ? 'secondary' : 'outline'
+                          }
+                        >
+                          {request.callStatus === 'PENDING' && '⏳ Pending'}
+                          {request.callStatus === 'SCHEDULED' && '📅 Scheduled'}
+                          {request.callStatus === 'COMPLETED' && '✅ Completed'}
+                        </Badge>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Admin Notes */}
+                  {request.adminNotes && (
+                    <div className="p-3 bg-white rounded-lg border">
+                      <p className="text-sm text-gray-700">{request.adminNotes}</p>
+                    </div>
+                  )}
+
+                  {/* Actions */}
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => handleMarkComplete(request.id)}
+                      disabled={loadingStates[request.id]}
+                      className="bg-green-600 hover:bg-green-700"
+                      size="sm"
                     >
                       <CheckCircle2 className="mr-2 h-4 w-4" />
                       Mark as Completed

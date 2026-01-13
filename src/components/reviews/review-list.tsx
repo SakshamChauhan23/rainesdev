@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import { useEffect, useState } from 'react'
 import { Star, CheckCircle } from 'lucide-react'
@@ -46,7 +48,7 @@ export function ReviewList({ agentId, refreshTrigger = 0 }: ReviewListProps) {
         setStats(data.stats)
       }
     } catch (error) {
-      console.error('Error fetching reviews:', error)
+      logger.error('Error fetching reviews:', error)
     } finally {
       setLoading(false)
     }

@@ -4,12 +4,13 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { logger } from '@/lib/logger'
 
 export async function submitAgentForReview(agentId: string) {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
-    console.log('🔍 Submit for Review - User check:', { userId: user?.id, agentId })
+    logger.info('🔍 Submit for Review - User check:', { userId: user?.id, agentId })
 
     if (!user) {
         throw new Error('Unauthorized: You must be logged in')
@@ -38,7 +39,7 @@ export async function submitAgentForReview(agentId: string) {
         throw new Error(`Cannot submit agent with status: ${agent.status}. Only DRAFT or REJECTED agents can be submitted.`)
     }
 
-    console.log('📝 Submitting agent for review:', { agentId, title: agent.title })
+    logger.info('📝 Submitting agent for review:', { agentId, title: agent.title })
 
     // Update status to UNDER_REVIEW and clear rejection reason if resubmitting
     await prisma.agent.update({
@@ -49,7 +50,7 @@ export async function submitAgentForReview(agentId: string) {
         }
     })
 
-    console.log('✅ Agent submitted for review successfully')
+    logger.info('✅ Agent submitted for review successfully')
 
     // Revalidate dashboard to show updated status
     revalidatePath('/dashboard')
@@ -59,7 +60,7 @@ export async function requestAgentUpdate(agentId: string) {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
-    console.log('🔍 Request Update - User check:', { userId: user?.id, agentId })
+    logger.info('🔍 Request Update - User check:', { userId: user?.id, agentId })
 
     if (!user) {
         throw new Error('Unauthorized: You must be logged in')
@@ -105,7 +106,7 @@ export async function requestAgentUpdate(agentId: string) {
         throw new Error('This agent already has a pending update')
     }
 
-    console.log('📝 Creating new version for agent:', { agentId, title: agent.title, currentVersion: agent.version })
+    logger.info('📝 Creating new version for agent:', { agentId, title: agent.title, currentVersion: agent.version })
 
     // Create a new draft version of the agent
     const newVersion = await prisma.agent.create({
@@ -136,7 +137,7 @@ export async function requestAgentUpdate(agentId: string) {
         data: { hasActiveUpdate: true }
     })
 
-    console.log('✅ New version created successfully:', { newVersionId: newVersion.id, version: newVersion.version })
+    logger.info('✅ New version created successfully:', { newVersionId: newVersion.id, version: newVersion.version })
 
     // Revalidate dashboard
     revalidatePath('/dashboard')
@@ -219,7 +220,7 @@ export async function approveAgentVersion(agentId: string) {
         })
     }
 
-    console.log('✅ Agent approved successfully')
+    logger.info('✅ Agent approved successfully')
     revalidatePath('/dashboard')
     revalidatePath('/agents')
 }
@@ -274,6 +275,6 @@ export async function rejectAgentVersion(agentId: string, rejectionReason: strin
         })
     }
 
-    console.log('✅ Agent rejected successfully')
+    logger.info('✅ Agent rejected successfully')
     revalidatePath('/dashboard')
 }

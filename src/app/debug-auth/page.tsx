@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -17,7 +19,7 @@ export default function DebugAuthPage() {
             setSession(session)
 
             if (sessionError) {
-                console.error('Session error:', sessionError)
+                logger.error('Session error:', sessionError)
             }
 
             // Get current user
@@ -25,7 +27,7 @@ export default function DebugAuthPage() {
             setUser(user)
 
             if (userError) {
-                console.error('User error:', userError)
+                logger.error('User error:', userError)
             }
 
             setLoading(false)

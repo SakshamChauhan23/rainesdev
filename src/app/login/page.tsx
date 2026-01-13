@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import { useState, Suspense, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -39,12 +41,12 @@ function LoginForm() {
             }
 
             // Redirect based on role
-            console.log(`✅ Login successful as ${result.role}, redirecting to ${result.redirectUrl}`)
+            logger.info(`✅ Login successful as ${result.role}, redirecting to ${result.redirectUrl}`)
 
             // Use window.location for hard redirect to ensure session is properly loaded
             window.location.href = result.redirectUrl!
         } catch (err: any) {
-            console.error('💥 Login exception:', err)
+            logger.error('💥 Login exception:', err)
             setError(err.message)
         } finally {
             setLoading(false)

@@ -5,11 +5,16 @@ import { redirect } from 'next/navigation'
 import { createTestPurchase } from '@/lib/purchases'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { logger } from '@/lib/logger'
 
 /**
  * Process a test mode purchase (no Stripe)
  */
-export async function processTestPurchase(agentId: string, assistedSetupRequested: boolean = false) {
+export async function processTestPurchase(
+    agentId: string,
+    assistedSetupRequested: boolean = false,
+    bookCallRequested: boolean = false
+) {
     const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
@@ -17,7 +22,7 @@ export async function processTestPurchase(agentId: string, assistedSetupRequeste
         redirect('/login?next=/checkout/' + agentId)
     }
 
-    console.log('🛒 Processing test purchase:', { userId: user.id, agentId, assistedSetupRequested })
+    logger.info('🛒 Processing test purchase:', { userId: user.id, agentId, assistedSetupRequested, bookCallRequested })
 
     try {
         // Verify agent exists and is approved
@@ -65,7 +70,7 @@ export async function processTestPurchase(agentId: string, assistedSetupRequeste
             }
         })
 
-        console.log('✅ Test purchase created:', purchase.id)
+        logger.info('✅ Test purchase created:', purchase.id)
 
         // Create SetupRequest if assisted setup was requested
         if (assistedSetupRequested) {
@@ -77,11 +82,12 @@ export async function processTestPurchase(agentId: string, assistedSetupRequeste
                     agentVersionId: agent.id,
                     setupType: 'ADMIN_ASSISTED',
                     setupCost: setupPrice,
-                    status: 'PENDING'
+                    status: 'PENDING',
+                    bookCallRequested: bookCallRequested
                 }
             })
 
-            console.log('✅ Setup request created:', setupRequest.id)
+            logger.info('✅ Setup request created:', setupRequest.id, 'bookCallRequested:', bookCallRequested)
         }
 
         // Revalidate paths
@@ -94,7 +100,7 @@ export async function processTestPurchase(agentId: string, assistedSetupRequeste
             redirectUrl: `/agents/${agent.slug}?unlocked=true`
         }
     } catch (error) {
-        console.error('❌ Purchase failed:', error)
+        logger.error('❌ Purchase failed:', error)
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Purchase failed'

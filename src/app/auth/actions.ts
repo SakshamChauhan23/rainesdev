@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { syncUserToPrisma, getUserWithRole } from '@/lib/user-sync'
 import { revalidatePath } from 'next/cache'
+import { logger } from '@/lib/logger'
 
 /**
  * Handle post-login redirect based on user role
@@ -89,7 +90,7 @@ export async function loginAction(email: string, password: string, nextUrl?: str
             role: prismaUser.role
         }
     } catch (error) {
-        console.error('Login error:', error)
+        logger.error('Login error:', error)
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Login failed'
@@ -150,7 +151,7 @@ export async function signupAction(email: string, password: string, name?: strin
             }
         }
     } catch (error) {
-        console.error('Signup error:', error)
+        logger.error('Signup error:', error)
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Signup failed'
@@ -169,7 +170,7 @@ export async function logoutAction() {
         revalidatePath('/', 'layout')
         return { success: true }
     } catch (error) {
-        console.error('Logout error:', error)
+        logger.error('Logout error:', error)
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Logout failed'

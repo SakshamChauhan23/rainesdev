@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { slugify } from '@/lib/utils'
+import { logger } from '@/lib/logger'
 
 export type CreateAgentState = {
     errors?: {
@@ -19,10 +20,10 @@ export async function createAgent(prevState: CreateAgentState, formData: FormDat
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
-    console.log('🔍 Create Agent - User check:', { userId: user?.id, email: user?.email })
+    logger.info('🔍 Create Agent - User check:', { userId: user?.id, email: user?.email })
 
     if (!user) {
-        console.log('❌ No user found in session')
+        logger.info('❌ No user found in session')
         return {
             message: 'You must be logged in to create an agent',
         }
@@ -47,7 +48,7 @@ export async function createAgent(prevState: CreateAgentState, formData: FormDat
 
     const slug = slugify(title) + '-' + Math.random().toString(36).substring(2, 7) // Ensure uniqueness
 
-    console.log('📝 Creating agent:', { title, slug, sellerId: user.id, categoryId })
+    logger.info('📝 Creating agent:', { title, slug, sellerId: user.id, categoryId })
 
     // First, verify the user exists in the database
     const userExists = await prisma.user.findUnique({
@@ -55,13 +56,13 @@ export async function createAgent(prevState: CreateAgentState, formData: FormDat
     })
 
     if (!userExists) {
-        console.error('❌ User not found in database:', user.id)
+        logger.error('❌ User not found in database:', user.id)
         return {
             message: 'User account not found. Please contact support.',
         }
     }
 
-    console.log('✅ User exists in database:', userExists.email)
+    logger.info('✅ User exists in database:', userExists.email)
 
     try {
         const agent = await prisma.agent.create({
@@ -80,9 +81,9 @@ export async function createAgent(prevState: CreateAgentState, formData: FormDat
                 thumbnailUrl: thumbnailUrl || null,
             }
         })
-        console.log('✅ Agent created successfully:', agent.id)
+        logger.info('✅ Agent created successfully:', agent.id)
     } catch (error) {
-        console.error('Failed to create agent:', error)
+        logger.error('Failed to create agent:', error)
         return {
             message: 'Database error: Failed to create agent.',
         }

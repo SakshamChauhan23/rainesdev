@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { logger } from '@/lib/logger'
 
 export type UpdateAgentState = {
     errors?: {
@@ -22,7 +23,7 @@ export async function updateAgent(
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
-    console.log('🔍 Update Agent - User check:', { userId: user?.id, email: user?.email })
+    logger.info('🔍 Update Agent - User check:', { userId: user?.id, email: user?.email })
 
     if (!user) {
         return { message: 'You must be logged in to update an agent' }
@@ -65,7 +66,7 @@ export async function updateAgent(
         return { message: 'Price must be a valid number' }
     }
 
-    console.log('📝 Updating agent:', { agentId, title, categoryId })
+    logger.info('📝 Updating agent:', { agentId, title, categoryId })
 
     try {
         await prisma.agent.update({
@@ -82,9 +83,9 @@ export async function updateAgent(
             }
         })
 
-        console.log('✅ Agent updated successfully:', agentId)
+        logger.info('✅ Agent updated successfully:', agentId)
     } catch (error) {
-        console.error('Failed to update agent:', error)
+        logger.error('Failed to update agent:', error)
         return { message: 'Database error: Failed to update agent' }
     }
 

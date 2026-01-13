@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -32,7 +34,7 @@ export function AdminAgentActions({ agentId }: { agentId: string }) {
                 alert(result.error || 'Failed to approve agent')
             }
         } catch (error) {
-            console.error('Error approving agent:', error)
+            logger.error('Error approving agent:', error)
             alert('Failed to approve agent')
         } finally {
             setLoading(false)
@@ -56,7 +58,7 @@ export function AdminAgentActions({ agentId }: { agentId: string }) {
                 alert(result.error || 'Failed to reject agent')
             }
         } catch (error) {
-            console.error('Error rejecting agent:', error)
+            logger.error('Error rejecting agent:', error)
             alert('Failed to reject agent')
         } finally {
             setLoading(false)

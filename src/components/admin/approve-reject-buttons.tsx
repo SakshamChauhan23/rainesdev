@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
@@ -35,7 +37,7 @@ export function ApproveRejectButtons({ agentId, agentTitle }: ApproveRejectButto
                 router.push('/admin/review-queue')
                 router.refresh()
             } catch (error) {
-                console.error('Failed to approve:', error)
+                logger.error('Failed to approve:', error)
                 alert(error instanceof Error ? error.message : 'Failed to approve agent')
             }
         })
@@ -53,7 +55,7 @@ export function ApproveRejectButtons({ agentId, agentTitle }: ApproveRejectButto
                 router.push('/admin/review-queue')
                 router.refresh()
             } catch (error) {
-                console.error('Failed to reject:', error)
+                logger.error('Failed to reject:', error)
                 alert(error instanceof Error ? error.message : 'Failed to reject agent')
             }
         })

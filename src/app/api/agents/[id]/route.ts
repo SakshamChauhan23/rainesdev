@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { createServerClient } from '@supabase/ssr'
@@ -116,7 +118,7 @@ export async function GET(
       data: response,
     })
   } catch (error) {
-    console.error('Error fetching agent:', error)
+    logger.error('Error fetching agent:', error)
     return NextResponse.json(
       {
         success: false,

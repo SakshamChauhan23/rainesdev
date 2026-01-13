@@ -128,6 +128,8 @@ model Purchase {
   @@index([agentId])
   @@index([agentVersionId])
   @@index([status])
+  @@index([buyerId, status])
+  @@index([agentId, status])
   @@map("purchases")
 }
 
@@ -154,6 +156,8 @@ model SupportRequest {
   @@index([sellerId])
   @@index([agentId])
   @@index([status])
+  @@index([status, createdAt])
+  @@index([assignedToId, status])
   @@map("support_requests")
 }
 
@@ -174,31 +178,37 @@ model Review {
   @@index([agentId])
   @@index([buyerId])
   @@index([agentVersionId])
+  @@index([agentId, createdAt])
+  @@index([rating])
   @@map("reviews")
 }
 
 model SetupRequest {
-  id              String           @id @default(cuid())
-  purchaseId      String           @unique @map("purchase_id")
-  buyerId         String           @map("buyer_id")
-  agentId         String           @map("agent_id")
-  agentVersionId  String           @map("agent_version_id")
-  setupType       SetupType        @default(ADMIN_ASSISTED) @map("setup_type")
-  setupCost       Decimal          @default(0) @map("setup_cost") @db.Decimal(10, 2)
-  status          SetupStatus      @default(PENDING)
-  complexity      SetupComplexity? @map("complexity")
-  adminNotes      String?          @map("admin_notes")
-  createdAt       DateTime         @default(now()) @map("created_at")
-  completedAt     DateTime?        @map("completed_at")
-  updatedAt       DateTime         @updatedAt @map("updated_at")
-  agent           Agent            @relation(fields: [agentId], references: [id])
-  buyer           User             @relation(fields: [buyerId], references: [id])
-  purchase        Purchase         @relation(fields: [purchaseId], references: [id])
+  id                 String           @id @default(cuid())
+  purchaseId         String           @unique @map("purchase_id")
+  buyerId            String           @map("buyer_id")
+  agentId            String           @map("agent_id")
+  agentVersionId     String           @map("agent_version_id")
+  setupType          SetupType        @default(ADMIN_ASSISTED) @map("setup_type")
+  setupCost          Decimal          @default(0) @map("setup_cost") @db.Decimal(10, 2)
+  status             SetupStatus      @default(PENDING)
+  complexity         SetupComplexity? @map("complexity")
+  adminNotes         String?          @map("admin_notes")
+  bookCallRequested  Boolean          @default(false) @map("book_call_requested")
+  callStatus         CallStatus       @default(PENDING) @map("call_status")
+  createdAt          DateTime         @default(now()) @map("created_at")
+  completedAt        DateTime?        @map("completed_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+  agent              Agent            @relation(fields: [agentId], references: [id])
+  buyer              User             @relation(fields: [buyerId], references: [id])
+  purchase           Purchase         @relation(fields: [purchaseId], references: [id])
 
   @@index([buyerId])
   @@index([agentId])
   @@index([status])
   @@index([complexity])
+  @@index([status, createdAt])
+  @@index([callStatus])
   @@map("setup_requests")
 }
 
@@ -215,6 +225,7 @@ model AdminLog {
   @@index([adminId])
   @@index([entityType, entityId])
   @@index([createdAt])
+  @@index([action, createdAt])
   @@map("admin_logs")
 }
 
@@ -271,6 +282,13 @@ enum SetupType {
 
 enum SetupStatus {
   PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum CallStatus {
+  PENDING
+  SCHEDULED
   COMPLETED
 }
 

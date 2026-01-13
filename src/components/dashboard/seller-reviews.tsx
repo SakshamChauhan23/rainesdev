@@ -1,4 +1,6 @@
 'use client'
+import { logger } from '@/lib/logger'
+
 
 import { useEffect, useState } from 'react'
 import { Star } from 'lucide-react'
@@ -57,7 +59,7 @@ export function SellerReviews({ sellerId }: SellerReviewsProps) {
         setOverallStats(data.data.overallStats)
       }
     } catch (error) {
-      console.error('Error fetching seller reviews:', error)
+      logger.error('Error fetching seller reviews:', error)
     } finally {
       setLoading(false)
     }

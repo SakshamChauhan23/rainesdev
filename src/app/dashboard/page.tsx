@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
@@ -16,61 +18,83 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
     const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
-    console.log('🔍 Dashboard auth check:', { user: user?.email, error })
+    logger.info('🔍 Dashboard auth check:', { user: user?.email, error })
 
     if (!user) {
-        console.log('❌ No user found, redirecting to /login')
+        // User not authenticated
         redirect('/login')
     }
 
-    console.log('✅ User authenticated:', user.email)
+    // User authenticated
 
-    // Fetch user's agents
-    const agents = await prisma.agent.findMany({
-        where: {
-            sellerId: user.id,
-            OR: [
-                { isLatestVersion: true },
-                {
-                    AND: [
-                        { parentAgentId: { not: null } },
-                        { status: { in: ['DRAFT', 'UNDER_REVIEW', 'REJECTED'] } }
-                    ]
-                }
-            ]
-        },
-        orderBy: { createdAt: 'desc' },
-        select: {
-            id: true,
-            sellerId: true,
-            categoryId: true,
-            title: true,
-            slug: true,
-            shortDescription: true,
-            price: true,
-            status: true,
-            viewCount: true,
-            purchaseCount: true,
-            updatedAt: true,
-            version: true,
-            hasActiveUpdate: true,
-            parentAgentId: true,
-            thumbnailUrl: true,
-            category: {
-                select: {
-                    id: true,
-                    name: true,
-                    slug: true
+    // Common where clause for user's agents
+    const agentWhereClause = {
+        sellerId: user.id,
+        OR: [
+            { isLatestVersion: true },
+            {
+                AND: [
+                    { parentAgentId: { not: null } },
+                    { status: { in: ['DRAFT' as const, 'UNDER_REVIEW' as const, 'REJECTED' as const] } }
+                ]
+            }
+        ]
+    };
+
+    // Optimize: Calculate stats using aggregates and fetch agents in parallel
+    const [agents, statsData, approvedCount] = await Promise.all([
+        // Fetch agent list for display
+        prisma.agent.findMany({
+            where: agentWhereClause,
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id: true,
+                sellerId: true,
+                categoryId: true,
+                title: true,
+                slug: true,
+                shortDescription: true,
+                price: true,
+                status: true,
+                viewCount: true,
+                purchaseCount: true,
+                updatedAt: true,
+                version: true,
+                hasActiveUpdate: true,
+                parentAgentId: true,
+                thumbnailUrl: true,
+                category: {
+                    select: {
+                        id: true,
+                        name: true,
+                        slug: true
+                    }
                 }
             }
-        }
-    })
+        }),
+        // Calculate stats using aggregates (much faster than loading all data)
+        prisma.agent.aggregate({
+            where: agentWhereClause,
+            _sum: {
+                viewCount: true,
+                purchaseCount: true
+            }
+        }),
+        // Count approved agents
+        prisma.agent.count({
+            where: {
+                ...agentWhereClause,
+                status: 'APPROVED'
+            }
+        })
+    ]);
 
-    // Calculate stats
-    const totalViews = agents.reduce((acc, agent) => acc + agent.viewCount, 0)
-    const totalSales = agents.reduce((acc, agent) => acc + agent.purchaseCount, 0)
-    const totalRevenue = agents.reduce((acc, agent) => acc + (agent.purchaseCount * Number(agent.price)), 0)
-    const approvedAgents = agents.filter(a => a.status === 'APPROVED').length
+    // Calculate total revenue (requires individual prices, but we already have agents loaded)
+    const totalRevenue = agents.reduce((acc, agent) => acc + (agent.purchaseCount * Number(agent.price)), 0);
+
+    const totalViews = statsData._sum.viewCount || 0;
+    const totalSales = statsData._sum.purchaseCount || 0;
+    const approvedAgents = approvedCount;
 
     return (
         <div className="min-h-screen bg-brand-cream">
