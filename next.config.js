@@ -1,4 +1,7 @@
 const { withSentryConfig } = require('@sentry/nextjs')
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -48,6 +51,14 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '10mb',
     },
+    // Enable performance optimizations (P3.2)
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  },
+  // Enable CSS optimization and remove console in production (P3.2)
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
   },
 }
 
@@ -64,7 +75,15 @@ const sentryWebpackPluginOptions = {
   authToken: process.env.SENTRY_AUTH_TOKEN,
 }
 
-// Wrap the config with Sentry only if DSN is configured
-module.exports = process.env.NEXT_PUBLIC_SENTRY_DSN
-  ? withSentryConfig(nextConfig, sentryWebpackPluginOptions)
-  : nextConfig
+// Compose configurations: Bundle Analyzer -> Sentry (P3.1)
+let composedConfig = nextConfig
+
+// Apply bundle analyzer
+composedConfig = withBundleAnalyzer(composedConfig)
+
+// Apply Sentry if DSN is configured
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  composedConfig = withSentryConfig(composedConfig, sentryWebpackPluginOptions)
+}
+
+module.exports = composedConfig

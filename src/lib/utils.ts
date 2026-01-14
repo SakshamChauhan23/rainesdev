@@ -1,15 +1,35 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { Decimal } from '@prisma/client/runtime/library'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatPrice(price: number): string {
+/**
+ * Format price as USD currency (P3.5)
+ * Handles both number and Prisma Decimal types
+ */
+export function formatPrice(price: number | Decimal): string {
+  const numPrice = typeof price === 'number' ? price : Number(price)
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-  }).format(price)
+  }).format(numPrice)
+}
+
+/**
+ * Format price in compact notation for large numbers (P3.5)
+ * e.g., $1,234 -> $1.2K, $1,234,567 -> $1.2M
+ */
+export function formatPriceCompact(price: number | Decimal): string {
+  const numPrice = typeof price === 'number' ? price : Number(price)
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(numPrice)
 }
 
 export function formatDate(date: Date | string): string {

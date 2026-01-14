@@ -1,8 +1,21 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "no-console": "off"
+    // Warn on unused variables but allow unused function parameters with underscore prefix (P3.6)
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    // Warn on explicit 'any' types - we've been fixing these (P3.6)
+    "@typescript-eslint/no-explicit-any": "warn",
+    // Allow console in development, warn in production code (P3.6)
+    // We use logger utility now, so this helps catch missed replacements
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    // Prevent unused imports
+    "no-unused-vars": "off" // Use TypeScript's version instead
   }
 }
