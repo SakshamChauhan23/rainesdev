@@ -2,6 +2,7 @@ import { logger } from '@/lib/logger'
 import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 // Allow Next.js to cache responses for 60 seconds
 export const revalidate = 60
@@ -51,8 +52,8 @@ async function handler(request: NextRequest) {
 
     const skip = (page - 1) * limit
 
-    // Build where clause
-    const where: any = {
+    // Build where clause (P2.13 - proper typing instead of any)
+    const where: Prisma.AgentWhereInput = {
       status: 'APPROVED',
       hasActiveUpdate: false, // Hide approved agents with pending updates
     }

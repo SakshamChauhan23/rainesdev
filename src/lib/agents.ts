@@ -2,6 +2,7 @@ import { logger } from '@/lib/logger'
 
 
 import { prisma } from './prisma';
+import { Prisma } from '@prisma/client';
 
 export async function getAgentBySlug(slug: string) {
     try {
@@ -58,8 +59,8 @@ export async function getAllAgents({
     try {
         const skip = (PAGE - 1) * LIMIT;
 
-        // Build where clause
-        const where: any = {
+        // Build where clause (P2.14 - proper typing instead of any)
+        const where: Prisma.AgentWhereInput = {
             status: 'APPROVED',
             hasActiveUpdate: false // Hide approved agents with pending updates
         };

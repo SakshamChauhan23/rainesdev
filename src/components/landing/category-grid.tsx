@@ -72,17 +72,23 @@ export function CategoryGrid() {
     const fetchCounts = async () => {
       // Check cache first (1 minute TTL for homepage stats)
       const cacheKey = 'category_counts'
-      const cached = sessionStorage.getItem(cacheKey)
-      if (cached) {
-        try {
-          const { counts, timestamp } = JSON.parse(cached)
-          if (Date.now() - timestamp < 60 * 1000) { // 1 minute
-            setCategoryCounts(counts)
-            return
+
+      // Wrap sessionStorage in try-catch for private browsing mode (P2.9)
+      try {
+        const cached = sessionStorage.getItem(cacheKey)
+        if (cached) {
+          try {
+            const { counts, timestamp } = JSON.parse(cached)
+            if (Date.now() - timestamp < 60 * 1000) { // 1 minute
+              setCategoryCounts(counts)
+              return
+            }
+          } catch (e) {
+            // Invalid cache, continue to fetch
           }
-        } catch (e) {
-          // Invalid cache, continue to fetch
         }
+      } catch (storageError) {
+        // sessionStorage not available (private browsing mode), skip cache check
       }
 
       try {
@@ -106,11 +112,15 @@ export function CategoryGrid() {
         if (data.success && data.counts) {
           setCategoryCounts(data.counts)
 
-          // Cache the results
-          sessionStorage.setItem(cacheKey, JSON.stringify({
-            counts: data.counts,
-            timestamp: Date.now()
-          }))
+          // Cache the results (P2.9 - wrap in try-catch)
+          try {
+            sessionStorage.setItem(cacheKey, JSON.stringify({
+              counts: data.counts,
+              timestamp: Date.now()
+            }))
+          } catch (storageError) {
+            // Ignore sessionStorage errors (e.g., in private browsing mode)
+          }
         } else {
           logger.warn('Category stats API returned unsuccessful response')
           // Set all counts to 0 if fetch fails

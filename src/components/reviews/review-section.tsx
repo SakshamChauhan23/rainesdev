@@ -74,7 +74,9 @@ export function ReviewSection({ agentId, userId, userRole }: ReviewSectionProps)
       {userId && userRole === 'BUYER' && (
         <div>
           {loading ? (
-            <div className="h-64 bg-gray-100 rounded-lg animate-pulse" />
+            <div className="h-64 bg-gray-100 rounded-lg animate-pulse flex items-center justify-center">
+              <p className="text-gray-500 text-sm">Loading review eligibility...</p>
+            </div>
           ) : eligibility?.eligible ? (
             <ReviewForm
               agentId={agentId}

@@ -79,7 +79,7 @@ export default async function LibraryPage() {
                         </CardHeader>
                         <CardContent>
                             <Link
-                                href="https://calendar.app.google/QyuK9XKQ52r6dNPD6"
+                                href={process.env.NEXT_PUBLIC_BOOKING_CALENDAR_URL || "https://calendar.app.google/QyuK9XKQ52r6dNPD6"}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >

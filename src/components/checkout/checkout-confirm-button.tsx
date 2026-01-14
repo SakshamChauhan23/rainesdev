@@ -27,8 +27,13 @@ export function CheckoutConfirmButton({ agentId, agentSlug, assistedSetupRequest
                 const result = await processTestPurchase(agentId, assistedSetupRequested, bookCallRequested)
 
                 if (result.success) {
-                    // Clear session storage
-                    sessionStorage.removeItem(`assistedSetup_${agentId}`)
+                    // Clear session storage (P2.9 - wrap in try-catch for private browsing mode)
+                    try {
+                        sessionStorage.removeItem(`assistedSetup_${agentId}`)
+                    } catch (storageError) {
+                        // Ignore sessionStorage errors (e.g., in private browsing mode)
+                        console.warn('Failed to clear sessionStorage:', storageError)
+                    }
 
                     // Redirect to agent page with success param
                     router.push(result.redirectUrl!)
