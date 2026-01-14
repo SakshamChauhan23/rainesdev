@@ -112,58 +112,58 @@ function AgentsPageContent() {
   return (
     <div className="min-h-screen bg-brand-cream">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-brand-orange/5 via-brand-cream to-brand-teal/5 py-16 sm:py-20">
+      <div className="relative overflow-hidden bg-gradient-to-br from-brand-orange/5 via-brand-cream to-brand-teal/5 py-12 sm:py-16 lg:py-20">
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-10 right-10 h-72 w-72 rounded-full bg-brand-orange/10 blur-3xl" />
-          <div className="absolute bottom-10 left-10 h-72 w-72 rounded-full bg-brand-teal/10 blur-3xl" />
+          <div className="absolute top-10 right-10 h-48 w-48 rounded-full bg-brand-orange/10 blur-3xl sm:h-72 sm:w-72" />
+          <div className="absolute bottom-10 left-10 h-48 w-48 rounded-full bg-brand-teal/10 blur-3xl sm:h-72 sm:w-72" />
         </div>
 
         <Container>
           <div className={`mx-auto max-w-3xl text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-brand-orange/10 px-4 py-2 text-sm font-medium text-brand-orange border border-brand-orange/20">
-              <Sparkles className="h-4 w-4" />
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-brand-orange/10 px-3 py-1.5 text-xs font-medium text-brand-orange border border-brand-orange/20 sm:mb-6 sm:px-4 sm:py-2 sm:text-sm">
+              <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
               <span>{totalAgents}+ AI Agents Ready to Deploy</span>
             </div>
 
-            <h1 className="mb-6 text-4xl font-bold tracking-tight text-brand-slate sm:text-5xl md:text-6xl">
+            <h1 className="mb-4 px-4 text-3xl font-bold tracking-tight text-brand-slate sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
               Discover Your Perfect{' '}
               <span className="relative inline-block">
                 <span className="relative z-10 text-brand-orange">AI Agent</span>
-                <span className="absolute bottom-2 left-0 right-0 h-3 bg-brand-orange/20 -z-0" />
+                <span className="absolute bottom-1 left-0 right-0 h-2 bg-brand-orange/20 -z-0 sm:bottom-2 sm:h-3" />
               </span>
             </h1>
 
-            <p className="mb-10 text-lg text-brand-slate/70 sm:text-xl max-w-2xl mx-auto">
+            <p className="mb-8 px-4 text-base text-brand-slate/70 sm:mb-10 sm:text-lg md:text-xl max-w-2xl mx-auto">
               Browse our curated marketplace of AI agents built for real business needs. No coding required.
             </p>
 
             {/* Search Bar */}
-            <div className={`mx-auto max-w-2xl transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+            <div className={`mx-auto max-w-2xl px-4 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
               <SearchBar
                 onSearch={handleSearch}
                 placeholder="Search for AI agents..."
-                className="rounded-2xl border-2 border-brand-slate/10 bg-white shadow-lg focus-within:border-brand-orange focus-within:shadow-xl transition-all"
+                className="rounded-xl border-2 border-brand-slate/10 bg-white shadow-lg focus-within:border-brand-orange focus-within:shadow-xl transition-all sm:rounded-2xl"
               />
             </div>
 
             {/* Quick Stats */}
-            <div className={`mt-10 flex flex-wrap justify-center gap-8 text-sm transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className={`mt-6 flex flex-wrap justify-center gap-4 px-4 text-sm sm:mt-10 sm:gap-8 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-orange/10">
-                  <TrendingUp className="h-5 w-5 text-brand-orange" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-orange/10 sm:h-10 sm:w-10 sm:rounded-xl">
+                  <TrendingUp className="h-4 w-4 text-brand-orange sm:h-5 sm:w-5" />
                 </div>
                 <div className="text-left">
-                  <p className="font-semibold text-brand-slate">{categories.length}+ Categories</p>
-                  <p className="text-xs text-brand-slate/60">Every use case</p>
+                  <p className="text-xs font-semibold text-brand-slate sm:text-sm">{categories.length}+ Categories</p>
+                  <p className="text-[10px] text-brand-slate/60 sm:text-xs">Every use case</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal/10">
-                  <Sparkles className="h-5 w-5 text-brand-teal" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-teal/10 sm:h-10 sm:w-10 sm:rounded-xl">
+                  <Sparkles className="h-4 w-4 text-brand-teal sm:h-5 sm:w-5" />
                 </div>
                 <div className="text-left">
-                  <p className="font-semibold text-brand-slate">Verified Sellers</p>
-                  <p className="text-xs text-brand-slate/60">Quality guaranteed</p>
+                  <p className="text-xs font-semibold text-brand-slate sm:text-sm">Verified Sellers</p>
+                  <p className="text-[10px] text-brand-slate/60 sm:text-xs">Quality guaranteed</p>
                 </div>
               </div>
             </div>

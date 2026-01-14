@@ -238,31 +238,31 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
                     </div>
 
                     {agents.length === 0 ? (
-                        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-brand-slate/20 bg-white p-12 text-center">
-                            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-orange/10">
-                                <Package className="h-8 w-8 text-brand-orange" />
+                        <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-brand-slate/20 bg-white p-8 text-center sm:min-h-[400px] sm:rounded-3xl sm:p-12">
+                            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-orange/10 sm:mb-6 sm:h-16 sm:w-16 sm:rounded-2xl">
+                                <Package className="h-6 w-6 text-brand-orange sm:h-8 sm:w-8" />
                             </div>
-                            <h3 className="mb-2 text-xl font-bold text-brand-slate">No agents yet</h3>
-                            <p className="mb-6 text-brand-slate/60 max-w-sm">
+                            <h3 className="mb-2 text-lg font-bold text-brand-slate sm:text-xl">No agents yet</h3>
+                            <p className="mb-4 max-w-sm text-sm text-brand-slate/60 sm:mb-6">
                                 Start selling your AI workflows today. Create your first agent to get started.
                             </p>
                             <Link href="/submit-agent">
-                                <Button className="h-12 rounded-xl bg-brand-orange font-semibold text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90">
-                                    <Plus className="mr-2 h-5 w-5" />
+                                <Button className="h-11 rounded-xl bg-brand-orange font-semibold text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90 sm:h-12">
+                                    <Plus className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                                     Create Your First Agent
                                 </Button>
                             </Link>
                         </div>
                     ) : (
-                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
                             {agents.map((agent) => (
                                 <div
                                     key={agent.id}
-                                    className="group relative overflow-hidden rounded-3xl bg-white border-2 border-brand-slate/10 shadow-lg transition-all hover:shadow-xl hover:border-brand-teal/30 hover:-translate-y-1"
+                                    className="group relative overflow-hidden rounded-2xl bg-white border-2 border-brand-slate/10 shadow-lg transition-all hover:shadow-xl hover:border-brand-teal/30 hover:-translate-y-1 sm:rounded-3xl"
                                 >
                                     {/* Thumbnail */}
                                     {agent.thumbnailUrl && (
-                                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-brand-orange/5 to-brand-teal/5">
+                                        <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-brand-orange/5 to-brand-teal/5">
                                             <img
                                                 src={agent.thumbnailUrl}
                                                 alt={agent.title}
@@ -272,23 +272,23 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
                                         </div>
                                     )}
 
-                                    <div className="p-6">
+                                    <div className="p-4 sm:p-6">
                                         {/* Status & Version Badges */}
-                                        <div className="mb-4 flex flex-wrap items-center gap-2">
+                                        <div className="mb-3 flex flex-wrap items-center gap-1.5 sm:mb-4 sm:gap-2">
                                             <StatusBadge status={agent.status as any} />
                                             <Badge className="rounded-lg bg-brand-slate/10 text-brand-slate border-brand-slate/20 text-xs">
                                                 v{agent.version}
                                             </Badge>
-                                            <Badge className="ml-auto rounded-lg bg-brand-orange/10 text-brand-orange border-brand-orange/20 font-semibold">
+                                            <Badge className="ml-auto rounded-lg bg-brand-orange/10 text-brand-orange border-brand-orange/20 text-xs font-semibold sm:text-sm">
                                                 {formatPrice(Number(agent.price))}
                                             </Badge>
                                         </div>
 
                                         {/* Title & Description */}
-                                        <h3 className="mb-2 text-xl font-bold text-brand-slate line-clamp-1">
+                                        <h3 className="mb-2 text-lg font-bold text-brand-slate line-clamp-1 sm:text-xl">
                                             {agent.title}
                                         </h3>
-                                        <p className="mb-4 text-sm text-brand-slate/60 line-clamp-2">
+                                        <p className="mb-3 text-sm text-brand-slate/60 line-clamp-2 sm:mb-4">
                                             {agent.shortDescription}
                                         </p>
 
@@ -303,20 +303,20 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
                                         )}
 
                                         {/* Stats */}
-                                        <div className="mb-6 flex items-center gap-4 rounded-2xl bg-brand-cream p-4">
+                                        <div className="mb-4 flex items-center gap-3 rounded-xl bg-brand-cream p-3 sm:mb-6 sm:gap-4 sm:rounded-2xl sm:p-4">
                                             <div className="flex-1 text-center">
-                                                <p className="text-2xl font-bold text-brand-slate">{agent.viewCount}</p>
+                                                <p className="text-xl font-bold text-brand-slate sm:text-2xl">{agent.viewCount}</p>
                                                 <p className="text-xs text-brand-slate/60">Views</p>
                                             </div>
-                                            <div className="h-8 w-px bg-brand-slate/10" />
+                                            <div className="h-6 w-px bg-brand-slate/10 sm:h-8" />
                                             <div className="flex-1 text-center">
-                                                <p className="text-2xl font-bold text-brand-slate">{agent.purchaseCount}</p>
+                                                <p className="text-xl font-bold text-brand-slate sm:text-2xl">{agent.purchaseCount}</p>
                                                 <p className="text-xs text-brand-slate/60">Sales</p>
                                             </div>
                                         </div>
 
                                         {/* Last Updated */}
-                                        <div className="mb-4 text-xs text-brand-slate/50">
+                                        <div className="mb-3 text-xs text-brand-slate/50 sm:mb-4">
                                             Updated {new Date(agent.updatedAt).toLocaleDateString('en-US', {
                                                 month: 'short',
                                                 day: 'numeric',
@@ -325,7 +325,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
                                         </div>
 
                                         {/* Actions */}
-                                        <div className="flex gap-2 border-t-2 border-brand-slate/10 pt-4">
+                                        <div className="flex gap-2 border-t-2 border-brand-slate/10 pt-3 sm:pt-4">
                                             <Button variant="outline" size="sm" className="flex-1 rounded-xl border-2 hover:border-brand-teal hover:bg-brand-teal/5" asChild>
                                                 <Link href={`/agents/${agent.slug}`}>
                                                     <ExternalLink className="mr-2 h-4 w-4" />
