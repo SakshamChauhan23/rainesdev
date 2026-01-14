@@ -2,7 +2,7 @@
 
 import { Container } from '@/components/layout/container'
 import { useEffect, useRef, useState } from 'react'
-import { Search, ShoppingCart, CreditCard, Link as LinkIcon, Rocket, CheckCircle2 } from 'lucide-react'
+import { Search, ShoppingCart, CreditCard, Link as LinkIcon, Rocket } from 'lucide-react'
 
 export function HowItWorksTimeline() {
   const [isVisible, setIsVisible] = useState(false)
@@ -29,7 +29,7 @@ export function HowItWorksTimeline() {
   useEffect(() => {
     if (isVisible) {
       const interval = setInterval(() => {
-        setActiveStep((prev) => (prev + 1) % 5)
+        setActiveStep(prev => (prev + 1) % 5)
       }, 3000)
       return () => clearInterval(interval)
     }
@@ -42,7 +42,7 @@ export function HowItWorksTimeline() {
       title: 'Discover',
       description: 'Browse our marketplace and find the perfect AI agent for your needs',
       detail: 'Search by category, filter by features, or explore trending agents',
-      color: 'orange'
+      color: 'orange',
     },
     {
       number: 2,
@@ -50,7 +50,7 @@ export function HowItWorksTimeline() {
       title: 'Review & Select',
       description: 'Check ratings, read reviews, and compare different options',
       detail: 'See verified buyer feedback and detailed agent capabilities',
-      color: 'teal'
+      color: 'teal',
     },
     {
       number: 3,
@@ -58,7 +58,7 @@ export function HowItWorksTimeline() {
       title: 'Checkout',
       description: 'Complete your purchase with our secure payment system',
       detail: 'One-click checkout with transparent pricing and instant confirmation',
-      color: 'orange'
+      color: 'orange',
     },
     {
       number: 4,
@@ -66,7 +66,7 @@ export function HowItWorksTimeline() {
       title: 'Access & Setup',
       description: 'Get instant access to your agent via a simple setup link',
       detail: 'No complex installation - just click and configure',
-      color: 'teal'
+      color: 'teal',
     },
     {
       number: 5,
@@ -74,27 +74,33 @@ export function HowItWorksTimeline() {
       title: 'Launch & Scale',
       description: 'Deploy your AI agent and watch it transform your workflow',
       detail: 'Monitor performance, adjust settings, and scale as needed',
-      color: 'orange'
-    }
+      color: 'orange',
+    },
   ]
 
   return (
-    <section id="how-it-works" ref={sectionRef} className="relative overflow-hidden bg-brand-cream py-20 sm:py-28 lg:py-32 scroll-mt-20">
+    <section
+      id="how-it-works"
+      ref={sectionRef}
+      className="relative scroll-mt-20 overflow-hidden bg-brand-cream py-20 sm:py-28 lg:py-32"
+    >
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 h-full w-px bg-gradient-to-b from-transparent via-brand-orange/20 to-transparent" />
-        <div className="absolute top-0 left-2/4 h-full w-px bg-gradient-to-b from-transparent via-brand-teal/20 to-transparent" />
-        <div className="absolute top-0 left-3/4 h-full w-px bg-gradient-to-b from-transparent via-brand-orange/20 to-transparent" />
+        <div className="absolute left-1/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-brand-orange/20 to-transparent" />
+        <div className="absolute left-2/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-brand-teal/20 to-transparent" />
+        <div className="absolute left-3/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-brand-orange/20 to-transparent" />
       </div>
 
       <Container>
         {/* Section Header */}
-        <div className={`mx-auto max-w-3xl text-center mb-20 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div
+          className={`mx-auto mb-20 max-w-3xl text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+        >
           <h2 className="mb-4 text-3xl font-bold tracking-tight text-brand-slate sm:text-4xl md:text-5xl">
             How It{' '}
             <span className="relative inline-block">
               <span className="relative z-10 text-brand-orange">Works</span>
-              <span className="absolute bottom-2 left-0 right-0 h-3 bg-brand-orange/20 -z-0" />
+              <span className="absolute bottom-2 left-0 right-0 -z-0 h-3 bg-brand-orange/20" />
             </span>
           </h2>
           <p className="text-lg text-brand-slate/70 sm:text-xl">
@@ -105,7 +111,7 @@ export function HowItWorksTimeline() {
         {/* Timeline */}
         <div className="relative">
           {/* Vertical Line (mobile) */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-brand-orange via-brand-teal to-brand-orange md:hidden" />
+          <div className="absolute bottom-0 left-8 top-0 w-0.5 bg-gradient-to-b from-brand-orange via-brand-teal to-brand-orange md:hidden" />
 
           {/* Steps */}
           <div className="space-y-12">
@@ -117,34 +123,44 @@ export function HowItWorksTimeline() {
               return (
                 <div
                   key={index}
-                  className={`relative transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}
+                  className={`relative transition-all duration-1000 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}
                   style={{ transitionDelay: `${200 + index * 150}ms` }}
                   onMouseEnter={() => setActiveStep(index)}
                 >
                   {/* Desktop Layout */}
-                  <div className="hidden md:grid md:grid-cols-12 md:gap-8 md:items-center">
+                  <div className="hidden md:grid md:grid-cols-12 md:items-center md:gap-8">
                     {/* Left side (odd numbers) */}
                     {index % 2 === 0 && (
                       <>
                         <div className="col-span-5 text-right">
-                          <div className={`inline-block rounded-3xl bg-white p-8 shadow-lg transition-all duration-500 ${isActive ? 'scale-105 shadow-2xl' : ''}`}>
-                            <h3 className="mb-2 text-2xl font-bold text-brand-slate">{step.title}</h3>
-                            <p className="text-brand-slate/70 mb-3">{step.description}</p>
+                          <div
+                            className={`inline-block rounded-3xl bg-white p-8 shadow-lg transition-all duration-500 ${isActive ? 'scale-105 shadow-2xl' : ''}`}
+                          >
+                            <h3 className="mb-2 text-2xl font-bold text-brand-slate">
+                              {step.title}
+                            </h3>
+                            <p className="mb-3 text-brand-slate/70">{step.description}</p>
                             <p className="text-sm text-brand-slate/50">{step.detail}</p>
                           </div>
                         </div>
                         <div className="col-span-2 flex justify-center">
-                          <div className={`relative flex h-20 w-20 items-center justify-center rounded-2xl transition-all duration-500 ${
-                            isActive
-                              ? isOrange
-                                ? 'bg-brand-orange shadow-xl shadow-brand-orange/50 scale-125'
-                                : 'bg-brand-teal shadow-xl shadow-brand-teal/50 scale-125'
-                              : 'bg-brand-slate/10'
-                          }`}>
-                            <Icon className={`h-10 w-10 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-teal'}`} />
-                            <div className={`absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
-                              isOrange ? 'bg-brand-orange text-white' : 'bg-brand-teal text-white'
-                            }`}>
+                          <div
+                            className={`relative flex h-20 w-20 items-center justify-center rounded-2xl transition-all duration-500 ${
+                              isActive
+                                ? isOrange
+                                  ? 'scale-125 bg-brand-orange shadow-xl shadow-brand-orange/50'
+                                  : 'scale-125 bg-brand-teal shadow-xl shadow-brand-teal/50'
+                                : 'bg-brand-slate/10'
+                            }`}
+                          >
+                            <Icon
+                              className={`h-10 w-10 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-teal'}`}
+                            />
+                            <div
+                              className={`absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
+                                isOrange ? 'bg-brand-orange text-white' : 'bg-brand-teal text-white'
+                              }`}
+                            >
                               {step.number}
                             </div>
                           </div>
@@ -158,25 +174,35 @@ export function HowItWorksTimeline() {
                       <>
                         <div className="col-span-5" />
                         <div className="col-span-2 flex justify-center">
-                          <div className={`relative flex h-20 w-20 items-center justify-center rounded-2xl transition-all duration-500 ${
-                            isActive
-                              ? isOrange
-                                ? 'bg-brand-orange shadow-xl shadow-brand-orange/50 scale-125'
-                                : 'bg-brand-teal shadow-xl shadow-brand-teal/50 scale-125'
-                              : 'bg-brand-slate/10'
-                          }`}>
-                            <Icon className={`h-10 w-10 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-teal'}`} />
-                            <div className={`absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
-                              isOrange ? 'bg-brand-orange text-white' : 'bg-brand-teal text-white'
-                            }`}>
+                          <div
+                            className={`relative flex h-20 w-20 items-center justify-center rounded-2xl transition-all duration-500 ${
+                              isActive
+                                ? isOrange
+                                  ? 'scale-125 bg-brand-orange shadow-xl shadow-brand-orange/50'
+                                  : 'scale-125 bg-brand-teal shadow-xl shadow-brand-teal/50'
+                                : 'bg-brand-slate/10'
+                            }`}
+                          >
+                            <Icon
+                              className={`h-10 w-10 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-teal'}`}
+                            />
+                            <div
+                              className={`absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
+                                isOrange ? 'bg-brand-orange text-white' : 'bg-brand-teal text-white'
+                              }`}
+                            >
                               {step.number}
                             </div>
                           </div>
                         </div>
                         <div className="col-span-5 text-left">
-                          <div className={`inline-block rounded-3xl bg-white p-8 shadow-lg transition-all duration-500 ${isActive ? 'scale-105 shadow-2xl' : ''}`}>
-                            <h3 className="mb-2 text-2xl font-bold text-brand-slate">{step.title}</h3>
-                            <p className="text-brand-slate/70 mb-3">{step.description}</p>
+                          <div
+                            className={`inline-block rounded-3xl bg-white p-8 shadow-lg transition-all duration-500 ${isActive ? 'scale-105 shadow-2xl' : ''}`}
+                          >
+                            <h3 className="mb-2 text-2xl font-bold text-brand-slate">
+                              {step.title}
+                            </h3>
+                            <p className="mb-3 text-brand-slate/70">{step.description}</p>
                             <p className="text-sm text-brand-slate/50">{step.detail}</p>
                           </div>
                         </div>
@@ -185,24 +211,32 @@ export function HowItWorksTimeline() {
                   </div>
 
                   {/* Mobile Layout */}
-                  <div className="md:hidden flex items-start gap-6">
-                    <div className={`relative flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl transition-all duration-500 ${
-                      isActive
-                        ? isOrange
-                          ? 'bg-brand-orange shadow-xl shadow-brand-orange/50'
-                          : 'bg-brand-teal shadow-xl shadow-brand-teal/50'
-                        : 'bg-brand-slate/10'
-                    }`}>
-                      <Icon className={`h-8 w-8 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-teal'}`} />
-                      <div className={`absolute -top-2 -left-2 flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
-                        isOrange ? 'bg-brand-orange text-white' : 'bg-brand-teal text-white'
-                      }`}>
+                  <div className="flex items-start gap-6 md:hidden">
+                    <div
+                      className={`relative flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl transition-all duration-500 ${
+                        isActive
+                          ? isOrange
+                            ? 'bg-brand-orange shadow-xl shadow-brand-orange/50'
+                            : 'bg-brand-teal shadow-xl shadow-brand-teal/50'
+                          : 'bg-brand-slate/10'
+                      }`}
+                    >
+                      <Icon
+                        className={`h-8 w-8 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-teal'}`}
+                      />
+                      <div
+                        className={`absolute -left-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
+                          isOrange ? 'bg-brand-orange text-white' : 'bg-brand-teal text-white'
+                        }`}
+                      >
                         {step.number}
                       </div>
                     </div>
-                    <div className={`flex-1 rounded-3xl bg-white p-6 shadow-lg transition-all duration-500 ${isActive ? 'scale-105 shadow-2xl' : ''}`}>
+                    <div
+                      className={`flex-1 rounded-3xl bg-white p-6 shadow-lg transition-all duration-500 ${isActive ? 'scale-105 shadow-2xl' : ''}`}
+                    >
                       <h3 className="mb-2 text-xl font-bold text-brand-slate">{step.title}</h3>
-                      <p className="text-brand-slate/70 mb-2 text-sm">{step.description}</p>
+                      <p className="mb-2 text-sm text-brand-slate/70">{step.description}</p>
                       <p className="text-xs text-brand-slate/50">{step.detail}</p>
                     </div>
                   </div>
@@ -213,7 +247,9 @@ export function HowItWorksTimeline() {
         </div>
 
         {/* Progress Indicators */}
-        <div className={`mt-16 flex justify-center gap-3 transition-all duration-1000 delay-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div
+          className={`mt-16 flex justify-center gap-3 transition-all delay-1000 duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+        >
           {steps.map((step, index) => (
             <button
               key={index}

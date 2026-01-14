@@ -1,7 +1,5 @@
 import { Container } from '@/components/layout/container'
-import { Wrench, ArrowRight } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { Wrench } from 'lucide-react'
 
 export function RainesDevContext() {
   return (
@@ -20,7 +18,7 @@ export function RainesDevContext() {
               href="https://www.rainesdev.ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-normal text-[#8DEC42] hover:text-[#7ACC3B] transition-colors underline decoration-[#8DEC42]/30 hover:decoration-[#7ACC3B]"
+              className="font-normal text-[#8DEC42] underline decoration-[#8DEC42]/30 transition-colors hover:text-[#7ACC3B] hover:decoration-[#7ACC3B]"
             >
               RainesDev.ai
             </a>
@@ -32,7 +30,7 @@ export function RainesDevContext() {
               href="https://www.rainesdev.ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-normal text-[#8DEC42] hover:text-[#7ACC3B] transition-colors"
+              className="font-normal text-[#8DEC42] transition-colors hover:text-[#7ACC3B]"
             >
               RainesDev.ai
             </a>
@@ -40,7 +38,9 @@ export function RainesDevContext() {
           </p>
 
           <p className="mb-10 text-base font-light text-white/80">
-            Instead of keeping effective workflows locked inside internal and client projects, we are making them reusable so teams can deploy what actually works faster, with less guesswork.
+            Instead of keeping effective workflows locked inside internal and client projects, we
+            are making them reusable so teams can deploy what actually works faster, with less
+            guesswork.
           </p>
         </div>
       </Container>

@@ -10,7 +10,7 @@ export const revalidate = 60 // Cache for 60 seconds
  * Returns agent counts for all categories in a single request
  * Replaces the inefficient 6 separate API calls from homepage
  */
-async function handler(request: NextRequest) {
+async function handler(_request: NextRequest) {
   try {
     // Get all categories with their agent counts
     const categories = await prisma.category.findMany({
@@ -21,37 +21,43 @@ async function handler(request: NextRequest) {
             agents: {
               where: {
                 status: 'APPROVED',
-                isLatestVersion: true
-              }
-            }
-          }
-        }
+                isLatestVersion: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
-        displayOrder: 'asc'
-      }
+        displayOrder: 'asc',
+      },
     })
 
     // Transform to the format expected by the frontend
-    const counts = categories.reduce((acc, category) => {
-      acc[category.slug] = category._count.agents
-      return acc
-    }, {} as Record<string, number>)
+    const counts = categories.reduce(
+      (acc, category) => {
+        acc[category.slug] = category._count.agents
+        return acc
+      },
+      {} as Record<string, number>
+    )
 
-    return NextResponse.json({
-      success: true,
-      counts
-    }, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
+    return NextResponse.json(
+      {
+        success: true,
+        counts,
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        },
       }
-    })
+    )
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
         error: 'Failed to fetch category statistics',
-        counts: {}
+        counts: {},
       },
       { status: 500 }
     )

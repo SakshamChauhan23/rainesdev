@@ -1,7 +1,6 @@
 'use client'
 import { logger } from '@/lib/logger'
 
-
 import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -15,7 +14,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { formatPrice } from '@/lib/utils'
-import { Clock, CheckCircle2, Sparkles, Phone, Calendar } from 'lucide-react'
+import { Clock, CheckCircle2, Sparkles, Phone } from 'lucide-react'
 import Link from 'next/link'
 import { Decimal } from '@prisma/client/runtime/library'
 
@@ -70,7 +69,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
       const response = await fetch(`/api/admin/setup-requests/${requestId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
+        body: JSON.stringify(updates),
       })
 
       if (!response.ok) {
@@ -79,9 +78,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
 
       const { setupRequest } = await response.json()
 
-      setRequests(prev =>
-        prev.map(req => (req.id === requestId ? setupRequest : req))
-      )
+      setRequests(prev => prev.map(req => (req.id === requestId ? setupRequest : req)))
 
       // Clear editing state for this request
       setEditingNotes(prev => {
@@ -147,22 +144,19 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                   {/* Header */}
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="mb-2 flex items-center gap-3">
                         <Sparkles className="h-5 w-5 text-teal-600" />
                         <Link
                           href={`/agents/${request.agent.slug}`}
-                          className="text-lg font-semibold text-gray-900 hover:text-teal-600 transition-colors"
+                          className="text-lg font-semibold text-gray-900 transition-colors hover:text-teal-600"
                         >
                           {request.agent.title}
                         </Link>
                       </div>
                       <div className="text-sm text-gray-600">
+                        <p>Buyer: {request.buyer.name || request.buyer.email}</p>
                         <p>
-                          Buyer: {request.buyer.name || request.buyer.email}
-                        </p>
-                        <p>
-                          Purchased:{' '}
-                          {new Date(request.purchase.purchasedAt).toLocaleDateString()}
+                          Purchased: {new Date(request.purchase.purchasedAt).toLocaleDateString()}
                         </p>
                         <p>
                           Setup Cost:{' '}
@@ -173,19 +167,19 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                       </div>
                     </div>
 
-                    <Badge className="bg-orange-100 text-orange-700 border-orange-300">
+                    <Badge className="border-orange-300 bg-orange-100 text-orange-700">
                       Pending
                     </Badge>
                   </div>
 
                   {/* Complexity Selector */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
                       Complexity
                     </label>
                     <Select
                       value={request.complexity || 'none'}
-                      onValueChange={(value) => handleComplexityChange(request.id, value)}
+                      onValueChange={value => handleComplexityChange(request.id, value)}
                       disabled={loadingStates[request.id]}
                     >
                       <SelectTrigger className="w-48">
@@ -203,17 +197,15 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                   {/* Call Status - Only show if buyer requested book call */}
                   {request.bookCallRequested && (
                     <div className="rounded-lg border-2 border-orange-200 bg-orange-50 p-4">
-                      <div className="flex items-center gap-2 mb-3">
+                      <div className="mb-3 flex items-center gap-2">
                         <Phone className="h-5 w-5 text-orange-600" />
                         <span className="font-medium text-gray-900">Book a Call Requested</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <label className="text-sm font-medium text-gray-700">
-                          Call Status:
-                        </label>
+                        <label className="text-sm font-medium text-gray-700">Call Status:</label>
                         <Select
                           value={request.callStatus}
-                          onValueChange={(value) => handleCallStatusChange(request.id, value)}
+                          onValueChange={value => handleCallStatusChange(request.id, value)}
                           disabled={loadingStates[request.id]}
                         >
                           <SelectTrigger className="w-48 bg-white">
@@ -226,7 +218,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                           </SelectContent>
                         </Select>
                       </div>
-                      <p className="text-xs text-gray-600 mt-2">
+                      <p className="mt-2 text-xs text-gray-600">
                         Buyer can book via: https://calendar.app.google/QyuK9XKQ52r6dNPD6
                       </p>
                     </div>
@@ -234,17 +226,17 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
 
                   {/* Admin Notes */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
                       Admin Notes
                     </label>
                     <Textarea
                       placeholder="Add notes about the setup process..."
                       className="min-h-[80px]"
                       value={editingNotes[request.id] ?? request.adminNotes ?? ''}
-                      onChange={(e) =>
+                      onChange={e =>
                         setEditingNotes(prev => ({
                           ...prev,
-                          [request.id]: e.target.value
+                          [request.id]: e.target.value,
                         }))
                       }
                       disabled={loadingStates[request.id]}
@@ -304,33 +296,28 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
         ) : (
           <div className="space-y-4">
             {inProgressRequests.map(request => (
-              <Card key={request.id} className="p-6 border-blue-200 bg-blue-50">
+              <Card key={request.id} className="border-blue-200 bg-blue-50 p-6">
                 <div className="space-y-4">
                   {/* Header */}
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="mb-2 flex items-center gap-3">
                         <Link
                           href={`/agents/${request.agent.slug}`}
-                          className="text-lg font-semibold text-gray-900 hover:text-teal-600 transition-colors"
+                          className="text-lg font-semibold text-gray-900 transition-colors hover:text-teal-600"
                         >
                           {request.agent.title}
                         </Link>
                       </div>
                       <div className="text-sm text-gray-600">
+                        <p>Buyer: {request.buyer.name || request.buyer.email}</p>
                         <p>
-                          Buyer: {request.buyer.name || request.buyer.email}
-                        </p>
-                        <p>
-                          Purchased:{' '}
-                          {new Date(request.purchase.purchasedAt).toLocaleDateString()}
+                          Purchased: {new Date(request.purchase.purchasedAt).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
 
-                    <Badge className="bg-blue-100 text-blue-700 border-blue-300">
-                      In Progress
-                    </Badge>
+                    <Badge className="border-blue-300 bg-blue-100 text-blue-700">In Progress</Badge>
                   </div>
 
                   {/* Call Status - Only show if buyer requested book call */}
@@ -341,8 +328,11 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                         <span className="text-sm font-medium text-gray-700">Call Status:</span>
                         <Badge
                           variant={
-                            request.callStatus === 'COMPLETED' ? 'default' :
-                            request.callStatus === 'SCHEDULED' ? 'secondary' : 'outline'
+                            request.callStatus === 'COMPLETED'
+                              ? 'default'
+                              : request.callStatus === 'SCHEDULED'
+                                ? 'secondary'
+                                : 'outline'
                           }
                         >
                           {request.callStatus === 'PENDING' && '⏳ Pending'}
@@ -355,7 +345,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
 
                   {/* Admin Notes */}
                   {request.adminNotes && (
-                    <div className="p-3 bg-white rounded-lg border">
+                    <div className="rounded-lg border bg-white p-3">
                       <p className="text-sm text-gray-700">{request.adminNotes}</p>
                     </div>
                   )}
@@ -395,15 +385,15 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
         ) : (
           <div className="space-y-4">
             {completedRequests.map(request => (
-              <Card key={request.id} className="p-6 bg-gray-50">
+              <Card key={request.id} className="bg-gray-50 p-6">
                 <div className="space-y-3">
                   {/* Header */}
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="mb-2 flex items-center gap-3">
                         <Link
                           href={`/agents/${request.agent.slug}`}
-                          className="text-lg font-semibold text-gray-900 hover:text-teal-600 transition-colors"
+                          className="text-lg font-semibold text-gray-900 transition-colors hover:text-teal-600"
                         >
                           {request.agent.title}
                         </Link>
@@ -416,9 +406,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                         )}
                       </div>
                       <div className="text-sm text-gray-600">
-                        <p>
-                          Buyer: {request.buyer.name || request.buyer.email}
-                        </p>
+                        <p>Buyer: {request.buyer.name || request.buyer.email}</p>
                         <p>
                           Completed:{' '}
                           {request.completedAt
@@ -428,14 +416,14 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                       </div>
                     </div>
 
-                    <Badge className="bg-green-100 text-green-700 border-green-300">
+                    <Badge className="border-green-300 bg-green-100 text-green-700">
                       Completed
                     </Badge>
                   </div>
 
                   {/* Admin Notes (if any) */}
                   {request.adminNotes && (
-                    <div className="mt-2 p-3 bg-white rounded-lg border">
+                    <div className="mt-2 rounded-lg border bg-white p-3">
                       <p className="text-sm text-gray-700">{request.adminNotes}</p>
                     </div>
                   )}

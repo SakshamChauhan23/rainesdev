@@ -1,5 +1,7 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
   "rules": {
     // Warn on unused variables but allow unused function parameters with underscore prefix (P3.6)
     "@typescript-eslint/no-unused-vars": [
