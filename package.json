@@ -36,6 +36,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
+    "isomorphic-dompurify": "^2.35.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.462.0",
     "nanoid": "^5.0.9",
@@ -49,7 +50,7 @@
     "sharp": "^0.33.5",
     "stripe": "^17.5.0",
     "tailwind-merge": "^2.6.0",
-    "zod": "^3.23.8"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "^5.7.2",

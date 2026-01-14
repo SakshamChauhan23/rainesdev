@@ -6,6 +6,14 @@ import { createTestPurchase } from '@/lib/purchases'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { logger } from '@/lib/logger'
+import { z } from 'zod'
+
+// Validation schema for checkout actions
+const ProcessPurchaseSchema = z.object({
+    agentId: z.string().uuid('Invalid agent ID format'),
+    assistedSetupRequested: z.boolean(),
+    bookCallRequested: z.boolean()
+})
 
 /**
  * Process a test mode purchase (no Stripe)
@@ -15,6 +23,21 @@ export async function processTestPurchase(
     assistedSetupRequested: boolean = false,
     bookCallRequested: boolean = false
 ) {
+    // Validate inputs
+    const validationResult = ProcessPurchaseSchema.safeParse({
+        agentId,
+        assistedSetupRequested,
+        bookCallRequested
+    })
+
+    if (!validationResult.success) {
+        logger.error('❌ Invalid purchase input:', validationResult.error.errors)
+        return {
+            success: false,
+            error: 'Invalid input: ' + validationResult.error.errors[0].message
+        }
+    }
+
     const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 

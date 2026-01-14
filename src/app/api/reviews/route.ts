@@ -1,7 +1,8 @@
 import { logger } from '@/lib/logger'
-
+import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import DOMPurify from 'isomorphic-dompurify'
 
 export const runtime = 'nodejs'
 export const revalidate = 60 // Cache reviews for 1 minute
@@ -10,7 +11,7 @@ const REVIEW_ELIGIBILITY_DAYS = 14
 const MAX_COMMENT_LENGTH = 1000
 
 // GET - Fetch reviews for an agent
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const agentId = searchParams.get('agentId')
@@ -88,7 +89,7 @@ export async function GET(request: NextRequest) {
 }
 
 // POST - Submit a new review
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   try {
     const body = await request.json()
     const { userId, agentId, rating, comment } = body
@@ -114,6 +115,13 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Sanitize comment to prevent XSS attacks
+    const sanitizedComment = comment ? DOMPurify.sanitize(comment, {
+      ALLOWED_TAGS: [], // Strip all HTML tags
+      ALLOWED_ATTR: [], // Strip all attributes
+      KEEP_CONTENT: true // Keep text content
+    }).trim() : null
 
     // Check if user exists and get their role
     const user = await prisma.user.findUnique({
@@ -208,7 +216,7 @@ export async function POST(request: NextRequest) {
         agentVersionId: purchase.agentVersionId,
         buyerId: userId,
         rating: rating,
-        comment: comment || null,
+        comment: sanitizedComment,
         verifiedPurchase: true // Always true since we verified purchase above
       },
       include: {
@@ -236,3 +244,9 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting
+// GET: Public API preset (30 req/min)
+// POST: Review preset (5 reviews per 5 minutes to prevent spam)
+export const GET = withRateLimit(RateLimitPresets.PUBLIC_API, getHandler)
+export const POST = withRateLimit(RateLimitPresets.REVIEW, postHandler)

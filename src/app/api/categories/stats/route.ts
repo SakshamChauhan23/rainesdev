@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 60 // Cache for 60 seconds
@@ -9,7 +10,7 @@ export const revalidate = 60 // Cache for 60 seconds
  * Returns agent counts for all categories in a single request
  * Replaces the inefficient 6 separate API calls from homepage
  */
-export async function GET(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     // Get all categories with their agent counts
     const categories = await prisma.category.findMany({
@@ -56,3 +57,6 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting (public API preset - 30 req/min)
+export const GET = withRateLimit(RateLimitPresets.PUBLIC_API, handler)

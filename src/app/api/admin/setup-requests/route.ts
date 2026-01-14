@@ -1,11 +1,11 @@
 import { logger } from '@/lib/logger'
-
+import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getUserWithRole } from '@/lib/user-sync'
 import { prisma } from '@/lib/prisma'
 
-export async function GET(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     // Verify authentication
     const supabase = createClient()
@@ -60,3 +60,6 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting (admin preset - 60 req/min)
+export const GET = withRateLimit(RateLimitPresets.ADMIN, handler)
