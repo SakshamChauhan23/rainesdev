@@ -28,7 +28,6 @@ interface SubmitAgentFormProps {
 }
 
 export function SubmitAgentForm({ categories }: SubmitAgentFormProps) {
-  // @ts-expect-error - Types for useFormState can be tricky seamlessly between server/client actions in some versions
   const [state, formAction] = useFormState(createAgent, initialState)
 
   return (
