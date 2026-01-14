@@ -136,6 +136,12 @@ export function Header() {
             >
               How It Works
             </Link>
+            <Link
+              href="/submit-agent"
+              className="text-sm font-medium text-brand-teal transition-all hover:scale-105 hover:text-brand-teal/80"
+            >
+              Become a Seller
+            </Link>
           </nav>
 
           {/* Auth Buttons */}
@@ -245,6 +251,13 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 How It Works
+              </Link>
+              <Link
+                href="/submit-agent"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-teal transition-colors hover:bg-brand-cream hover:text-brand-teal/80"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Become a Seller
               </Link>
 
               {user && userRole && (
