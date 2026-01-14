@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { logger } from '@/lib/logger'
+import { validatePrice } from '@/lib/validation'
 
 export type UpdateAgentState = {
     errors?: {
@@ -62,8 +63,15 @@ export async function updateAgent(
     if (!categoryId) {
         return { message: 'Please select a category' }
     }
-    if (isNaN(price) || price < 0) {
+    if (isNaN(price)) {
         return { message: 'Price must be a valid number' }
+    }
+
+    // Validate price constraints (P1.11)
+    try {
+        validatePrice(price, 'price')
+    } catch (error) {
+        return { message: error instanceof Error ? error.message : 'Invalid price' }
     }
 
     logger.info('📝 Updating agent:', { agentId, title, categoryId })

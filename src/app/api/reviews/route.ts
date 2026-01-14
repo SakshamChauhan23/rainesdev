@@ -3,6 +3,7 @@ import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import DOMPurify from 'isomorphic-dompurify'
+import { validateRating } from '@/lib/validation'
 
 export const runtime = 'nodejs'
 export const revalidate = 60 // Cache reviews for 1 minute
@@ -102,9 +103,12 @@ async function postHandler(request: NextRequest) {
       )
     }
 
-    if (rating < 1 || rating > 5) {
+    // Validate rating constraints (P1.12)
+    try {
+      validateRating(rating)
+    } catch (error) {
       return NextResponse.json(
-        { success: false, error: 'Rating must be between 1 and 5' },
+        { success: false, error: error instanceof Error ? error.message : 'Invalid rating' },
         { status: 400 }
       )
     }

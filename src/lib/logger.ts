@@ -1,19 +1,52 @@
 /**
  * Logger utility that respects environment
  * Only logs in development mode, preventing sensitive data leaks in production
+ * Integrates with Sentry for production error tracking
  */
 
 type LogLevel = 'log' | 'info' | 'warn' | 'error' | 'debug';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Lazy load Sentry only when needed (production errors)
+let sentryModule: typeof import('@sentry/nextjs') | null = null;
+
+async function getSentry() {
+  if (!sentryModule && isProduction) {
+    try {
+      sentryModule = await import('@sentry/nextjs');
+    } catch (error) {
+      console.error('Failed to load Sentry:', error);
+    }
+  }
+  return sentryModule;
+}
 
 class Logger {
   private logInternal(level: LogLevel, ...args: any[]) {
     if (!isDevelopment) {
-      // In production, only log errors (and optionally send to error tracking service)
+      // In production, only log errors and send to Sentry
       if (level === 'error') {
         console.error(...args);
-        // TODO: Send to Sentry or error tracking service
+
+        // Send to Sentry in production
+        if (isProduction) {
+          getSentry().then(Sentry => {
+            if (Sentry) {
+              // Extract error object if present
+              const error = args.find(arg => arg instanceof Error);
+              if (error) {
+                Sentry.captureException(error, {
+                  extra: { context: args.filter(arg => !(arg instanceof Error)) }
+                });
+              } else {
+                // Capture as message if no error object
+                Sentry.captureMessage(args.join(' '), 'error');
+              }
+            }
+          });
+        }
       }
       return;
     }

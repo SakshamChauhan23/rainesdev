@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { logger } from '@/lib/logger'
 import { z } from 'zod'
+import { validateAmountPaid } from '@/lib/validation'
 
 // Validation schema for checkout actions
 const ProcessPurchaseSchema = z.object({
@@ -79,6 +80,13 @@ export async function processTestPurchase(
         const agentPrice = Number(agent.price)
         const setupPrice = assistedSetupRequested ? Number(agent.assistedSetupPrice) : 0
         const totalAmount = agentPrice + setupPrice
+
+        // Validate amount paid constraints (P1.13)
+        try {
+            validateAmountPaid(totalAmount)
+        } catch (error) {
+            throw new Error(error instanceof Error ? error.message : 'Invalid payment amount')
+        }
 
         // Create purchase with assisted setup flag
         const purchase = await prisma.purchase.create({
