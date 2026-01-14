@@ -4,6 +4,7 @@ import { getUserWithRole } from '@/lib/user-sync'
 import { prisma } from '@/lib/prisma'
 import { Container } from '@/components/layout/container'
 import { Badge } from '@/components/ui/badge'
+import { StatusBadge } from '@/components/ui/status-badge'
 import { Button } from '@/components/ui/button'
 import {
   Clock,
@@ -324,15 +325,7 @@ export default async function AdminDashboard() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Badge
-                        className={`rounded-lg ${
-                          agent.status === 'APPROVED'
-                            ? 'border-green-200 bg-green-100 text-green-700'
-                            : 'border-red-200 bg-red-100 text-red-700'
-                        }`}
-                      >
-                        {agent.status}
-                      </Badge>
+                      <StatusBadge status={agent.status as any} />
                       <span className="text-sm text-brand-slate/50">
                         {agent.approvedAt &&
                           formatDistanceToNow(new Date(agent.approvedAt), { addSuffix: true })}
