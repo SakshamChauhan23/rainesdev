@@ -68,6 +68,7 @@
     "@netlify/plugin-nextjs": "^5.7.2",
     "@next/bundle-analyzer": "^16.1.1",
     "@types/bcryptjs": "^2.4.6",
+    "@types/json-schema": "^7.0.15",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.10.1",
     "@types/pg": "^8.16.0",
