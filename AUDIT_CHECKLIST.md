@@ -1,7 +1,7 @@
 # Platform Audit - Issue Tracking Checklist
 
 **Total Issues:** 63
-**Status:** 42/63 Complete (67%)
+**Status:** 43/63 Complete (68%)
 **Last Updated:** 2026-01-14
 
 ## 🔴 CRITICAL ISSUES (Priority 1) - 23 Issues
@@ -279,7 +279,7 @@
   - **Effort:** 30 minutes
   - **Completed:** 2026-01-14 - Added try-catch to all sessionStorage operations in checkout-confirm-button.tsx and category-grid.tsx to gracefully handle private browsing mode
 
-#### Hard-coded Values - ✅ 2/3 Complete
+#### Hard-coded Values - ✅ 3/3 Complete ✅ COMPLETE!
 
 - [x] **P2.10** Move review constants to environment variables ✅ DONE
   - **File:** [src/app/api/reviews/route.ts:7-8](src/app/api/reviews/route.ts#L7-L8)
@@ -288,11 +288,12 @@
   - **Effort:** 1 hour
   - **Completed:** 2026-01-14 - Moved REVIEW_ELIGIBILITY_DAYS and MAX_COMMENT_LENGTH to environment variables with defaults (14 days, 1000 chars)
 
-- [ ] **P2.11** Fix Terms of Service and Refund Policy links
+- [x] **P2.11** Fix Terms of Service and Refund Policy links ✅ DONE
   - **File:** [src/components/checkout/checkout-confirm-button.tsx:74-80](src/components/checkout/checkout-confirm-button.tsx#L74-L80)
   - **Fix:** Create actual T&C pages, update links from `#`
   - **Impact:** Legal compliance, better UX
   - **Effort:** 4 hours (includes creating pages)
+  - **Completed:** 2026-01-14 - Created comprehensive Terms of Service and Refund Policy pages with professional styling, updated checkout links from "#" to /terms and /refund-policy
 
 - [x] **P2.12** Move calendar booking link to environment variable ✅ DONE
   - **File:** [src/app/library/page.tsx:81](src/app/library/page.tsx#L81)
