@@ -26,45 +26,47 @@ async function getHandler(request: NextRequest) {
       )
     }
 
-    // Get reviews for approved versions only
-    const reviews = await prisma.review.findMany({
-      where: {
-        agentId: agentId,
-        agent: {
-          status: 'APPROVED'
-        }
-      },
-      include: {
-        buyer: {
-          select: {
-            id: true,
-            name: true,
-            email: true
+    // Run queries in parallel for better performance (P2.1)
+    const [reviews, stats] = await Promise.all([
+      // Get reviews for approved versions only
+      prisma.review.findMany({
+        where: {
+          agentId: agentId,
+          agent: {
+            status: 'APPROVED'
           }
+        },
+        include: {
+          buyer: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        take: limit,
+        skip: offset
+      }),
+      // Calculate average rating and total count
+      prisma.review.aggregate({
+        where: {
+          agentId: agentId,
+          agent: {
+            status: 'APPROVED'
+          }
+        },
+        _avg: {
+          rating: true
+        },
+        _count: {
+          id: true
         }
-      },
-      orderBy: {
-        createdAt: 'desc'
-      },
-      take: limit,
-      skip: offset
-    })
-
-    // Calculate average rating and total count
-    const stats = await prisma.review.aggregate({
-      where: {
-        agentId: agentId,
-        agent: {
-          status: 'APPROVED'
-        }
-      },
-      _avg: {
-        rating: true
-      },
-      _count: {
-        id: true
-      }
-    })
+      })
+    ])
 
     const response = NextResponse.json({
       success: true,

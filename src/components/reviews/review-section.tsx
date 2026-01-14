@@ -38,13 +38,25 @@ export function ReviewSection({ agentId, userId, userRole }: ReviewSectionProps)
   const checkEligibility = async () => {
     try {
       const response = await fetch(`/api/reviews/eligibility?userId=${userId}&agentId=${agentId}`)
+
+      // Check response status (P2.7)
+      if (!response.ok) {
+        logger.error('Error checking review eligibility: HTTP', response.status)
+        setEligibility({ eligible: false, message: 'Failed to check eligibility' })
+        return
+      }
+
       const data = await response.json()
 
       if (data.success) {
         setEligibility(data)
+      } else {
+        // Handle API error response
+        setEligibility({ eligible: false, message: data.error || 'Failed to check eligibility' })
       }
     } catch (error) {
       logger.error('Error checking review eligibility:', error)
+      setEligibility({ eligible: false, message: 'Failed to check eligibility' })
     } finally {
       setLoading(false)
     }

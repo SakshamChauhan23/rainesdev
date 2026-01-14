@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { logger } from '@/lib/logger'
 
 const categoryDefinitions = [
   {
@@ -87,6 +88,19 @@ export function CategoryGrid() {
       try {
         // Single API call to get all category counts (replaces 6 separate calls)
         const response = await fetch('/api/categories/stats')
+
+        // Check response status (P2.8)
+        if (!response.ok) {
+          logger.error('Error fetching category stats: HTTP', response.status)
+          // Set all counts to 0 if fetch fails
+          const counts: Record<string, number> = {}
+          categoryDefinitions.forEach(cat => {
+            counts[cat.slug] = 0
+          })
+          setCategoryCounts(counts)
+          return
+        }
+
         const data = await response.json()
 
         if (data.success && data.counts) {
@@ -98,6 +112,7 @@ export function CategoryGrid() {
             timestamp: Date.now()
           }))
         } else {
+          logger.warn('Category stats API returned unsuccessful response')
           // Set all counts to 0 if fetch fails
           const counts: Record<string, number> = {}
           categoryDefinitions.forEach(cat => {
@@ -106,6 +121,7 @@ export function CategoryGrid() {
           setCategoryCounts(counts)
         }
       } catch (error) {
+        logger.error('Error fetching category stats:', error)
         // Set all counts to 0 if fetch fails
         const counts: Record<string, number> = {}
         categoryDefinitions.forEach(cat => {

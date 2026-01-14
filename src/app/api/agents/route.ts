@@ -127,7 +127,7 @@ async function handler(request: NextRequest) {
       seller: agent.seller,
     }))
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       data: sanitizedAgents,
       pagination: {
@@ -137,6 +137,11 @@ async function handler(request: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     })
+
+    // Add CDN caching headers (P2.3)
+    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120')
+
+    return response
   } catch (error) {
     logger.error('Error fetching agents:', error)
     return NextResponse.json(
