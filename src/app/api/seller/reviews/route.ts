@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export const runtime = 'nodejs'
-export const revalidate = 60
+export const dynamic = 'force-dynamic' // Uses searchParams, cannot be static
 
 // GET - Fetch all reviews for a seller's agents
 export async function GET(request: NextRequest) {
@@ -13,18 +13,15 @@ export async function GET(request: NextRequest) {
     const sellerId = searchParams.get('sellerId')
 
     if (!sellerId) {
-      return NextResponse.json(
-        { success: false, error: 'Missing sellerId' },
-        { status: 400 }
-      )
+      return NextResponse.json({ success: false, error: 'Missing sellerId' }, { status: 400 })
     }
 
     // Get all reviews for this seller's agents
     const reviews = await prisma.review.findMany({
       where: {
         agent: {
-          sellerId: sellerId
-        }
+          sellerId: sellerId,
+        },
       },
       include: {
         agent: {
@@ -32,20 +29,20 @@ export async function GET(request: NextRequest) {
             id: true,
             title: true,
             slug: true,
-            version: true
-          }
+            version: true,
+          },
         },
         buyer: {
           select: {
             id: true,
             name: true,
-            email: true
-          }
-        }
+            email: true,
+          },
+        },
       },
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: 'desc',
+      },
     })
 
     // Group reviews by agent
@@ -69,15 +66,18 @@ export async function GET(request: NextRequest) {
         agentSlug: agentReviews[0].agent.slug,
         totalReviews: agentReviews.length,
         averageRating: parseFloat(averageRating.toFixed(1)),
-        reviews: agentReviews
+        reviews: agentReviews,
       }
     })
 
     // Overall stats
     const totalReviews = reviews.length
-    const overallAverage = totalReviews > 0
-      ? parseFloat((reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews).toFixed(1))
-      : 0
+    const overallAverage =
+      totalReviews > 0
+        ? parseFloat(
+            (reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews).toFixed(1)
+          )
+        : 0
 
     const response = NextResponse.json({
       success: true,
@@ -86,15 +86,14 @@ export async function GET(request: NextRequest) {
         agentStats,
         overallStats: {
           totalReviews,
-          averageRating: overallAverage
-        }
-      }
+          averageRating: overallAverage,
+        },
+      },
     })
 
     response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120')
 
     return response
-
   } catch (error) {
     logger.error('[Seller Reviews API] Error:', error)
     return NextResponse.json(
