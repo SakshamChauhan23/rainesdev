@@ -3,7 +3,15 @@ import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import DOMPurify from 'isomorphic-dompurify'
-import { validateRating } from '@/lib/validation'
+import {
+  validateRating,
+  reviewsGetSchema,
+  reviewsPostSchema,
+  validateQuery,
+  validateBody,
+  formatZodErrors,
+} from '@/lib/validation'
+import { ZodError } from 'zod'
 
 export const runtime = 'nodejs'
 export const revalidate = 60 // Cache reviews for 1 minute
@@ -19,15 +27,19 @@ const MAX_PAGE_SIZE = 50
 // GET - Fetch reviews for an agent with cursor-based pagination (P2.29)
 async function getHandler(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams
-    const agentId = searchParams.get('agentId')
-    const cursor = searchParams.get('cursor') // Review ID to start after
-    const limitParam = parseInt(searchParams.get('limit') || String(DEFAULT_PAGE_SIZE))
-    const limit = Math.min(Math.max(1, limitParam), MAX_PAGE_SIZE)
-
-    if (!agentId) {
-      return NextResponse.json({ success: false, error: 'Missing agentId' }, { status: 400 })
+    // Validate query parameters with Zod schema (P2.16)
+    let validatedParams
+    try {
+      validatedParams = validateQuery(request, reviewsGetSchema)
+    } catch (error) {
+      if (error instanceof NextResponse) return error
+      return NextResponse.json(
+        { success: false, error: 'Invalid query parameters' },
+        { status: 400 }
+      )
     }
+
+    const { agentId, cursor, limit } = validatedParams
 
     // Build where clause
     const whereClause = {
@@ -104,30 +116,29 @@ async function getHandler(request: NextRequest) {
 // POST - Submit a new review
 async function postHandler(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { userId, agentId, rating, comment } = body
-
-    // Validation
-    if (!userId || !agentId || rating === undefined) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
-        { status: 400 }
-      )
+    // Validate request body with Zod schema (P2.16)
+    let validatedBody
+    try {
+      validatedBody = await validateBody(request, reviewsPostSchema)
+    } catch (error) {
+      if (error instanceof NextResponse) return error
+      if (error instanceof ZodError) {
+        return NextResponse.json(
+          { success: false, error: 'Validation failed', details: formatZodErrors(error) },
+          { status: 400 }
+        )
+      }
+      return NextResponse.json({ success: false, error: 'Invalid request body' }, { status: 400 })
     }
 
-    // Validate rating constraints (P1.12)
+    const { userId, agentId, rating, comment } = validatedBody
+
+    // Validate rating constraints (P1.12) - additional business logic validation
     try {
       validateRating(rating)
     } catch (error) {
       return NextResponse.json(
         { success: false, error: error instanceof Error ? error.message : 'Invalid rating' },
-        { status: 400 }
-      )
-    }
-
-    if (comment && comment.length > MAX_COMMENT_LENGTH) {
-      return NextResponse.json(
-        { success: false, error: `Comment must be ${MAX_COMMENT_LENGTH} characters or less` },
         { status: 400 }
       )
     }
