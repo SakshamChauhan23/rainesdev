@@ -1,95 +1,47 @@
 import { logger } from '@/lib/logger'
-
+import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { reviewsEligibilitySchema, validateQuery, formatZodErrors } from '@/lib/validation'
+import { checkReviewEligibility } from '@/lib/reviews'
+import { ZodError } from 'zod'
 
 export const runtime = 'nodejs'
 export const revalidate = 0 // Always fresh for eligibility checks
 
-const REVIEW_ELIGIBILITY_DAYS = 14 // 14 days after purchase
-
-export async function GET(request: NextRequest) {
+/**
+ * GET /api/reviews/eligibility
+ * Check if a user is eligible to review an agent (P2.28)
+ * Uses shared eligibility logic from @/lib/reviews
+ */
+async function getHandler(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams
-    const userId = searchParams.get('userId')
-    const agentId = searchParams.get('agentId')
-
-    if (!userId || !agentId) {
+    // Validate query parameters with Zod (P2.16)
+    let validatedParams
+    try {
+      validatedParams = validateQuery(request, reviewsEligibilitySchema)
+    } catch (error) {
+      if (error instanceof NextResponse) return error
+      if (error instanceof ZodError) {
+        return NextResponse.json(
+          { success: false, error: 'Validation failed', details: formatZodErrors(error) },
+          { status: 400 }
+        )
+      }
       return NextResponse.json(
-        { success: false, error: 'Missing userId or agentId' },
+        { success: false, error: 'Invalid query parameters' },
         { status: 400 }
       )
     }
 
-    // Find the user's purchase for this agent
-    const purchase = await prisma.purchase.findFirst({
-      where: {
-        buyerId: userId,
-        agentId: agentId,
-        status: 'COMPLETED'
-      },
-      orderBy: {
-        purchasedAt: 'desc' // Most recent purchase
-      }
-    })
+    const { userId, agentId } = validatedParams
 
-    if (!purchase) {
-      return NextResponse.json({
-        success: true,
-        eligible: false,
-        reason: 'NO_PURCHASE',
-        message: 'You need to purchase this agent before leaving a review.'
-      })
-    }
-
-    // Check if review already exists for this version
-    const existingReview = await prisma.review.findUnique({
-      where: {
-        agentVersionId_buyerId: {
-          agentVersionId: purchase.agentVersionId,
-          buyerId: userId
-        }
-      }
-    })
-
-    if (existingReview) {
-      return NextResponse.json({
-        success: true,
-        eligible: false,
-        reason: 'ALREADY_REVIEWED',
-        message: 'You have already reviewed this version of the agent.'
-      })
-    }
-
-    // Calculate eligibility date (14 days after purchase)
-    const eligibilityDate = new Date(purchase.purchasedAt)
-    eligibilityDate.setDate(eligibilityDate.getDate() + REVIEW_ELIGIBILITY_DAYS)
-
-    const now = new Date()
-    const isEligible = now >= eligibilityDate
-
-    if (!isEligible) {
-      const daysRemaining = Math.ceil((eligibilityDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-
-      return NextResponse.json({
-        success: true,
-        eligible: false,
-        reason: 'TOO_SOON',
-        message: `Reviews unlock after you've had time to use this agent (${daysRemaining} days remaining).`,
-        eligibilityDate: eligibilityDate.toISOString(),
-        daysRemaining
-      })
-    }
+    // Use shared eligibility checker (P2.28)
+    const eligibility = await checkReviewEligibility(userId, agentId)
 
     return NextResponse.json({
       success: true,
-      eligible: true,
-      agentVersionId: purchase.agentVersionId,
-      purchaseId: purchase.id,
-      purchasedAt: purchase.purchasedAt,
-      message: 'You can now leave a review for this agent.'
+      ...eligibility,
     })
-
   } catch (error) {
     logger.error('[Review Eligibility API] Error:', error)
     return NextResponse.json(
@@ -98,3 +50,6 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting - Public API preset (30 req/min)
+export const GET = withRateLimit(RateLimitPresets.PUBLIC_API, getHandler)

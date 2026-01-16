@@ -98,6 +98,11 @@ export const reviewsGetSchema = z.object({
   limit: z.coerce.number().int().min(1).max(50).optional().default(10),
 })
 
+export const reviewsEligibilitySchema = z.object({
+  userId: uuidPattern,
+  agentId: uuidPattern,
+})
+
 export const reviewsPostSchema = z.object({
   userId: uuidPattern,
   agentId: uuidPattern,

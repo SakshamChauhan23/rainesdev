@@ -1,8 +1,8 @@
 # Platform Audit - Issue Tracking Checklist
 
 **Total Issues:** 63
-**Status:** 59/63 Complete (94%)
-**Last Updated:** 2026-01-14
+**Status:** 60/63 Complete (95%)
+**Last Updated:** 2026-01-16
 
 ## 🔴 CRITICAL ISSUES (Priority 1) - 23 Issues
 
@@ -437,10 +437,11 @@
 
 #### API Design
 
-- [ ] **P2.28** Consolidate review endpoints
+- [x] **P2.28** Consolidate review endpoints ✅ DONE
   - **Files:** [src/app/api/reviews/\*](src/app/api/reviews/)
   - **Fix:** Better organize review API structure
   - **Impact:** Cleaner API design, easier to maintain
+  - **Completed:** 2026-01-16 - Created shared @/lib/reviews.ts utility with checkReviewEligibility(), added Zod validation to eligibility endpoint, added rate limiting, both endpoints now use shared logic
   - **Effort:** 3 hours
 
 - [x] **P2.29** Add pagination to reviews ✅ DONE
@@ -555,7 +556,7 @@
 ### By Priority
 
 - **P1 (Critical):** 21/23 (91%) ✅ Almost complete!
-- **P2 (High):** 27/29 (93%) 🔥 Almost complete!
+- **P2 (High):** 28/29 (97%) 🔥 Almost complete!
 - **P3 (Medium):** 11/11 (100%) 🔥 COMPLETE!
 
 ### By Category

@@ -11,18 +11,11 @@ import {
   validateBody,
   formatZodErrors,
 } from '@/lib/validation'
+import { checkReviewEligibility } from '@/lib/reviews'
 import { ZodError } from 'zod'
 
 export const runtime = 'nodejs'
 export const revalidate = 60 // Cache reviews for 1 minute
-
-// Review configuration from environment variables (P2.10)
-const REVIEW_ELIGIBILITY_DAYS = parseInt(process.env.REVIEW_ELIGIBILITY_DAYS || '14')
-const MAX_COMMENT_LENGTH = parseInt(process.env.MAX_COMMENT_LENGTH || '1000')
-
-// Pagination limits (P2.29)
-const DEFAULT_PAGE_SIZE = 10
-const MAX_PAGE_SIZE = 50
 
 // GET - Fetch reviews for an agent with cursor-based pagination (P2.29)
 async function getHandler(request: NextRequest) {
@@ -39,7 +32,7 @@ async function getHandler(request: NextRequest) {
       )
     }
 
-    const { agentId, cursor, limit } = validatedParams
+    const { agentId, cursor, limit = 10 } = validatedParams
 
     // Build where clause
     const whereClause = {
@@ -179,58 +172,20 @@ async function postHandler(request: NextRequest) {
       )
     }
 
-    // Find the user's completed purchase
-    const purchase = await prisma.purchase.findFirst({
-      where: {
-        buyerId: userId,
-        agentId: agentId,
-        status: 'COMPLETED',
-      },
-      orderBy: {
-        purchasedAt: 'desc',
-      },
-    })
+    // Use shared eligibility checker (P2.28)
+    const eligibility = await checkReviewEligibility(userId, agentId)
 
-    if (!purchase) {
-      return NextResponse.json(
-        { success: false, error: 'You must purchase this agent before reviewing it' },
-        { status: 403 }
-      )
-    }
-
-    // Check eligibility period (14 days)
-    const eligibilityDate = new Date(purchase.purchasedAt)
-    eligibilityDate.setDate(eligibilityDate.getDate() + REVIEW_ELIGIBILITY_DAYS)
-    const now = new Date()
-
-    if (now < eligibilityDate) {
-      const daysRemaining = Math.ceil(
-        (eligibilityDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-      )
+    if (!eligibility.eligible) {
+      const statusCode = eligibility.reason === 'ALREADY_REVIEWED' ? 409 : 403
       return NextResponse.json(
         {
           success: false,
-          error: `You can review this agent in ${daysRemaining} days`,
-          eligibilityDate: eligibilityDate.toISOString(),
+          error: eligibility.message,
+          reason: eligibility.reason,
+          ...(eligibility.eligibilityDate && { eligibilityDate: eligibility.eligibilityDate }),
+          ...(eligibility.daysRemaining && { daysRemaining: eligibility.daysRemaining }),
         },
-        { status: 403 }
-      )
-    }
-
-    // Check for existing review for this version
-    const existingReview = await prisma.review.findUnique({
-      where: {
-        agentVersionId_buyerId: {
-          agentVersionId: purchase.agentVersionId,
-          buyerId: userId,
-        },
-      },
-    })
-
-    if (existingReview) {
-      return NextResponse.json(
-        { success: false, error: 'You have already reviewed this version of the agent' },
-        { status: 409 }
+        { status: statusCode }
       )
     }
 
@@ -238,7 +193,7 @@ async function postHandler(request: NextRequest) {
     const review = await prisma.review.create({
       data: {
         agentId: agentId,
-        agentVersionId: purchase.agentVersionId,
+        agentVersionId: eligibility.agentVersionId!,
         buyerId: userId,
         rating: rating,
         comment: sanitizedComment,
