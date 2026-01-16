@@ -7,6 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { checkCsrf } from './csrf'
 
 interface RateLimitConfig {
   interval: number // Time window in milliseconds
@@ -132,12 +133,19 @@ export const RateLimitPresets = {
 /**
  * Rate limit middleware wrapper
  * Returns a function that checks rate limit and returns 429 if exceeded
+ * Also includes CSRF protection for mutation requests (P2.17)
  */
 export function withRateLimit(
   config: RateLimitConfig,
   handler: (request: NextRequest) => Promise<NextResponse>
 ) {
   return async (request: NextRequest): Promise<NextResponse> => {
+    // Check CSRF protection for mutation requests (P2.17)
+    const csrfError = checkCsrf(request)
+    if (csrfError) {
+      return csrfError
+    }
+
     const identifier = getIdentifier(request)
     const { allowed, remaining, resetTime } = checkRateLimit(identifier, config)
 
