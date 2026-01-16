@@ -1,8 +1,8 @@
 'use client'
 import { logger } from '@/lib/logger'
 
-import { useEffect, useState } from 'react'
-import { Star, CheckCircle } from 'lucide-react'
+import { useEffect, useState, useCallback } from 'react'
+import { Star, CheckCircle, Loader2 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 interface Review {
@@ -23,25 +23,48 @@ interface ReviewStats {
   totalReviews: number
 }
 
+interface Pagination {
+  hasMore: boolean
+  nextCursor: string | null
+  pageSize: number
+}
+
 interface ReviewListProps {
   agentId: string
   refreshTrigger?: number
 }
 
+const PAGE_SIZE = 10
+
 export function ReviewList({ agentId, refreshTrigger = 0 }: ReviewListProps) {
   const [reviews, setReviews] = useState<Review[]>([])
   const [stats, setStats] = useState<ReviewStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [pagination, setPagination] = useState<Pagination | null>(null)
 
+  // Reset and fetch initial reviews when agentId or refreshTrigger changes
   useEffect(() => {
+    setReviews([])
+    setPagination(null)
     fetchReviews()
   }, [agentId, refreshTrigger])
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async (cursor?: string) => {
     try {
       setError(null)
-      const response = await fetch(`/api/reviews?agentId=${agentId}&limit=20`)
+      const isLoadingMore = !!cursor
+
+      if (isLoadingMore) {
+        setLoadingMore(true)
+      }
+
+      const url = cursor
+        ? `/api/reviews?agentId=${agentId}&limit=${PAGE_SIZE}&cursor=${cursor}`
+        : `/api/reviews?agentId=${agentId}&limit=${PAGE_SIZE}`
+
+      const response = await fetch(url)
 
       // Check response status (P2.20)
       if (!response.ok) {
@@ -53,16 +76,28 @@ export function ReviewList({ agentId, refreshTrigger = 0 }: ReviewListProps) {
       const data = await response.json()
 
       if (data.success) {
-        setReviews(data.data)
-        setStats(data.stats)
+        if (isLoadingMore) {
+          setReviews(prev => [...prev, ...data.data])
+        } else {
+          setReviews(data.data)
+          setStats(data.stats)
+        }
+        setPagination(data.pagination)
       } else {
         setError(data.error || 'Failed to load reviews')
       }
-    } catch (error) {
-      logger.error('Error fetching reviews:', error)
+    } catch (err) {
+      logger.error('Error fetching reviews:', err)
       setError('Failed to load reviews. Please try again later.')
     } finally {
       setLoading(false)
+      setLoadingMore(false)
+    }
+  }, [agentId])
+
+  const handleLoadMore = () => {
+    if (pagination?.nextCursor && !loadingMore) {
+      fetchReviews(pagination.nextCursor)
     }
   }
 
@@ -144,38 +179,60 @@ export function ReviewList({ agentId, refreshTrigger = 0 }: ReviewListProps) {
             </p>
           </div>
         ) : (
-          reviews.map(review => (
-            <div
-              key={review.id}
-              className="space-y-3 rounded-lg border border-gray-200 bg-white p-6"
-            >
-              {/* Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-gray-900">
-                      {review.buyer.name || review.buyer.email.split('@')[0]}
-                    </span>
-                    {review.verifiedPurchase && (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
-                        <CheckCircle className="h-3 w-3" />
-                        Verified Buyer
+          <>
+            {reviews.map(review => (
+              <div
+                key={review.id}
+                className="space-y-3 rounded-lg border border-gray-200 bg-white p-6"
+              >
+                {/* Header */}
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-gray-900">
+                        {review.buyer.name || review.buyer.email.split('@')[0]}
                       </span>
-                    )}
-                  </div>
-                  <div className="mt-1 flex items-center gap-2">
-                    {renderStars(review.rating)}
-                    <span className="text-sm text-gray-500">
-                      {formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
-                    </span>
+                      {review.verifiedPurchase && (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
+                          <CheckCircle className="h-3 w-3" />
+                          Verified Buyer
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-1 flex items-center gap-2">
+                      {renderStars(review.rating)}
+                      <span className="text-sm text-gray-500">
+                        {formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Comment */}
-              {review.comment && <p className="leading-relaxed text-gray-700">{review.comment}</p>}
-            </div>
-          ))
+                {/* Comment */}
+                {review.comment && <p className="leading-relaxed text-gray-700">{review.comment}</p>}
+              </div>
+            ))}
+
+            {/* Load More Button (P2.29) */}
+            {pagination?.hasMore && (
+              <div className="mt-6 text-center">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {loadingMore ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Loading...
+                    </>
+                  ) : (
+                    `Load More Reviews`
+                  )}
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -12,28 +12,36 @@ export const revalidate = 60 // Cache reviews for 1 minute
 const REVIEW_ELIGIBILITY_DAYS = parseInt(process.env.REVIEW_ELIGIBILITY_DAYS || '14')
 const MAX_COMMENT_LENGTH = parseInt(process.env.MAX_COMMENT_LENGTH || '1000')
 
-// GET - Fetch reviews for an agent
+// Pagination limits (P2.29)
+const DEFAULT_PAGE_SIZE = 10
+const MAX_PAGE_SIZE = 50
+
+// GET - Fetch reviews for an agent with cursor-based pagination (P2.29)
 async function getHandler(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const agentId = searchParams.get('agentId')
-    const limit = parseInt(searchParams.get('limit') || '10')
-    const offset = parseInt(searchParams.get('offset') || '0')
+    const cursor = searchParams.get('cursor') // Review ID to start after
+    const limitParam = parseInt(searchParams.get('limit') || String(DEFAULT_PAGE_SIZE))
+    const limit = Math.min(Math.max(1, limitParam), MAX_PAGE_SIZE)
 
     if (!agentId) {
       return NextResponse.json({ success: false, error: 'Missing agentId' }, { status: 400 })
     }
 
+    // Build where clause
+    const whereClause = {
+      agentId: agentId,
+      agent: {
+        status: 'APPROVED' as const,
+      },
+    }
+
     // Run queries in parallel for better performance (P2.1)
     const [reviews, stats] = await Promise.all([
-      // Get reviews for approved versions only
+      // Get reviews for approved versions only with cursor-based pagination
       prisma.review.findMany({
-        where: {
-          agentId: agentId,
-          agent: {
-            status: 'APPROVED',
-          },
-        },
+        where: whereClause,
         include: {
           buyer: {
             select: {
@@ -46,17 +54,15 @@ async function getHandler(request: NextRequest) {
         orderBy: {
           createdAt: 'desc',
         },
-        take: limit,
-        skip: offset,
+        take: limit + 1, // Fetch one extra to check if there are more
+        ...(cursor && {
+          cursor: { id: cursor },
+          skip: 1, // Skip the cursor item itself
+        }),
       }),
       // Calculate average rating and total count
       prisma.review.aggregate({
-        where: {
-          agentId: agentId,
-          agent: {
-            status: 'APPROVED',
-          },
-        },
+        where: whereClause,
         _avg: {
           rating: true,
         },
@@ -66,12 +72,22 @@ async function getHandler(request: NextRequest) {
       }),
     ])
 
+    // Check if there are more reviews
+    const hasMore = reviews.length > limit
+    const reviewsToReturn = hasMore ? reviews.slice(0, limit) : reviews
+    const nextCursor = hasMore ? reviewsToReturn[reviewsToReturn.length - 1]?.id : null
+
     const response = NextResponse.json({
       success: true,
-      data: reviews,
+      data: reviewsToReturn,
       stats: {
         averageRating: stats._avg.rating ? parseFloat(stats._avg.rating.toFixed(1)) : 0,
         totalReviews: stats._count.id,
+      },
+      pagination: {
+        hasMore,
+        nextCursor,
+        pageSize: limit,
       },
     })
 
