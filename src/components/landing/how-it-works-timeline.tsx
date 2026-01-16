@@ -2,7 +2,7 @@
 
 import { Container } from '@/components/layout/container'
 import { useEffect, useRef, useState } from 'react'
-import { Search, ShoppingCart, CreditCard, Link as LinkIcon, Rocket } from 'lucide-react'
+import { Search, ShoppingCart, CreditCard, Rocket } from 'lucide-react'
 
 export function HowItWorksTimeline() {
   const [isVisible, setIsVisible] = useState(false)
@@ -29,7 +29,7 @@ export function HowItWorksTimeline() {
   useEffect(() => {
     if (isVisible) {
       const interval = setInterval(() => {
-        setActiveStep(prev => (prev + 1) % 5)
+        setActiveStep(prev => (prev + 1) % 4)
       }, 3000)
       return () => clearInterval(interval)
     }
@@ -62,19 +62,11 @@ export function HowItWorksTimeline() {
     },
     {
       number: 4,
-      icon: LinkIcon,
-      title: 'Access & Setup',
-      description: 'Get instant access to your agent via a simple setup link',
-      detail: 'No complex installation - just click and configure',
-      color: 'teal',
-    },
-    {
-      number: 5,
       icon: Rocket,
       title: 'Launch & Scale',
       description: 'Deploy your AI agent and watch it transform your workflow',
-      detail: 'Monitor performance, adjust settings, and scale as needed',
-      color: 'orange',
+      detail: 'Get instant access, monitor performance, and scale as needed',
+      color: 'teal',
     },
   ]
 
@@ -104,7 +96,7 @@ export function HowItWorksTimeline() {
             </span>
           </h2>
           <p className="text-lg text-brand-slate/70 sm:text-xl">
-            From discovery to deployment in 5 simple steps
+            From discovery to deployment in 4 simple steps
           </p>
         </div>
 

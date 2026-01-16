@@ -115,9 +115,9 @@ export function Header() {
             <Image
               src="/logo.png"
               alt="Rouze.ai"
-              width={180}
-              height={50}
-              className="h-14 w-auto transition-transform group-hover:scale-105"
+              width={200}
+              height={56}
+              className="h-16 w-auto transition-transform group-hover:scale-105"
               priority
             />
           </Link>
