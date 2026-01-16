@@ -91,9 +91,11 @@ export function FAQSection() {
           </div>
 
           {/* FAQ Accordion */}
-          <div className="space-y-4">
+          <div className="space-y-4" role="region" aria-label="Frequently Asked Questions">
             {faqs.map((faq, index) => {
               const isOpen = openIndex === index
+              const headingId = `faq-heading-${index}`
+              const panelId = `faq-panel-${index}`
 
               return (
                 <div
@@ -105,24 +107,34 @@ export function FAQSection() {
                   } ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                   style={{ transitionDelay: `${200 + index * 100}ms` }}
                 >
-                  <button
-                    onClick={() => setOpenIndex(isOpen ? null : index)}
-                    className="flex w-full items-center justify-between gap-4 p-6 text-left transition-all"
-                  >
-                    <span className={`text-lg font-semibold transition-colors ${
-                      isOpen ? 'text-brand-orange' : 'text-brand-slate group-hover:text-brand-teal'
-                    }`}>
-                      {faq.question}
-                    </span>
-                    <ChevronDown
-                      className={`h-6 w-6 flex-shrink-0 transition-all duration-300 ${
-                        isOpen
-                          ? 'rotate-180 text-brand-orange'
-                          : 'text-brand-slate/40 group-hover:text-brand-teal'
-                      }`}
-                    />
-                  </button>
+                  <h3>
+                    <button
+                      id={headingId}
+                      onClick={() => setOpenIndex(isOpen ? null : index)}
+                      className="flex w-full items-center justify-between gap-4 p-6 text-left transition-all"
+                      aria-expanded={isOpen}
+                      aria-controls={panelId}
+                    >
+                      <span className={`text-lg font-semibold transition-colors ${
+                        isOpen ? 'text-brand-orange' : 'text-brand-slate group-hover:text-brand-teal'
+                      }`}>
+                        {faq.question}
+                      </span>
+                      <ChevronDown
+                        className={`h-6 w-6 flex-shrink-0 transition-all duration-300 ${
+                          isOpen
+                            ? 'rotate-180 text-brand-orange'
+                            : 'text-brand-slate/40 group-hover:text-brand-teal'
+                        }`}
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </h3>
                   <div
+                    id={panelId}
+                    role="region"
+                    aria-labelledby={headingId}
+                    hidden={!isOpen}
                     className={`overflow-hidden transition-all duration-500 ${
                       isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                     }`}

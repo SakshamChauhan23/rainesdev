@@ -72,9 +72,11 @@ export function PurchaseConfirmationModal({
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2" role="radiogroup" aria-label="Admin assistance preference">
                 <button
                   onClick={() => setAssistedSetupChoice('yes')}
+                  role="radio"
+                  aria-checked={assistedSetupChoice === 'yes'}
                   className={`w-full rounded-xl border-2 p-4 text-left transition-all ${
                     assistedSetupChoice === 'yes'
                       ? 'border-brand-teal bg-brand-teal/10'
@@ -86,7 +88,7 @@ export function PurchaseConfirmationModal({
                       Yes, I need admin assistance
                     </span>
                     {assistedSetupChoice === 'yes' && (
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-teal">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-teal" aria-hidden="true">
                         <ArrowRight className="h-3 w-3 text-white" />
                       </div>
                     )}
@@ -95,6 +97,8 @@ export function PurchaseConfirmationModal({
 
                 <button
                   onClick={() => setAssistedSetupChoice('no')}
+                  role="radio"
+                  aria-checked={assistedSetupChoice === 'no'}
                   className={`w-full rounded-xl border-2 p-4 text-left transition-all ${
                     assistedSetupChoice === 'no'
                       ? 'border-brand-slate bg-brand-slate/5'
@@ -106,7 +110,7 @@ export function PurchaseConfirmationModal({
                       No thanks, I&apos;ll set it up myself
                     </span>
                     {assistedSetupChoice === 'no' && (
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-slate">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-slate" aria-hidden="true">
                         <ArrowRight className="h-3 w-3 text-white" />
                       </div>
                     )}

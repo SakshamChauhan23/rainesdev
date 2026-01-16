@@ -56,13 +56,14 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
   }
 
   return (
-    <div className="flex items-center justify-center space-x-2">
+    <nav aria-label="Pagination" className="flex items-center justify-center space-x-2">
       {/* Previous Button */}
       <Button
         variant="outline"
         size="icon"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
+        aria-label="Go to previous page"
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
@@ -71,7 +72,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       {pages.map((page, index) => {
         if (page < 0) {
           return (
-            <span key={`ellipsis-${index}`} className="px-2">
+            <span key={`ellipsis-${index}`} className="px-2" aria-hidden="true">
               ...
             </span>
           )
@@ -83,6 +84,8 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
             variant={currentPage === page ? 'default' : 'outline'}
             size="icon"
             onClick={() => onPageChange(page)}
+            aria-label={`Go to page ${page}`}
+            aria-current={currentPage === page ? 'page' : undefined}
           >
             {page}
           </Button>
@@ -95,9 +98,10 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         size="icon"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
+        aria-label="Go to next page"
       >
         <ChevronRight className="h-4 w-4" />
       </Button>
-    </div>
+    </nav>
   )
 }

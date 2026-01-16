@@ -67,32 +67,40 @@ export function ReviewForm({ agentId, userId, onSuccess }: ReviewFormProps) {
       <h3 className="text-lg font-semibold">Leave a Review</h3>
 
       {/* Star Rating */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Your Rating <span className="text-red-500">*</span>
-        </label>
-        <div className="flex gap-1">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              onClick={() => setRating(star)}
-              onMouseEnter={() => setHoverRating(star)}
-              onMouseLeave={() => setHoverRating(0)}
-              className="focus:outline-none transition-transform hover:scale-110"
-            >
-              <Star
-                className={`w-8 h-8 ${
-                  star <= (hoverRating || rating)
-                    ? 'fill-yellow-400 text-yellow-400'
-                    : 'text-gray-300'
-                }`}
-              />
-            </button>
-          ))}
+      <fieldset>
+        <legend className="block text-sm font-medium text-gray-700 mb-2">
+          Your Rating <span className="text-red-500" aria-hidden="true">*</span>
+          <span className="sr-only">(required)</span>
+        </legend>
+        <div className="flex gap-1" role="radiogroup" aria-label="Rating">
+          {[1, 2, 3, 4, 5].map((star) => {
+            const ratingLabel = star === 1 ? 'Poor' : star === 2 ? 'Fair' : star === 3 ? 'Good' : star === 4 ? 'Very Good' : 'Excellent'
+            return (
+              <button
+                key={star}
+                type="button"
+                role="radio"
+                aria-checked={rating === star}
+                aria-label={`${star} star${star > 1 ? 's' : ''} - ${ratingLabel}`}
+                onClick={() => setRating(star)}
+                onMouseEnter={() => setHoverRating(star)}
+                onMouseLeave={() => setHoverRating(0)}
+                className="focus:outline-none focus:ring-2 focus:ring-brand-orange focus:ring-offset-2 rounded transition-transform hover:scale-110"
+              >
+                <Star
+                  className={`w-8 h-8 ${
+                    star <= (hoverRating || rating)
+                      ? 'fill-yellow-400 text-yellow-400'
+                      : 'text-gray-300'
+                  }`}
+                  aria-hidden="true"
+                />
+              </button>
+            )
+          })}
         </div>
         {rating > 0 && (
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-gray-600 mt-1" aria-live="polite">
             {rating === 1 && 'Poor'}
             {rating === 2 && 'Fair'}
             {rating === 3 && 'Good'}
@@ -100,7 +108,7 @@ export function ReviewForm({ agentId, userId, onSuccess }: ReviewFormProps) {
             {rating === 5 && 'Excellent'}
           </p>
         )}
-      </div>
+      </fieldset>
 
       {/* Comment */}
       <div>
@@ -123,7 +131,7 @@ export function ReviewForm({ agentId, userId, onSuccess }: ReviewFormProps) {
 
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+        <div className="p-3 bg-red-50 border border-red-200 rounded-md" role="alert" aria-live="assertive">
           <p className="text-sm text-red-600">{error}</p>
         </div>
       )}
