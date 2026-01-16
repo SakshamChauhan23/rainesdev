@@ -270,7 +270,9 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
               avatarUrl={agent.seller.avatarUrl}
               bio={agent.seller.sellerProfile?.bio || null}
               portfolioSlug={agent.seller.sellerProfile?.portfolioUrlSlug || '#'}
-              socialLinks={agent.seller.sellerProfile?.socialLinks as Record<string, string> | null}
+              socialLinks={
+                agent.seller.sellerProfile?.socialLinks as import('@/types').SocialLinks | null
+              }
             />
           </div>
         </div>

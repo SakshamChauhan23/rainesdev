@@ -79,6 +79,62 @@ const uuidPattern = z.string().uuid('Invalid UUID format')
 const positiveInt = z.number().int().positive()
 const nonNegativeNumber = z.number().min(0)
 const maxStringLength = (max: number) => z.string().max(max)
+const urlPattern = z.string().url().optional().or(z.literal(''))
+
+// ============================================
+// JSON Field Validation Schemas (P1.14, P1.15)
+// ============================================
+
+/**
+ * Social links schema for SellerProfile.socialLinks
+ * Validates URL format for each social platform
+ */
+export const socialLinksSchema = z
+  .object({
+    github: urlPattern,
+    twitter: urlPattern,
+    linkedin: urlPattern,
+    website: urlPattern,
+    youtube: urlPattern,
+  })
+  .partial()
+  .optional()
+
+/**
+ * Workflow step schema for Agent.workflowDetails.steps
+ */
+export const workflowStepSchema = z.object({
+  id: z.string().min(1).max(50),
+  title: z.string().min(1).max(200),
+  description: z.string().min(1).max(1000),
+  order: z.number().int().min(0),
+})
+
+/**
+ * Workflow details schema for Agent.workflowDetails
+ * Validates the structured workflow information
+ */
+export const workflowDetailsSchema = z
+  .object({
+    steps: z.array(workflowStepSchema).max(20).optional(),
+    integrations: z.array(z.string().max(100)).max(20).optional(),
+    requirements: z.array(z.string().max(500)).max(20).optional(),
+    estimatedTime: z.string().max(100).optional(),
+  })
+  .optional()
+
+/**
+ * Type-safe validators for JSON fields
+ */
+export function validateSocialLinks(data: unknown): boolean {
+  const result = socialLinksSchema.safeParse(data)
+  return result.success
+}
+
+export function validateWorkflowDetails(data: unknown): boolean {
+  const result = workflowDetailsSchema.safeParse(data)
+  return result.success
+}
 
 /**
  * Pagination schema (reusable for all list endpoints)
@@ -161,7 +217,7 @@ export const agentSubmissionSchema = z.object({
   demoVideoUrl: z.string().url().optional().or(z.literal('')),
   thumbnailUrl: z.string().url().optional().or(z.literal('')),
   setupGuide: z.string().min(20).max(5000),
-  workflowDetails: z.any().optional(), // JSON field
+  workflowDetails: workflowDetailsSchema, // Typed JSON field (P1.15)
 })
 
 // ============================================

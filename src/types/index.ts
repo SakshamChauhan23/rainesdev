@@ -1,6 +1,53 @@
-import { User, Agent, Purchase, Category, SellerProfile, SupportRequest, Review } from '@prisma/client'
+import {
+  User,
+  Agent,
+  Purchase,
+  Category,
+  SellerProfile,
+  SupportRequest,
+  Review,
+} from '@prisma/client'
 
+// ============================================
+// JSON Field Type Definitions (P1.14, P1.15)
+// ============================================
+
+/**
+ * Social links stored in SellerProfile.socialLinks
+ * @example { github: "https://github.com/user", twitter: "https://twitter.com/user" }
+ */
+export interface SocialLinks {
+  github?: string
+  twitter?: string
+  linkedin?: string
+  website?: string
+  youtube?: string
+}
+
+/**
+ * Workflow step definition for Agent.workflowDetails
+ */
+export interface WorkflowStep {
+  id: string
+  title: string
+  description: string
+  order: number
+}
+
+/**
+ * Workflow details stored in Agent.workflowDetails
+ * @example { steps: [...], integrations: ["Zapier", "Make"] }
+ */
+export interface WorkflowDetails {
+  steps?: WorkflowStep[]
+  integrations?: string[]
+  requirements?: string[]
+  estimatedTime?: string
+}
+
+// ============================================
 // Extended types with relations
+// ============================================
 export type AgentWithRelations = Agent & {
   seller: User & {
     sellerProfile?: SellerProfile | null
@@ -55,7 +102,7 @@ export interface AgentSubmissionForm {
   demoVideoUrl?: string
   thumbnailUrl?: string
   setupGuide: string
-  workflowDetails?: any
+  workflowDetails?: WorkflowDetails
 }
 
 export interface CheckoutForm {
