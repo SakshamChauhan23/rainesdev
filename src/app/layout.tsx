@@ -4,6 +4,7 @@ import './globals.css'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { WebVitalsReporter } from '@/components/analytics/web-vitals-reporter'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
+        <WebVitalsReporter />
         <ErrorBoundary>
           <div className="flex min-h-screen flex-col">
             <Header />
