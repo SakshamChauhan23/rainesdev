@@ -108,33 +108,38 @@ export async function requestAgentUpdate(agentId: string) {
 
     logger.info('📝 Creating new version for agent:', { agentId, title: agent.title, currentVersion: agent.version })
 
-    // Create a new draft version of the agent
-    const newVersion = await prisma.agent.create({
-        data: {
-            sellerId: agent.sellerId,
-            categoryId: agent.categoryId,
-            title: agent.title,
-            slug: `${agent.slug}-v${agent.version + 1}-draft`,
-            shortDescription: agent.shortDescription,
-            workflowOverview: agent.workflowOverview,
-            useCase: agent.useCase,
-            price: agent.price,
-            supportAddonPrice: agent.supportAddonPrice,
-            demoVideoUrl: agent.demoVideoUrl,
-            thumbnailUrl: agent.thumbnailUrl,
-            setupGuide: agent.setupGuide,
-            workflowDetails: agent.workflowDetails || undefined,
-            status: 'DRAFT',
-            version: agent.version + 1,
-            isLatestVersion: false,
-            parentAgentId: agent.id
-        }
-    })
+    // Use transaction to ensure version creation and parent update are atomic (P2.6)
+    const newVersion = await prisma.$transaction(async (tx) => {
+        // Create a new draft version of the agent
+        const version = await tx.agent.create({
+            data: {
+                sellerId: agent.sellerId,
+                categoryId: agent.categoryId,
+                title: agent.title,
+                slug: `${agent.slug}-v${agent.version + 1}-draft`,
+                shortDescription: agent.shortDescription,
+                workflowOverview: agent.workflowOverview,
+                useCase: agent.useCase,
+                price: agent.price,
+                supportAddonPrice: agent.supportAddonPrice,
+                demoVideoUrl: agent.demoVideoUrl,
+                thumbnailUrl: agent.thumbnailUrl,
+                setupGuide: agent.setupGuide,
+                workflowDetails: agent.workflowDetails || undefined,
+                status: 'DRAFT',
+                version: agent.version + 1,
+                isLatestVersion: false,
+                parentAgentId: agent.id
+            }
+        })
 
-    // Mark the parent agent as having an active update
-    await prisma.agent.update({
-        where: { id: agentId },
-        data: { hasActiveUpdate: true }
+        // Mark the parent agent as having an active update
+        await tx.agent.update({
+            where: { id: agentId },
+            data: { hasActiveUpdate: true }
+        })
+
+        return version
     })
 
     logger.info('✅ New version created successfully:', { newVersionId: newVersion.id, version: newVersion.version })

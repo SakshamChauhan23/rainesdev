@@ -95,43 +95,49 @@ export async function processTestPurchase(
       throw new Error(error instanceof Error ? error.message : 'Invalid payment amount')
     }
 
-    // Create purchase with assisted setup flag
-    const purchase = await prisma.purchase.create({
-      data: {
-        buyerId: user.id,
-        agentId: agent.id,
-        agentVersionId: agent.id, // Using agentId as versionId for now
-        amountPaid: totalAmount,
-        status: 'COMPLETED',
-        source: 'TEST_MODE',
-        assistedSetupRequested: assistedSetupRequested,
-      },
-    })
-
-    logger.info('✅ Test purchase created:', purchase.id)
-
-    // Create SetupRequest if assisted setup was requested
-    if (assistedSetupRequested) {
-      const setupRequest = await prisma.setupRequest.create({
+    // Use transaction to ensure purchase and setup request are created atomically (P2.6)
+    const result = await prisma.$transaction(async (tx) => {
+      // Create purchase with assisted setup flag
+      const purchase = await tx.purchase.create({
         data: {
-          purchaseId: purchase.id,
           buyerId: user.id,
           agentId: agent.id,
-          agentVersionId: agent.id,
-          setupType: 'ADMIN_ASSISTED',
-          setupCost: setupPrice,
-          status: 'PENDING',
-          bookCallRequested: bookCallRequested,
+          agentVersionId: agent.id, // Using agentId as versionId for now
+          amountPaid: totalAmount,
+          status: 'COMPLETED',
+          source: 'TEST_MODE',
+          assistedSetupRequested: assistedSetupRequested,
         },
       })
 
-      logger.info(
-        '✅ Setup request created:',
-        setupRequest.id,
-        'bookCallRequested:',
-        bookCallRequested
-      )
-    }
+      logger.info('✅ Test purchase created:', purchase.id)
+
+      // Create SetupRequest if assisted setup was requested
+      let setupRequest = null
+      if (assistedSetupRequested) {
+        setupRequest = await tx.setupRequest.create({
+          data: {
+            purchaseId: purchase.id,
+            buyerId: user.id,
+            agentId: agent.id,
+            agentVersionId: agent.id,
+            setupType: 'ADMIN_ASSISTED',
+            setupCost: setupPrice,
+            status: 'PENDING',
+            bookCallRequested: bookCallRequested,
+          },
+        })
+
+        logger.info(
+          '✅ Setup request created:',
+          setupRequest.id,
+          'bookCallRequested:',
+          bookCallRequested
+        )
+      }
+
+      return { purchase, setupRequest }
+    })
 
     // Revalidate paths
     revalidatePath(`/agents/${agent.slug}`)
