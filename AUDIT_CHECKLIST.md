@@ -1,7 +1,7 @@
 # Platform Audit - Issue Tracking Checklist
 
 **Total Issues:** 63
-**Status:** 60/63 Complete (95%)
+**Status:** 61/63 Complete (97%)
 **Last Updated:** 2026-01-16
 
 ## 🔴 CRITICAL ISSUES (Priority 1) - 23 Issues
@@ -241,11 +241,12 @@
   - **Effort:** 1 hour
   - **Completed:** 2026-01-14 - Documented connection pool settings in .env.example with recommendations (connection_limit=10, pool_timeout=20)
 
-- [ ] **P2.5** Optimize hasActiveUpdate and isLatestVersion flags
+- [x] **P2.5** Optimize hasActiveUpdate and isLatestVersion flags ✅ DONE
   - **File:** [prisma/schema.prisma:85](prisma/schema.prisma#L85)
   - **Fix:** Use database views or computed fields to prevent inconsistencies
   - **Impact:** Prevent data integrity issues
   - **Effort:** 4 hours
+  - **Completed:** 2026-01-16 - Created @/lib/agent-versions.ts with centralized flag management: markParentAsHavingUpdate(), clearParentUpdateFlag(), promoteVersionToLatest(), repairVersionFlags(), validateVersionState(). Updated actions.ts to use these utilities
 
 - [x] **P2.6** Add transaction handling for critical operations ✅ DONE
   - **Files:** Various mutation endpoints
@@ -556,7 +557,7 @@
 ### By Priority
 
 - **P1 (Critical):** 21/23 (91%) ✅ Almost complete!
-- **P2 (High):** 28/29 (97%) 🔥 Almost complete!
+- **P2 (High):** 29/29 (100%) ✅ COMPLETE!
 - **P3 (Medium):** 11/11 (100%) 🔥 COMPLETE!
 
 ### By Category
