@@ -5,7 +5,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { Star, CheckCircle, Loader2 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
-interface Review {
+// Export types for server-side preloading (P2.27)
+export interface Review {
   id: string
   rating: number
   comment: string | null
@@ -18,82 +19,105 @@ interface Review {
   }
 }
 
-interface ReviewStats {
+export interface ReviewStats {
   averageRating: number
   totalReviews: number
 }
 
-interface Pagination {
+export interface ReviewPagination {
   hasMore: boolean
   nextCursor: string | null
   pageSize: number
 }
 
+// Keep internal alias for backwards compatibility
+type Pagination = ReviewPagination
+
+// Props for server-side preloading (P2.27)
 interface ReviewListProps {
   agentId: string
   refreshTrigger?: number
+  initialReviews?: Review[]
+  initialStats?: ReviewStats | null
+  initialPagination?: Pagination | null
 }
 
 const PAGE_SIZE = 10
 
-export function ReviewList({ agentId, refreshTrigger = 0 }: ReviewListProps) {
-  const [reviews, setReviews] = useState<Review[]>([])
-  const [stats, setStats] = useState<ReviewStats | null>(null)
-  const [loading, setLoading] = useState(true)
+export function ReviewList({
+  agentId,
+  refreshTrigger = 0,
+  initialReviews,
+  initialStats,
+  initialPagination,
+}: ReviewListProps) {
+  // Use server-preloaded data if available (P2.27)
+  const hasInitialData = initialReviews !== undefined
+  const [reviews, setReviews] = useState<Review[]>(initialReviews || [])
+  const [stats, setStats] = useState<ReviewStats | null>(initialStats || null)
+  const [loading, setLoading] = useState(!hasInitialData)
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [pagination, setPagination] = useState<Pagination | null>(null)
+  const [pagination, setPagination] = useState<Pagination | null>(initialPagination || null)
 
   // Reset and fetch initial reviews when agentId or refreshTrigger changes
+  // Skip initial fetch if we have server-preloaded data
   useEffect(() => {
+    if (refreshTrigger === 0 && hasInitialData) {
+      // Don't fetch on mount if we have initial data
+      return
+    }
     setReviews([])
     setPagination(null)
     fetchReviews()
   }, [agentId, refreshTrigger])
 
-  const fetchReviews = useCallback(async (cursor?: string) => {
-    try {
-      setError(null)
-      const isLoadingMore = !!cursor
+  const fetchReviews = useCallback(
+    async (cursor?: string) => {
+      try {
+        setError(null)
+        const isLoadingMore = !!cursor
 
-      if (isLoadingMore) {
-        setLoadingMore(true)
-      }
-
-      const url = cursor
-        ? `/api/reviews?agentId=${agentId}&limit=${PAGE_SIZE}&cursor=${cursor}`
-        : `/api/reviews?agentId=${agentId}&limit=${PAGE_SIZE}`
-
-      const response = await fetch(url)
-
-      // Check response status (P2.20)
-      if (!response.ok) {
-        logger.error('Error fetching reviews: HTTP', response.status)
-        setError('Failed to load reviews. Please try again later.')
-        return
-      }
-
-      const data = await response.json()
-
-      if (data.success) {
         if (isLoadingMore) {
-          setReviews(prev => [...prev, ...data.data])
-        } else {
-          setReviews(data.data)
-          setStats(data.stats)
+          setLoadingMore(true)
         }
-        setPagination(data.pagination)
-      } else {
-        setError(data.error || 'Failed to load reviews')
+
+        const url = cursor
+          ? `/api/reviews?agentId=${agentId}&limit=${PAGE_SIZE}&cursor=${cursor}`
+          : `/api/reviews?agentId=${agentId}&limit=${PAGE_SIZE}`
+
+        const response = await fetch(url)
+
+        // Check response status (P2.20)
+        if (!response.ok) {
+          logger.error('Error fetching reviews: HTTP', response.status)
+          setError('Failed to load reviews. Please try again later.')
+          return
+        }
+
+        const data = await response.json()
+
+        if (data.success) {
+          if (isLoadingMore) {
+            setReviews(prev => [...prev, ...data.data])
+          } else {
+            setReviews(data.data)
+            setStats(data.stats)
+          }
+          setPagination(data.pagination)
+        } else {
+          setError(data.error || 'Failed to load reviews')
+        }
+      } catch (err) {
+        logger.error('Error fetching reviews:', err)
+        setError('Failed to load reviews. Please try again later.')
+      } finally {
+        setLoading(false)
+        setLoadingMore(false)
       }
-    } catch (err) {
-      logger.error('Error fetching reviews:', err)
-      setError('Failed to load reviews. Please try again later.')
-    } finally {
-      setLoading(false)
-      setLoadingMore(false)
-    }
-  }, [agentId])
+    },
+    [agentId]
+  )
 
   const handleLoadMore = () => {
     if (pagination?.nextCursor && !loadingMore) {
@@ -209,7 +233,9 @@ export function ReviewList({ agentId, refreshTrigger = 0 }: ReviewListProps) {
                 </div>
 
                 {/* Comment */}
-                {review.comment && <p className="leading-relaxed text-gray-700">{review.comment}</p>}
+                {review.comment && (
+                  <p className="leading-relaxed text-gray-700">{review.comment}</p>
+                )}
               </div>
             ))}
 

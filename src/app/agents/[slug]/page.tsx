@@ -16,6 +16,7 @@ import { SetupStatus } from '@/components/agent/setup-status'
 import { BookCallCard } from '@/components/agent/book-call-card'
 import { prisma } from '@/lib/prisma'
 import { Metadata } from 'next'
+import type { Review, ReviewStats, ReviewPagination } from '@/components/reviews/review-list'
 
 interface AgentPageProps {
   params: {
@@ -23,6 +24,83 @@ interface AgentPageProps {
   }
   searchParams?: {
     unlocked?: string
+  }
+}
+
+// Server-side review data fetching (P2.27)
+const REVIEW_PAGE_SIZE = 10
+
+async function getInitialReviews(agentId: string): Promise<{
+  reviews: Review[]
+  stats: ReviewStats | null
+  pagination: ReviewPagination
+}> {
+  const whereClause = {
+    agentId: agentId,
+    agent: {
+      status: 'APPROVED' as const,
+    },
+  }
+
+  // Fetch reviews and stats in parallel
+  const [reviews, statsResult] = await Promise.all([
+    prisma.review.findMany({
+      where: whereClause,
+      include: {
+        buyer: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: REVIEW_PAGE_SIZE + 1, // +1 to check if there are more
+    }),
+    prisma.review.aggregate({
+      where: whereClause,
+      _avg: { rating: true },
+      _count: { id: true },
+    }),
+  ])
+
+  const hasMore = reviews.length > REVIEW_PAGE_SIZE
+  const reviewsToReturn = hasMore ? reviews.slice(0, REVIEW_PAGE_SIZE) : reviews
+  const nextCursor = hasMore ? reviewsToReturn[reviewsToReturn.length - 1]?.id : null
+
+  // Format reviews for client component
+  const formattedReviews: Review[] = reviewsToReturn.map(review => ({
+    id: review.id,
+    rating: review.rating,
+    comment: review.comment,
+    verifiedPurchase: review.verifiedPurchase,
+    createdAt: review.createdAt.toISOString(),
+    buyer: {
+      id: review.buyer.id,
+      name: review.buyer.name,
+      email: review.buyer.email,
+    },
+  }))
+
+  const stats: ReviewStats | null =
+    statsResult._count.id > 0
+      ? {
+          averageRating: statsResult._avg.rating
+            ? parseFloat(statsResult._avg.rating.toFixed(1))
+            : 0,
+          totalReviews: statsResult._count.id,
+        }
+      : null
+
+  return {
+    reviews: formattedReviews,
+    stats,
+    pagination: {
+      hasMore,
+      nextCursor,
+      pageSize: REVIEW_PAGE_SIZE,
+    },
   }
 }
 
@@ -55,6 +133,9 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
     data: { user },
   } = await supabase.auth.getUser()
   const showSuccessBanner = searchParams?.unlocked === 'true'
+
+  // Fetch initial reviews server-side (P2.27)
+  const initialReviewData = await getInitialReviews(agent.id)
 
   // Optimize: Combine all user-related queries into one using Promise.all
   let isPurchased = false
@@ -159,11 +240,14 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
               <LockedSetupGuide agentId={agent.id} isApproved={agent.status === 'APPROVED'} />
             )}
 
-            {/* Reviews Section */}
+            {/* Reviews Section - Server-preloaded data for faster initial load (P2.27) */}
             <ReviewSection
               agentId={agent.id}
               userId={user?.id || null}
               userRole={userWithRole?.role}
+              initialReviews={initialReviewData.reviews}
+              initialStats={initialReviewData.stats}
+              initialPagination={initialReviewData.pagination}
             />
           </div>
 

@@ -1,16 +1,20 @@
 'use client'
 import { logger } from '@/lib/logger'
 
-
 import { useEffect, useState } from 'react'
 import { ReviewForm } from './review-form'
-import { ReviewList } from './review-list'
+import { ReviewList, Review, ReviewStats, ReviewPagination } from './review-list'
 import { AlertCircle, Clock } from 'lucide-react'
 
+// Props including optional server-preloaded data (P2.27)
 interface ReviewSectionProps {
   agentId: string
   userId: string | null
   userRole?: string
+  // Server-preloaded review data (P2.27)
+  initialReviews?: Review[]
+  initialStats?: ReviewStats | null
+  initialPagination?: ReviewPagination | null
 }
 
 interface EligibilityResponse {
@@ -22,7 +26,14 @@ interface EligibilityResponse {
   agentVersionId?: string
 }
 
-export function ReviewSection({ agentId, userId, userRole }: ReviewSectionProps) {
+export function ReviewSection({
+  agentId,
+  userId,
+  userRole,
+  initialReviews,
+  initialStats,
+  initialPagination,
+}: ReviewSectionProps) {
   const [eligibility, setEligibility] = useState<EligibilityResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
@@ -74,51 +85,41 @@ export function ReviewSection({ agentId, userId, userRole }: ReviewSectionProps)
       {userId && userRole === 'BUYER' && (
         <div>
           {loading ? (
-            <div className="h-64 bg-gray-100 rounded-lg animate-pulse flex items-center justify-center">
-              <p className="text-gray-500 text-sm">Loading review eligibility...</p>
+            <div className="flex h-64 animate-pulse items-center justify-center rounded-lg bg-gray-100">
+              <p className="text-sm text-gray-500">Loading review eligibility...</p>
             </div>
           ) : eligibility?.eligible ? (
-            <ReviewForm
-              agentId={agentId}
-              userId={userId}
-              onSuccess={handleReviewSubmitted}
-            />
+            <ReviewForm agentId={agentId} userId={userId} onSuccess={handleReviewSubmitted} />
           ) : eligibility?.reason === 'NO_PURCHASE' ? (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-6">
               <div className="flex gap-3">
-                <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-600" />
                 <div>
                   <h4 className="font-medium text-blue-900">Purchase Required</h4>
-                  <p className="text-sm text-blue-700 mt-1">
-                    {eligibility.message}
-                  </p>
+                  <p className="mt-1 text-sm text-blue-700">{eligibility.message}</p>
                 </div>
               </div>
             </div>
           ) : eligibility?.reason === 'TOO_SOON' ? (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-6">
               <div className="flex gap-3">
-                <Clock className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <Clock className="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-600" />
                 <div>
                   <h4 className="font-medium text-yellow-900">Review Coming Soon</h4>
-                  <p className="text-sm text-yellow-700 mt-1">
-                    {eligibility.message}
-                  </p>
-                  <p className="text-xs text-yellow-600 mt-2">
+                  <p className="mt-1 text-sm text-yellow-700">{eligibility.message}</p>
+                  <p className="mt-2 text-xs text-yellow-600">
                     This ensures reviews are based on real usage and outcomes.
                   </p>
                 </div>
               </div>
             </div>
           ) : eligibility?.reason === 'ALREADY_REVIEWED' ? (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+            <div className="rounded-lg border border-green-200 bg-green-50 p-6">
               <div className="flex gap-3">
-                <AlertCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
                 <div>
                   <h4 className="font-medium text-green-900">Review Submitted</h4>
-                  <p className="text-sm text-green-700 mt-1">
-                    {eligibility.message}
-                  </p>
+                  <p className="mt-1 text-sm text-green-700">{eligibility.message}</p>
                 </div>
               </div>
             </div>
@@ -127,7 +128,14 @@ export function ReviewSection({ agentId, userId, userRole }: ReviewSectionProps)
       )}
 
       {/* Reviews Display - Visible to everyone */}
-      <ReviewList agentId={agentId} refreshTrigger={refreshTrigger} />
+      {/* Pass server-preloaded data to avoid client-side fetch on initial load (P2.27) */}
+      <ReviewList
+        agentId={agentId}
+        refreshTrigger={refreshTrigger}
+        initialReviews={initialReviews}
+        initialStats={initialStats}
+        initialPagination={initialPagination}
+      />
     </div>
   )
 }
