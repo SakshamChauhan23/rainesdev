@@ -1,5 +1,6 @@
 import { logger } from '@/lib/logger'
 import { withRateLimit, RateLimitPresets } from '@/lib/rate-limit'
+import { withCache, createCacheKey } from '@/lib/cache'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
@@ -71,7 +72,7 @@ async function handler(request: NextRequest) {
     } else if (categorySlug) {
       // Support filtering by slug
       where.category = {
-        slug: categorySlug
+        slug: categorySlug,
       }
     }
 
@@ -79,37 +80,96 @@ async function handler(request: NextRequest) {
       where.featured = true
     }
 
-    // Get total count for pagination
-    const total = await prisma.agent.count({ where })
+    // Build cache key from query parameters (P2.2)
+    const cacheKeyParams = {
+      page: page.toString(),
+      limit: limit.toString(),
+      search,
+      categoryId,
+      categorySlug,
+      featured: featured.toString(),
+    }
 
-    // Get agents
-    const agents = await prisma.agent.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
-      include: {
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        seller: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true,
-            sellerProfile: {
-              select: {
-                portfolioUrlSlug: true,
+    // Get total count for pagination (with caching for non-search queries)
+    const countCacheKey = createCacheKey('agents:count', {
+      search,
+      categoryId,
+      categorySlug,
+      featured: featured.toString(),
+    })
+
+    const total = search
+      ? await prisma.agent.count({ where }) // Don't cache search queries (too many variants)
+      : await withCache(
+          countCacheKey,
+          () => prisma.agent.count({ where }),
+          30 * 1000 // 30 second TTL for counts
+        )
+
+    // Get agents (with caching for non-search, first page queries)
+    const agentsCacheKey = createCacheKey('agents:list', cacheKeyParams)
+
+    const agents =
+      search || page > 3
+        ? await prisma.agent.findMany({
+            where,
+            skip,
+            take: limit,
+            orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+            include: {
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                  slug: true,
+                },
+              },
+              seller: {
+                select: {
+                  id: true,
+                  name: true,
+                  avatarUrl: true,
+                  sellerProfile: {
+                    select: {
+                      portfolioUrlSlug: true,
+                    },
+                  },
+                },
               },
             },
-          },
-        },
-      },
-    })
+          })
+        : await withCache(
+            agentsCacheKey,
+            () =>
+              prisma.agent.findMany({
+                where,
+                skip,
+                take: limit,
+                orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+                include: {
+                  category: {
+                    select: {
+                      id: true,
+                      name: true,
+                      slug: true,
+                    },
+                  },
+                  seller: {
+                    select: {
+                      id: true,
+                      name: true,
+                      avatarUrl: true,
+                      sellerProfile: {
+                        select: {
+                          portfolioUrlSlug: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              }),
+            60 * 1000 // 60 second TTL for agent lists
+          )
 
     // Don't send locked content in list view
     const sanitizedAgents = agents.map(agent => ({
