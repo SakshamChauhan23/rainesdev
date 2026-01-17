@@ -17,7 +17,7 @@ interface AssistedSetupConfigProps {
 export function AssistedSetupConfig({
   agentId,
   currentEnabled,
-  currentPrice,
+  currentPrice
 }: AssistedSetupConfigProps) {
   const [enabled, setEnabled] = useState(currentEnabled)
   const [price, setPrice] = useState(currentPrice.toString())
@@ -93,7 +93,7 @@ export function AssistedSetupConfig({
         {enabled && (
           <div className="space-y-4 rounded-2xl border-2 border-brand-slate/10 bg-white p-4">
             <div className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-brand-orange" />
+              <DollarSign className="h-5 w-5 text-brand-teal" />
               <Label htmlFor="price" className="text-base font-semibold text-brand-slate">
                 Setup Price
               </Label>
@@ -105,31 +105,29 @@ export function AssistedSetupConfig({
                   Price (USD)
                 </Label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-slate/50">
-                    $
-                  </span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-slate/50">$</span>
                   <Input
                     id="price"
                     type="number"
                     min="0"
                     step="0.01"
                     value={price}
-                    onChange={e => setPrice(e.target.value)}
-                    className="rounded-xl border-2 border-brand-slate/10 pl-7 focus:border-brand-orange"
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="pl-7 rounded-xl border-2 border-brand-slate/10 focus:border-brand-orange"
                     placeholder="0.00"
                   />
                 </div>
-                <p className="text-xs text-brand-slate/60">Set to $0 for free setup</p>
+                <p className="text-xs text-brand-slate/60">
+                  Set to $0 for free setup
+                </p>
               </div>
 
               <div className="rounded-xl bg-brand-cream p-4">
-                <p className="mb-1 text-xs font-medium text-brand-slate/70">Status</p>
-                <p
-                  className={`text-lg font-bold ${isFree ? 'text-brand-orange' : 'text-brand-orange'}`}
-                >
+                <p className="text-xs font-medium text-brand-slate/70 mb-1">Status</p>
+                <p className={`text-lg font-bold ${isFree ? 'text-brand-teal' : 'text-brand-orange'}`}>
                   {isFree ? 'Free Setup' : `$${parseFloat(price || '0').toFixed(2)}`}
                 </p>
-                <p className="mt-1 text-xs text-brand-slate/60">
+                <p className="text-xs text-brand-slate/60 mt-1">
                   {isFree ? 'No charge for setup' : 'Added to checkout total'}
                 </p>
               </div>
@@ -139,23 +137,23 @@ export function AssistedSetupConfig({
 
         {/* Scope Information */}
         {enabled && (
-          <div className="rounded-2xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100/50 p-4">
-            <p className="mb-2 text-sm font-semibold text-blue-900">What&apos;s Included:</p>
+          <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/50 border-2 border-blue-200 p-4">
+            <p className="text-sm font-semibold text-blue-900 mb-2">What's Included:</p>
             <ul className="space-y-1 text-sm text-blue-800">
               <li className="flex items-start gap-2">
-                <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-orange" />
+                <Check className="h-4 w-4 mt-0.5 text-green-600 flex-shrink-0" />
                 <span>Initial configuration and tool connections</span>
               </li>
               <li className="flex items-start gap-2">
-                <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-orange" />
+                <Check className="h-4 w-4 mt-0.5 text-green-600 flex-shrink-0" />
                 <span>Live setup session with admin team</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="font-bold text-red-600">✖</span>
+                <span className="text-red-600 font-bold">✖</span>
                 <span>Ongoing support (separate addon)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="font-bold text-red-600">✖</span>
+                <span className="text-red-600 font-bold">✖</span>
                 <span>Custom workflow modifications</span>
               </li>
             </ul>
@@ -164,13 +162,13 @@ export function AssistedSetupConfig({
 
         {/* Error/Success Messages */}
         {error && (
-          <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-4 text-sm text-red-800">
+          <div className="rounded-2xl bg-red-50 border-2 border-red-200 p-4 text-sm text-red-800">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="flex items-center gap-2 rounded-2xl border-2 border-brand-orange/20 bg-brand-orange/5 p-4 text-sm text-brand-slate">
+          <div className="rounded-2xl bg-green-50 border-2 border-green-200 p-4 text-sm text-green-800 flex items-center gap-2">
             <Check className="h-4 w-4" />
             Configuration saved successfully!
           </div>
@@ -180,13 +178,13 @@ export function AssistedSetupConfig({
         <Button
           onClick={handleSave}
           disabled={loading}
-          className="h-12 w-full rounded-xl bg-brand-orange font-semibold text-white shadow-lg shadow-brand-orange/30 transition-all hover:-translate-y-0.5 hover:bg-brand-orange/90 hover:shadow-xl hover:shadow-brand-orange/40 disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full h-12 rounded-xl bg-brand-orange font-semibold text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90 hover:shadow-xl hover:shadow-brand-orange/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
           {loading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
           {loading ? 'Saving...' : 'Save Configuration'}
         </Button>
 
-        <p className="text-center text-xs text-brand-slate/50">
+        <p className="text-xs text-center text-brand-slate/50">
           Changes apply immediately without requiring agent re-approval
         </p>
       </CardContent>

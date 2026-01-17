@@ -100,7 +100,7 @@ export function Header() {
       case 'ADMIN':
         return 'bg-brand-orange/10 text-brand-orange border-brand-orange/20'
       case 'SELLER':
-        return 'bg-brand-orange/10 text-brand-orange border-brand-orange/20'
+        return 'bg-brand-teal/10 text-brand-teal border-brand-teal/20'
       default:
         return 'bg-brand-slate/10 text-brand-slate border-brand-slate/20'
     }
@@ -138,7 +138,7 @@ export function Header() {
             </Link>
             <Link
               href="/submit-agent"
-              className="text-sm font-medium text-brand-orange transition-all hover:scale-105 hover:text-brand-orange/80"
+              className="text-sm font-medium text-brand-teal transition-all hover:scale-105 hover:text-brand-teal/80"
             >
               Become a Seller
             </Link>
@@ -254,7 +254,7 @@ export function Header() {
               </Link>
               <Link
                 href="/submit-agent"
-                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-orange transition-colors hover:bg-brand-cream hover:text-brand-orange/80"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-teal transition-colors hover:bg-brand-cream hover:text-brand-teal/80"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Become a Seller

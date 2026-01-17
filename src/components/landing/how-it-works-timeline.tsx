@@ -79,7 +79,7 @@ export function HowItWorksTimeline() {
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-brand-orange/20 to-transparent" />
-        <div className="absolute left-2/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-brand-orange/20 to-transparent" />
+        <div className="absolute left-2/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-brand-teal/20 to-transparent" />
         <div className="absolute left-3/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-brand-orange/20 to-transparent" />
       </div>
 
@@ -103,7 +103,7 @@ export function HowItWorksTimeline() {
         {/* Timeline */}
         <div className="relative">
           {/* Vertical Line (mobile) */}
-          <div className="absolute bottom-0 left-8 top-0 w-0.5 bg-gradient-to-b from-brand-orange via-brand-orange to-brand-orange md:hidden" />
+          <div className="absolute bottom-0 left-8 top-0 w-0.5 bg-gradient-to-b from-brand-orange via-brand-teal to-brand-orange md:hidden" />
 
           {/* Steps */}
           <div className="space-y-12">
@@ -141,18 +141,16 @@ export function HowItWorksTimeline() {
                               isActive
                                 ? isOrange
                                   ? 'scale-125 bg-brand-orange shadow-xl shadow-brand-orange/50'
-                                  : 'scale-125 bg-brand-orange shadow-xl shadow-brand-orange/50'
+                                  : 'scale-125 bg-brand-teal shadow-xl shadow-brand-teal/50'
                                 : 'bg-brand-slate/10'
                             }`}
                           >
                             <Icon
-                              className={`h-10 w-10 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-orange'}`}
+                              className={`h-10 w-10 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-teal'}`}
                             />
                             <div
                               className={`absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
-                                isOrange
-                                  ? 'bg-brand-orange text-white'
-                                  : 'bg-brand-orange text-white'
+                                isOrange ? 'bg-brand-orange text-white' : 'bg-brand-teal text-white'
                               }`}
                             >
                               {step.number}
@@ -173,18 +171,16 @@ export function HowItWorksTimeline() {
                               isActive
                                 ? isOrange
                                   ? 'scale-125 bg-brand-orange shadow-xl shadow-brand-orange/50'
-                                  : 'scale-125 bg-brand-orange shadow-xl shadow-brand-orange/50'
+                                  : 'scale-125 bg-brand-teal shadow-xl shadow-brand-teal/50'
                                 : 'bg-brand-slate/10'
                             }`}
                           >
                             <Icon
-                              className={`h-10 w-10 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-orange'}`}
+                              className={`h-10 w-10 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-teal'}`}
                             />
                             <div
                               className={`absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
-                                isOrange
-                                  ? 'bg-brand-orange text-white'
-                                  : 'bg-brand-orange text-white'
+                                isOrange ? 'bg-brand-orange text-white' : 'bg-brand-teal text-white'
                               }`}
                             >
                               {step.number}
@@ -213,16 +209,16 @@ export function HowItWorksTimeline() {
                         isActive
                           ? isOrange
                             ? 'bg-brand-orange shadow-xl shadow-brand-orange/50'
-                            : 'bg-brand-orange shadow-xl shadow-brand-orange/50'
+                            : 'bg-brand-teal shadow-xl shadow-brand-teal/50'
                           : 'bg-brand-slate/10'
                       }`}
                     >
                       <Icon
-                        className={`h-8 w-8 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-orange'}`}
+                        className={`h-8 w-8 transition-all duration-500 ${isActive ? 'text-white' : isOrange ? 'text-brand-orange' : 'text-brand-teal'}`}
                       />
                       <div
                         className={`absolute -left-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
-                          isOrange ? 'bg-brand-orange text-white' : 'bg-brand-orange text-white'
+                          isOrange ? 'bg-brand-orange text-white' : 'bg-brand-teal text-white'
                         }`}
                       >
                         {step.number}
@@ -254,7 +250,7 @@ export function HowItWorksTimeline() {
                 activeStep === index
                   ? step.color === 'orange'
                     ? 'w-12 bg-brand-orange'
-                    : 'w-12 bg-brand-orange'
+                    : 'w-12 bg-brand-teal'
                   : 'w-2 bg-brand-slate/20 hover:bg-brand-slate/40'
               }`}
               aria-label={`Step ${index + 1}`}

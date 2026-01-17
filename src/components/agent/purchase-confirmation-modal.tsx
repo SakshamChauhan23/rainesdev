@@ -56,10 +56,10 @@ export function PurchaseConfirmationModal({
         <div className="space-y-6 py-4">
           {/* Admin-Assisted Setup Option - Only show if enabled by admin */}
           {assistedSetupEnabled && (
-            <div className="rounded-2xl border-2 border-brand-orange/30 bg-gradient-to-br from-brand-orange/5 to-brand-orange/10 p-5">
+            <div className="rounded-2xl border-2 border-brand-teal/30 bg-gradient-to-br from-brand-teal/5 to-brand-teal/10 p-5">
               <div className="mb-4 flex items-start gap-3">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-orange/10">
-                  <Calendar className="h-5 w-5 text-brand-orange" />
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-teal/10">
+                  <Calendar className="h-5 w-5 text-brand-teal" />
                 </div>
                 <div>
                   <h3 className="mb-1 font-semibold text-brand-slate">
@@ -79,8 +79,8 @@ export function PurchaseConfirmationModal({
                   aria-checked={assistedSetupChoice === 'yes'}
                   className={`w-full rounded-xl border-2 p-4 text-left transition-all ${
                     assistedSetupChoice === 'yes'
-                      ? 'border-brand-orange bg-brand-orange/10'
-                      : 'border-brand-slate/20 hover:border-brand-orange/50'
+                      ? 'border-brand-teal bg-brand-teal/10'
+                      : 'border-brand-slate/20 hover:border-brand-teal/50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -88,10 +88,7 @@ export function PurchaseConfirmationModal({
                       Yes, I need admin assistance
                     </span>
                     {assistedSetupChoice === 'yes' && (
-                      <div
-                        className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-orange"
-                        aria-hidden="true"
-                      >
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-teal" aria-hidden="true">
                         <ArrowRight className="h-3 w-3 text-white" />
                       </div>
                     )}
@@ -113,10 +110,7 @@ export function PurchaseConfirmationModal({
                       No thanks, I&apos;ll set it up myself
                     </span>
                     {assistedSetupChoice === 'no' && (
-                      <div
-                        className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-slate"
-                        aria-hidden="true"
-                      >
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-slate" aria-hidden="true">
                         <ArrowRight className="h-3 w-3 text-white" />
                       </div>
                     )}
@@ -138,7 +132,7 @@ export function PurchaseConfirmationModal({
             <Button
               onClick={handleProceedToCheckout}
               disabled={assistedSetupEnabled && assistedSetupChoice === null}
-              className="h-12 flex-1 rounded-xl bg-brand-orange font-semibold text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90"
+              className="h-12 flex-1 rounded-xl bg-brand-teal font-semibold text-white shadow-lg shadow-brand-teal/30 hover:bg-brand-teal/90"
             >
               Proceed to Checkout
               <ArrowRight className="ml-2 h-4 w-4" />

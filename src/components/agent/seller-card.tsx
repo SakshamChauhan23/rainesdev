@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { Github, Twitter, Globe, ExternalLink } from 'lucide-react'
+import { Github, Twitter, Globe } from 'lucide-react'
 import type { SocialLinks } from '@/types'
 
 interface SellerCardProps {
@@ -10,51 +10,45 @@ interface SellerCardProps {
   avatarUrl: string | null
   bio: string | null
   portfolioSlug: string
-  socialLinks: SocialLinks | null
+  socialLinks: SocialLinks | null // Typed JSON field (P1.14)
 }
 
 export function SellerCard({ name, avatarUrl, bio, portfolioSlug, socialLinks }: SellerCardProps) {
   return (
-    <Card className="overflow-hidden border-brand-slate/10 bg-white">
-      <div className="bg-gradient-to-br from-brand-orange/10 to-brand-cream p-6">
+    <Card className="border-gray-200 bg-white">
+      <CardHeader>
+        <CardTitle className="text-lg font-normal text-gray-900">Created By</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
         <div className="flex items-center gap-4">
-          <Avatar className="h-14 w-14 border-2 border-white shadow-md">
+          <Avatar className="h-12 w-12">
             <AvatarImage src={avatarUrl || ''} alt={name} />
-            <AvatarFallback className="bg-brand-orange text-lg font-semibold text-white">
-              {name.charAt(0)}
-            </AvatarFallback>
+            <AvatarFallback className="bg-gray-100 text-gray-700">{name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div>
-            <div className="text-sm font-medium text-brand-slate/60">Created by</div>
-            <div className="text-lg font-semibold text-brand-slate">{name}</div>
+            <div className="font-semibold text-gray-900">{name}</div>
+            <Link
+              href={`/seller/${portfolioSlug}`}
+              className="text-sm font-light text-gray-600 hover:underline"
+            >
+              View Portfolio
+            </Link>
           </div>
         </div>
-      </div>
 
-      <CardContent className="space-y-4 p-6">
-        {bio && <p className="line-clamp-3 text-sm text-brand-slate/70">{bio}</p>}
+        {bio && <p className="line-clamp-3 text-sm font-light text-gray-600">{bio}</p>}
 
-        <Link href={`/seller/${portfolioSlug}`}>
-          <Button
-            variant="outline"
-            className="w-full border-brand-slate/20 text-brand-slate hover:border-brand-orange hover:bg-brand-orange/5 hover:text-brand-orange"
-          >
-            <ExternalLink className="mr-2 h-4 w-4" />
-            View Full Portfolio
-          </Button>
-        </Link>
-
-        {socialLinks && (socialLinks.github || socialLinks.twitter || socialLinks.website) && (
-          <div className="flex justify-center gap-2 border-t border-brand-slate/10 pt-4">
+        {socialLinks && (
+          <div className="flex gap-2">
             {socialLinks.github && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-brand-slate/60 hover:bg-brand-orange/10 hover:text-brand-orange"
+                className="text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 asChild
               >
                 <a href={socialLinks.github} target="_blank" rel="noopener noreferrer">
-                  <Github className="h-5 w-5" />
+                  <Github className="h-4 w-4" />
                 </a>
               </Button>
             )}
@@ -62,11 +56,11 @@ export function SellerCard({ name, avatarUrl, bio, portfolioSlug, socialLinks }:
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-brand-slate/60 hover:bg-brand-orange/10 hover:text-brand-orange"
+                className="text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 asChild
               >
                 <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer">
-                  <Twitter className="h-5 w-5" />
+                  <Twitter className="h-4 w-4" />
                 </a>
               </Button>
             )}
@@ -74,11 +68,11 @@ export function SellerCard({ name, avatarUrl, bio, portfolioSlug, socialLinks }:
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-brand-slate/60 hover:bg-brand-orange/10 hover:text-brand-orange"
+                className="text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 asChild
               >
                 <a href={socialLinks.website} target="_blank" rel="noopener noreferrer">
-                  <Globe className="h-5 w-5" />
+                  <Globe className="h-4 w-4" />
                 </a>
               </Button>
             )}

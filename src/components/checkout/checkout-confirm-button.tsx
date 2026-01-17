@@ -63,7 +63,7 @@ export function CheckoutConfirmButton({
       <Button
         onClick={handleConfirm}
         disabled={isPending}
-        className="h-14 w-full rounded-xl bg-brand-orange text-base font-semibold text-white shadow-lg shadow-brand-orange/30 transition-all hover:-translate-y-0.5 hover:bg-brand-orange/90 hover:shadow-xl hover:shadow-brand-orange/40 disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="h-14 w-full rounded-xl bg-brand-teal text-base font-semibold text-white shadow-lg shadow-brand-teal/30 transition-all hover:-translate-y-0.5 hover:bg-brand-teal/90 hover:shadow-xl hover:shadow-brand-teal/40 disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isPending ? (
           <>
@@ -84,7 +84,7 @@ export function CheckoutConfirmButton({
           href="/terms"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-brand-orange transition-colors hover:text-brand-orange/80"
+          className="text-brand-teal transition-colors hover:text-brand-teal/80"
         >
           Terms of Service
         </a>{' '}
@@ -93,7 +93,7 @@ export function CheckoutConfirmButton({
           href="/refund-policy"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-brand-orange transition-colors hover:text-brand-orange/80"
+          className="text-brand-teal transition-colors hover:text-brand-teal/80"
         >
           Refund Policy
         </a>

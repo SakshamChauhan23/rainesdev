@@ -31,14 +31,14 @@ export function ReviewForm({ agentId, userId, onSuccess }: ReviewFormProps) {
       const response = await fetch('/api/reviews', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           userId,
           agentId,
           rating,
-          comment: comment.trim() || null,
-        }),
+          comment: comment.trim() || null
+        })
       })
 
       const data = await response.json()
@@ -55,6 +55,7 @@ export function ReviewForm({ agentId, userId, onSuccess }: ReviewFormProps) {
       if (onSuccess) {
         onSuccess()
       }
+
     } catch (err) {
       setError('An error occurred while submitting your review')
       setIsSubmitting(false)
@@ -62,33 +63,18 @@ export function ReviewForm({ agentId, userId, onSuccess }: ReviewFormProps) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 rounded-lg border border-gray-200 bg-white p-6"
-    >
+    <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg border border-gray-200">
       <h3 className="text-lg font-semibold">Leave a Review</h3>
 
       {/* Star Rating */}
       <fieldset>
-        <legend className="mb-2 block text-sm font-medium text-gray-700">
-          Your Rating{' '}
-          <span className="text-red-500" aria-hidden="true">
-            *
-          </span>
+        <legend className="block text-sm font-medium text-gray-700 mb-2">
+          Your Rating <span className="text-red-500" aria-hidden="true">*</span>
           <span className="sr-only">(required)</span>
         </legend>
         <div className="flex gap-1" role="radiogroup" aria-label="Rating">
-          {[1, 2, 3, 4, 5].map(star => {
-            const ratingLabel =
-              star === 1
-                ? 'Poor'
-                : star === 2
-                  ? 'Fair'
-                  : star === 3
-                    ? 'Good'
-                    : star === 4
-                      ? 'Very Good'
-                      : 'Excellent'
+          {[1, 2, 3, 4, 5].map((star) => {
+            const ratingLabel = star === 1 ? 'Poor' : star === 2 ? 'Fair' : star === 3 ? 'Good' : star === 4 ? 'Very Good' : 'Excellent'
             return (
               <button
                 key={star}
@@ -99,10 +85,10 @@ export function ReviewForm({ agentId, userId, onSuccess }: ReviewFormProps) {
                 onClick={() => setRating(star)}
                 onMouseEnter={() => setHoverRating(star)}
                 onMouseLeave={() => setHoverRating(0)}
-                className="rounded transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:ring-offset-2"
+                className="focus:outline-none focus:ring-2 focus:ring-brand-orange focus:ring-offset-2 rounded transition-transform hover:scale-110"
               >
                 <Star
-                  className={`h-8 w-8 ${
+                  className={`w-8 h-8 ${
                     star <= (hoverRating || rating)
                       ? 'fill-yellow-400 text-yellow-400'
                       : 'text-gray-300'
@@ -114,7 +100,7 @@ export function ReviewForm({ agentId, userId, onSuccess }: ReviewFormProps) {
           })}
         </div>
         {rating > 0 && (
-          <p className="mt-1 text-sm text-gray-600" aria-live="polite">
+          <p className="text-sm text-gray-600 mt-1" aria-live="polite">
             {rating === 1 && 'Poor'}
             {rating === 2 && 'Fair'}
             {rating === 3 && 'Good'}
@@ -126,28 +112,26 @@ export function ReviewForm({ agentId, userId, onSuccess }: ReviewFormProps) {
 
       {/* Comment */}
       <div>
-        <label htmlFor="comment" className="mb-2 block text-sm font-medium text-gray-700">
+        <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
           Your Review (Optional)
         </label>
         <textarea
           id="comment"
           value={comment}
-          onChange={e => setComment(e.target.value)}
+          onChange={(e) => setComment(e.target.value)}
           placeholder="Share your experience with this agent and the business outcomes you achieved..."
           rows={4}
           maxLength={1000}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-orange"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         />
-        <p className="mt-1 text-sm text-gray-500">{comment.length}/1000 characters</p>
+        <p className="text-sm text-gray-500 mt-1">
+          {comment.length}/1000 characters
+        </p>
       </div>
 
       {/* Error Message */}
       {error && (
-        <div
-          className="rounded-md border border-red-200 bg-red-50 p-3"
-          role="alert"
-          aria-live="assertive"
-        >
+        <div className="p-3 bg-red-50 border border-red-200 rounded-md" role="alert" aria-live="assertive">
           <p className="text-sm text-red-600">{error}</p>
         </div>
       )}
@@ -156,7 +140,7 @@ export function ReviewForm({ agentId, userId, onSuccess }: ReviewFormProps) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full rounded-md bg-brand-orange px-4 py-2 text-white transition-colors hover:bg-brand-orange disabled:cursor-not-allowed disabled:bg-gray-400"
+        className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
       >
         {isSubmitting ? 'Submitting...' : 'Submit Review'}
       </button>

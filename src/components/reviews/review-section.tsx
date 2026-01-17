@@ -114,12 +114,12 @@ export function ReviewSection({
               </div>
             </div>
           ) : eligibility?.reason === 'ALREADY_REVIEWED' ? (
-            <div className="rounded-lg border border-brand-orange/20 bg-brand-orange/5 p-6">
+            <div className="rounded-lg border border-green-200 bg-green-50 p-6">
               <div className="flex gap-3">
-                <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-orange" />
+                <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
                 <div>
-                  <h4 className="font-medium text-brand-slate">Review Submitted</h4>
-                  <p className="mt-1 text-sm text-brand-orange">{eligibility.message}</p>
+                  <h4 className="font-medium text-green-900">Review Submitted</h4>
+                  <p className="mt-1 text-sm text-green-700">{eligibility.message}</p>
                 </div>
               </div>
             </div>
