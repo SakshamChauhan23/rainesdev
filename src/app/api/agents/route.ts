@@ -5,8 +5,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 
-// Allow Next.js to cache responses for 60 seconds
-export const revalidate = 60
+// Force dynamic rendering - this route uses query parameters for filtering
+export const dynamic = 'force-dynamic'
 // Use Node.js runtime for Prisma compatibility
 export const runtime = 'nodejs'
 
@@ -199,8 +199,10 @@ async function handler(request: NextRequest) {
       },
     })
 
-    // Add CDN caching headers (P2.3)
-    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120')
+    // Disable CDN caching for dynamic filtered queries to prevent serving wrong results
+    // The in-memory cache handles server-side caching, CDN caching causes issues with query params
+    response.headers.set('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+    response.headers.set('Vary', 'Accept-Encoding')
 
     return response
   } catch (error) {
