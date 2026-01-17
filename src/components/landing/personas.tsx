@@ -10,22 +10,22 @@ export function Personas() {
       title: 'Business Teams',
       description: 'Looking to deploy AI without custom builds',
       cta: 'Browse Agents',
-      href: '/agents'
+      href: '/agents',
     },
     {
       icon: Code2,
       title: 'Indie Developers & AI Builders',
       description: 'Want to monetize real AI workflows',
       cta: 'Submit Agent',
-      href: '/submit-agent'
+      href: '/submit-agent',
     },
     {
       icon: Briefcase,
       title: 'Agencies & Consultants',
       description: 'Delivering AI solutions faster for clients',
       cta: 'Explore Solutions',
-      href: '/agents'
-    }
+      href: '/agents',
+    },
   ]
 
   return (
@@ -36,7 +36,8 @@ export function Personas() {
             Who This Platform Is For
           </h2>
           <p className="mx-auto max-w-2xl text-lg font-light text-gray-700">
-            Whether you are deploying AI or building it, this marketplace connects you with proven workflows
+            Whether you are deploying AI or building it, this marketplace connects you with proven
+            workflows
           </p>
         </div>
 
@@ -44,19 +45,18 @@ export function Personas() {
           {personas.map((persona, index) => (
             <div
               key={index}
-              className="flex flex-col rounded-lg border border-gray-300 bg-white p-8 transition-all hover:border-[#8DEC42]"
+              className="flex flex-col rounded-lg border border-gray-300 bg-white p-8 transition-all hover:border-brand-orange"
             >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white">
                 <persona.icon className="h-6 w-6 text-gray-700" />
               </div>
-              <h3 className="mb-2 text-xl font-normal text-black">
-                {persona.title}
-              </h3>
-              <p className="mb-6 flex-1 font-light text-gray-700">
-                {persona.description}
-              </p>
+              <h3 className="mb-2 text-xl font-normal text-black">{persona.title}</h3>
+              <p className="mb-6 flex-1 font-light text-gray-700">{persona.description}</p>
               <Link href={persona.href}>
-                <Button variant="outline" className="w-full border-gray-300 font-normal text-black hover:border-[#8DEC42] hover:bg-[#8DEC42] hover:text-white">
+                <Button
+                  variant="outline"
+                  className="w-full border-gray-300 font-normal text-black hover:border-brand-orange hover:bg-brand-orange hover:text-white"
+                >
                   {persona.cta}
                 </Button>
               </Link>

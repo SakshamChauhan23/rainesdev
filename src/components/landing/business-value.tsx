@@ -5,20 +5,20 @@ export function BusinessValue() {
   const values = [
     {
       icon: TrendingUp,
-      title: 'Deploy AI workflows in days, not months'
+      title: 'Deploy AI workflows in days, not months',
     },
     {
       icon: DollarSign,
-      title: 'Reduce dependency on custom development'
+      title: 'Reduce dependency on custom development',
     },
     {
       icon: Target,
-      title: 'Learn from workflows already tested in real business environments'
+      title: 'Learn from workflows already tested in real business environments',
     },
     {
       icon: Users,
-      title: 'Scale automation without scaling headcount'
-    }
+      title: 'Scale automation without scaling headcount',
+    },
   ]
 
   return (
@@ -37,12 +37,12 @@ export function BusinessValue() {
           {values.map((value, index) => (
             <div
               key={index}
-              className="group flex items-start gap-6 border-l-2 border-gray-300 pl-6 transition-all duration-300 hover:border-[#8DEC42] hover:pl-8"
+              className="group flex items-start gap-6 border-l-2 border-gray-300 pl-6 transition-all duration-300 hover:border-brand-orange hover:pl-8"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 transition-all duration-300 group-hover:bg-[#8DEC42]/10 group-hover:scale-110">
-                <value.icon className="h-5 w-5 text-gray-700 transition-all duration-300 group-hover:text-[#8DEC42]" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 transition-all duration-300 group-hover:scale-110 group-hover:bg-brand-orange/10">
+                <value.icon className="h-5 w-5 text-gray-700 transition-all duration-300 group-hover:text-brand-orange" />
               </div>
-              <h3 className="pt-1.5 text-lg font-normal text-black transition-all duration-300 group-hover:text-[#8DEC42]">
+              <h3 className="pt-1.5 text-lg font-normal text-black transition-all duration-300 group-hover:text-brand-orange">
                 {value.title}
               </h3>
             </div>

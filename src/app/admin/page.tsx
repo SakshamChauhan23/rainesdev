@@ -113,10 +113,10 @@ export default async function AdminDashboard() {
   return (
     <div className="min-h-screen bg-brand-cream">
       {/* Header Section */}
-      <div className="relative overflow-hidden border-b border-brand-slate/10 bg-gradient-to-br from-brand-orange/5 via-brand-cream to-brand-teal/5">
+      <div className="relative overflow-hidden border-b border-brand-slate/10 bg-gradient-to-br from-brand-orange/5 via-brand-cream to-brand-orange/5">
         <div className="absolute inset-0 -z-10">
           <div className="absolute right-10 top-10 h-72 w-72 rounded-full bg-brand-orange/10 blur-3xl" />
-          <div className="absolute bottom-10 left-10 h-72 w-72 rounded-full bg-brand-teal/10 blur-3xl" />
+          <div className="absolute bottom-10 left-10 h-72 w-72 rounded-full bg-brand-orange/10 blur-3xl" />
         </div>
 
         <Container className="py-12">
@@ -152,9 +152,9 @@ export default async function AdminDashboard() {
             </div>
 
             {/* Approved Agents */}
-            <div className="group relative overflow-hidden rounded-3xl border-2 border-brand-slate/10 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 hover:border-brand-teal/30 hover:shadow-xl">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-green-100">
-                <CheckCircle className="h-6 w-6 text-green-600" />
+            <div className="group relative overflow-hidden rounded-3xl border-2 border-brand-slate/10 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 hover:border-brand-orange/30 hover:shadow-xl">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-orange/10">
+                <CheckCircle className="h-6 w-6 text-brand-orange" />
               </div>
               <p className="mb-1 text-sm font-medium text-brand-slate/70">Approved Agents</p>
               <p className="text-3xl font-bold text-brand-slate">{approvedCount}</p>
@@ -165,7 +165,7 @@ export default async function AdminDashboard() {
             </div>
 
             {/* Total Purchases */}
-            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-teal to-brand-teal/90 p-6 text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-orange to-brand-orange/90 p-6 text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
               <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
               <div className="relative">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
@@ -188,9 +188,9 @@ export default async function AdminDashboard() {
             </div>
 
             {/* Total Buyers */}
-            <div className="group relative overflow-hidden rounded-3xl border-2 border-brand-slate/10 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 hover:border-brand-teal/30 hover:shadow-xl">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-teal/10">
-                <Package className="h-6 w-6 text-brand-teal" />
+            <div className="group relative overflow-hidden rounded-3xl border-2 border-brand-slate/10 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 hover:border-brand-orange/30 hover:shadow-xl">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-orange/10">
+                <Package className="h-6 w-6 text-brand-orange" />
               </div>
               <p className="mb-1 text-sm font-medium text-brand-slate/70">Total Buyers</p>
               <p className="text-3xl font-bold text-brand-slate">{buyerCount}</p>
@@ -223,7 +223,7 @@ export default async function AdminDashboard() {
 
           {pendingAgents.length === 0 ? (
             <div className="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border-2 border-brand-slate/10 bg-white p-12 text-center">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-green-600 shadow-lg shadow-green-500/30">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-orange/80 to-brand-orange shadow-lg shadow-brand-orange/30">
                 <CheckCircle className="h-8 w-8 text-white" />
               </div>
               <h3 className="mb-2 text-xl font-bold text-brand-slate">All caught up!</h3>
@@ -240,7 +240,7 @@ export default async function AdminDashboard() {
                     <div className="flex-1 space-y-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="text-xl font-bold text-brand-slate">{agent.title}</h3>
-                        <Badge className="rounded-lg border-brand-teal/20 bg-brand-teal/10 text-xs text-brand-teal">
+                        <Badge className="rounded-lg border-brand-orange/20 bg-brand-orange/10 text-xs text-brand-orange">
                           {agent.category.name}
                         </Badge>
                         <Badge className="rounded-lg border-brand-slate/20 bg-brand-slate/10 text-xs text-brand-slate">
@@ -269,7 +269,7 @@ export default async function AdminDashboard() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="rounded-xl border-2 hover:border-brand-teal hover:bg-brand-teal/5"
+                          className="rounded-xl border-2 hover:border-brand-orange hover:bg-brand-orange/5"
                         >
                           <Eye className="mr-2 h-4 w-4" />
                           Preview
@@ -308,11 +308,11 @@ export default async function AdminDashboard() {
                     <div className="flex items-center gap-4">
                       <div
                         className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${
-                          agent.status === 'APPROVED' ? 'bg-green-100' : 'bg-red-100'
+                          agent.status === 'APPROVED' ? 'bg-brand-orange/10' : 'bg-red-100'
                         }`}
                       >
                         {agent.status === 'APPROVED' ? (
-                          <CheckCircle className="h-5 w-5 text-green-600" />
+                          <CheckCircle className="h-5 w-5 text-brand-orange" />
                         ) : (
                           <XCircle className="h-5 w-5 text-red-600" />
                         )}

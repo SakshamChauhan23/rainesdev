@@ -145,10 +145,10 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="mb-2 flex items-center gap-3">
-                        <Sparkles className="h-5 w-5 text-teal-600" />
+                        <Sparkles className="h-5 w-5 text-brand-orange" />
                         <Link
                           href={`/agents/${request.agent.slug}`}
-                          className="text-lg font-semibold text-gray-900 transition-colors hover:text-teal-600"
+                          className="text-lg font-semibold text-gray-900 transition-colors hover:text-brand-orange"
                         >
                           {request.agent.title}
                         </Link>
@@ -167,7 +167,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                       </div>
                     </div>
 
-                    <Badge className="border-orange-300 bg-orange-100 text-orange-700">
+                    <Badge className="border-brand-orange/30 bg-orange-100 text-orange-700">
                       Pending
                     </Badge>
                   </div>
@@ -196,7 +196,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
 
                   {/* Call Status - Only show if buyer requested book call */}
                   {request.bookCallRequested && (
-                    <div className="rounded-lg border-2 border-orange-200 bg-orange-50 p-4">
+                    <div className="rounded-lg border-2 border-orange-200 bg-brand-orange/5 p-4">
                       <div className="mb-3 flex items-center gap-2">
                         <Phone className="h-5 w-5 text-orange-600" />
                         <span className="font-medium text-gray-900">Book a Call Requested</span>
@@ -267,7 +267,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                     <Button
                       onClick={() => handleMarkComplete(request.id)}
                       disabled={loadingStates[request.id]}
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-brand-orange hover:bg-brand-orange"
                     >
                       <CheckCircle2 className="mr-2 h-4 w-4" />
                       Mark as Completed
@@ -304,7 +304,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                       <div className="mb-2 flex items-center gap-3">
                         <Link
                           href={`/agents/${request.agent.slug}`}
-                          className="text-lg font-semibold text-gray-900 transition-colors hover:text-teal-600"
+                          className="text-lg font-semibold text-gray-900 transition-colors hover:text-brand-orange"
                         >
                           {request.agent.title}
                         </Link>
@@ -355,7 +355,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                     <Button
                       onClick={() => handleMarkComplete(request.id)}
                       disabled={loadingStates[request.id]}
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-brand-orange hover:bg-brand-orange"
                       size="sm"
                     >
                       <CheckCircle2 className="mr-2 h-4 w-4" />
@@ -372,7 +372,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
       {/* Completed Requests */}
       <div>
         <div className="mb-4 flex items-center gap-2">
-          <CheckCircle2 className="h-5 w-5 text-green-600" />
+          <CheckCircle2 className="h-5 w-5 text-brand-orange" />
           <h2 className="text-xl font-semibold text-gray-900">
             Completed ({completedRequests.length})
           </h2>
@@ -393,7 +393,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                       <div className="mb-2 flex items-center gap-3">
                         <Link
                           href={`/agents/${request.agent.slug}`}
-                          className="text-lg font-semibold text-gray-900 transition-colors hover:text-teal-600"
+                          className="text-lg font-semibold text-gray-900 transition-colors hover:text-brand-orange"
                         >
                           {request.agent.title}
                         </Link>
@@ -416,7 +416,7 @@ export function SetupRequestsTable({ initialRequests }: SetupRequestsTableProps)
                       </div>
                     </div>
 
-                    <Badge className="border-green-300 bg-green-100 text-green-700">
+                    <Badge className="border-brand-orange/30 bg-brand-orange/10 text-brand-orange">
                       Completed
                     </Badge>
                   </div>

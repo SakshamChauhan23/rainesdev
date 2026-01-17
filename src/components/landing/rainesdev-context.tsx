@@ -8,7 +8,7 @@ export function RainesDevContext() {
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-6 flex justify-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm">
-              <Wrench className="h-8 w-8 text-orange-300" />
+              <Wrench className="h-8 w-8 text-brand-orange/30" />
             </div>
           </div>
 
@@ -18,7 +18,7 @@ export function RainesDevContext() {
               href="https://www.rainesdev.ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-normal text-[#8DEC42] underline decoration-[#8DEC42]/30 transition-colors hover:text-[#7ACC3B] hover:decoration-[#7ACC3B]"
+              className="font-normal text-brand-orange underline decoration-brand-orange/30 transition-colors hover:text-[brand-orange/90] hover:decoration-[brand-orange/90]"
             >
               RainesDev.ai
             </a>
@@ -30,7 +30,7 @@ export function RainesDevContext() {
               href="https://www.rainesdev.ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-normal text-[#8DEC42] transition-colors hover:text-[#7ACC3B]"
+              className="font-normal text-brand-orange transition-colors hover:text-[brand-orange/90]"
             >
               RainesDev.ai
             </a>

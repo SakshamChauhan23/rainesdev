@@ -20,10 +20,10 @@ model User {
   purchases               Purchase[]
   reviews                 Review[]
   sellerProfile           SellerProfile?
+  setupRequests           SetupRequest[]
   supportRequestsAssigned SupportRequest[] @relation("AssignedSupport")
   supportRequestsAsBuyer  SupportRequest[] @relation("BuyerSupport")
   supportRequestsAsSeller SupportRequest[] @relation("SellerSupport")
-  setupRequests           SetupRequest[]
 
   @@map("users")
 }
@@ -69,7 +69,6 @@ model Agent {
   supportAddonPrice    Decimal          @default(0) @map("support_addon_price") @db.Decimal(10, 2)
   assistedSetupEnabled Boolean          @default(false) @map("assisted_setup_enabled")
   assistedSetupPrice   Decimal          @default(0) @map("assisted_setup_price") @db.Decimal(10, 2)
-  bookCallEnabled      Boolean          @default(false) @map("book_call_enabled")
   demoVideoUrl         String?          @map("demo_video_url")
   thumbnailUrl         String?          @map("thumbnail_url")
   status               AgentStatus      @default(DRAFT)
@@ -86,14 +85,15 @@ model Agent {
   isLatestVersion      Boolean          @default(true) @map("is_latest_version")
   parentAgentId        String?          @map("parent_agent_id")
   version              Int              @default(1)
+  bookCallEnabled      Boolean          @default(false) @map("book_call_enabled")
   category             Category         @relation(fields: [categoryId], references: [id])
   parentAgent          Agent?           @relation("AgentVersions", fields: [parentAgentId], references: [id])
   childVersions        Agent[]          @relation("AgentVersions")
   seller               User             @relation("SellerAgents", fields: [sellerId], references: [id], onDelete: Cascade)
   purchases            Purchase[]
   reviews              Review[]
-  supportRequests      SupportRequest[]
   setupRequests        SetupRequest[]
+  supportRequests      SupportRequest[]
 
   @@index([sellerId])
   @@index([categoryId])
@@ -106,22 +106,22 @@ model Agent {
 }
 
 model Purchase {
-  id                    String           @id @default(cuid())
-  buyerId               String           @map("buyer_id")
-  agentId               String           @map("agent_id")
-  amountPaid            Decimal          @map("amount_paid") @db.Decimal(10, 2)
-  supportAddonPurchased Boolean          @default(false) @map("support_addon_purchased")
-  assistedSetupRequested Boolean         @default(false) @map("assisted_setup_requested")
-  stripePaymentIntentId String?          @unique @map("stripe_payment_intent_id")
-  status                PurchaseStatus   @default(PENDING)
-  purchasedAt           DateTime         @default(now()) @map("purchased_at")
-  createdAt             DateTime         @default(now()) @map("created_at")
-  agentVersionId        String           @map("agent_version_id")
-  source                PurchaseSource   @default(TEST_MODE)
-  agent                 Agent            @relation(fields: [agentId], references: [id])
-  buyer                 User             @relation(fields: [buyerId], references: [id])
-  supportRequests       SupportRequest[]
-  setupRequest          SetupRequest?
+  id                     String           @id @default(cuid())
+  buyerId                String           @map("buyer_id")
+  agentId                String           @map("agent_id")
+  amountPaid             Decimal          @map("amount_paid") @db.Decimal(10, 2)
+  supportAddonPurchased  Boolean          @default(false) @map("support_addon_purchased")
+  assistedSetupRequested Boolean          @default(false) @map("assisted_setup_requested")
+  stripePaymentIntentId  String?          @unique @map("stripe_payment_intent_id")
+  status                 PurchaseStatus   @default(PENDING)
+  purchasedAt            DateTime         @default(now()) @map("purchased_at")
+  createdAt              DateTime         @default(now()) @map("created_at")
+  agentVersionId         String           @map("agent_version_id")
+  source                 PurchaseSource   @default(TEST_MODE)
+  agent                  Agent            @relation(fields: [agentId], references: [id])
+  buyer                  User             @relation(fields: [buyerId], references: [id])
+  setupRequest           SetupRequest?
+  supportRequests        SupportRequest[]
 
   @@unique([buyerId, agentVersionId])
   @@index([buyerId])
@@ -184,24 +184,24 @@ model Review {
 }
 
 model SetupRequest {
-  id                 String           @id @default(cuid())
-  purchaseId         String           @unique @map("purchase_id")
-  buyerId            String           @map("buyer_id")
-  agentId            String           @map("agent_id")
-  agentVersionId     String           @map("agent_version_id")
-  setupType          SetupType        @default(ADMIN_ASSISTED) @map("setup_type")
-  setupCost          Decimal          @default(0) @map("setup_cost") @db.Decimal(10, 2)
-  status             SetupStatus      @default(PENDING)
-  complexity         SetupComplexity? @map("complexity")
-  adminNotes         String?          @map("admin_notes")
-  bookCallRequested  Boolean          @default(false) @map("book_call_requested")
-  callStatus         CallStatus       @default(PENDING) @map("call_status")
-  createdAt          DateTime         @default(now()) @map("created_at")
-  completedAt        DateTime?        @map("completed_at")
-  updatedAt          DateTime          @updatedAt @map("updated_at")
-  agent              Agent            @relation(fields: [agentId], references: [id])
-  buyer              User             @relation(fields: [buyerId], references: [id])
-  purchase           Purchase         @relation(fields: [purchaseId], references: [id])
+  id                String           @id @default(cuid())
+  purchaseId        String           @unique @map("purchase_id")
+  buyerId           String           @map("buyer_id")
+  agentId           String           @map("agent_id")
+  agentVersionId    String           @map("agent_version_id")
+  setupType         SetupType        @default(ADMIN_ASSISTED) @map("setup_type")
+  setupCost         Decimal          @default(0) @map("setup_cost") @db.Decimal(10, 2)
+  status            SetupStatus      @default(PENDING)
+  complexity        SetupComplexity? @map("complexity")
+  adminNotes        String?          @map("admin_notes")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  completedAt       DateTime?        @map("completed_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+  bookCallRequested Boolean          @default(false) @map("book_call_requested")
+  callStatus        CallStatus       @default(PENDING) @map("call_status")
+  agent             Agent            @relation(fields: [agentId], references: [id])
+  buyer             User             @relation(fields: [buyerId], references: [id])
+  purchase          Purchase         @relation(fields: [purchaseId], references: [id])
 
   @@index([buyerId])
   @@index([agentId])
@@ -282,8 +282,8 @@ enum SetupType {
 
 enum SetupStatus {
   PENDING
-  IN_PROGRESS
   COMPLETED
+  IN_PROGRESS
 }
 
 enum CallStatus {

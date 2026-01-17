@@ -8,7 +8,7 @@ export function Differentiation() {
     'Agents designed for business outcomes, not experimentation',
     'End-to-end solutions ready to deploy',
     'Pre-configured for common SMB tools',
-    'Purchase once, unlock forever'
+    'Purchase once, unlock forever',
   ]
 
   return (
@@ -20,17 +20,15 @@ export function Differentiation() {
               What Makes This Different
             </h2>
             <p className="text-lg font-light text-gray-700">
-              Unlike generic AI tools, this marketplace focuses on practical, business-first solutions
+              Unlike generic AI tools, this marketplace focuses on practical, business-first
+              solutions
             </p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
             {differences.map((difference, index) => (
-              <div
-                key={index}
-                className="flex items-start gap-3"
-              >
-                <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-[#8DEC42]" />
+              <div key={index} className="flex items-start gap-3">
+                <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-brand-orange" />
                 <p className="font-light text-black">{difference}</p>
               </div>
             ))}

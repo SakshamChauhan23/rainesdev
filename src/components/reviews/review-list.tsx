@@ -217,7 +217,7 @@ export function ReviewList({
                         {review.buyer.name || review.buyer.email.split('@')[0]}
                       </span>
                       {review.verifiedPurchase && (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-brand-orange/20 bg-brand-orange/5 px-2 py-0.5 text-xs font-medium text-brand-orange">
                           <CheckCircle className="h-3 w-3" />
                           Verified Buyer
                         </span>

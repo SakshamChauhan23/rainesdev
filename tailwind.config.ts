@@ -19,9 +19,8 @@ const config: Config = {
       colors: {
         // Brand Colors
         brand: {
-          orange: '#FF6B35', // Sunrise Orange - Primary
+          orange: '#FF6B35', // Sunrise Orange - Primary & Accent
           slate: '#1E293B', // Deep Slate - Foundation
-          teal: '#14B8A6', // Growth Teal - Accent
           cream: '#FFFBF5', // Soft Cream - Background
         },
         border: 'hsl(var(--border))',

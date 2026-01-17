@@ -39,8 +39,8 @@ export function WhyExists() {
           {/* Right: Solution */}
           <div className="flex flex-col justify-center">
             <div className="rounded-lg border border-gray-300 bg-white p-8">
-              <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-[#8DEC42]/10">
-                <Zap className="h-6 w-6 text-[#8DEC42]" />
+              <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-brand-orange/10">
+                <Zap className="h-6 w-6 text-brand-orange" />
               </div>
               <h3 className="mb-4 text-2xl font-normal text-black">
                 Businesses do not need more AI hype — they need working solutions.
@@ -50,22 +50,20 @@ export function WhyExists() {
               </p>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-[#8DEC42]" />
+                  <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-brand-orange" />
                   <p className="font-light text-black">
                     Proven AI agent workflows that actually work
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-[#8DEC42]" />
+                  <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-brand-orange" />
                   <p className="font-light text-black">
                     Discoverable, reusable, and ready to deploy
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-[#8DEC42]" />
-                  <p className="font-light text-black">
-                    No need to start from scratch every time
-                  </p>
+                  <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-brand-orange" />
+                  <p className="font-light text-black">No need to start from scratch every time</p>
                 </div>
               </div>
             </div>

@@ -143,10 +143,10 @@ export function AgentsPageClient({
   return (
     <div className="min-h-screen bg-brand-cream">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-brand-orange/5 via-brand-cream to-brand-teal/5 py-12 sm:py-16 lg:py-20">
+      <div className="relative overflow-hidden bg-gradient-to-br from-brand-orange/5 via-brand-cream to-brand-orange/5 py-12 sm:py-16 lg:py-20">
         <div className="absolute inset-0 -z-10">
           <div className="absolute right-10 top-10 h-48 w-48 rounded-full bg-brand-orange/10 blur-3xl sm:h-72 sm:w-72" />
-          <div className="absolute bottom-10 left-10 h-48 w-48 rounded-full bg-brand-teal/10 blur-3xl sm:h-72 sm:w-72" />
+          <div className="absolute bottom-10 left-10 h-48 w-48 rounded-full bg-brand-orange/10 blur-3xl sm:h-72 sm:w-72" />
         </div>
 
         <Container>
@@ -199,8 +199,8 @@ export function AgentsPageClient({
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-teal/10 sm:h-10 sm:w-10 sm:rounded-xl">
-                  <Sparkles className="h-4 w-4 text-brand-teal sm:h-5 sm:w-5" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-orange/10 sm:h-10 sm:w-10 sm:rounded-xl">
+                  <Sparkles className="h-4 w-4 text-brand-orange sm:h-5 sm:w-5" />
                 </div>
                 <div className="text-left">
                   <p className="text-xs font-semibold text-brand-slate sm:text-sm">
@@ -273,7 +273,7 @@ export function AgentsPageClient({
                       className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-medium transition-all ${
                         selectedCategorySlug === category.slug
                           ? 'bg-brand-orange text-white shadow-md shadow-brand-orange/30 hover:bg-brand-orange/90'
-                          : 'border-2 border-brand-slate/10 bg-white text-brand-slate hover:border-brand-teal hover:bg-brand-teal/5 hover:text-brand-teal'
+                          : 'border-2 border-brand-slate/10 bg-white text-brand-slate hover:border-brand-orange hover:bg-brand-orange/5 hover:text-brand-orange'
                       }`}
                       onClick={() => toggleCategory(category.slug)}
                     >

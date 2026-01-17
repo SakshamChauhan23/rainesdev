@@ -17,16 +17,18 @@ export function Hero() {
     <section className="relative overflow-hidden bg-brand-cream py-20 sm:py-28 lg:py-32">
       {/* Decorative background elements */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 right-10 h-72 w-72 rounded-full bg-brand-orange/10 blur-3xl" />
-        <div className="absolute bottom-20 left-10 h-96 w-96 rounded-full bg-brand-teal/10 blur-3xl" />
+        <div className="absolute right-10 top-20 h-72 w-72 rounded-full bg-brand-orange/10 blur-3xl" />
+        <div className="absolute bottom-20 left-10 h-96 w-96 rounded-full bg-brand-orange/10 blur-3xl" />
       </div>
 
       <Container>
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left Column - Text Content */}
-          <div className={`flex flex-col justify-center transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div
+            className={`flex flex-col justify-center transition-all duration-1000 ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+          >
             {/* Badge */}
-            <div className="mb-6 inline-flex items-center gap-2 self-start rounded-full bg-brand-orange/10 px-4 py-2 text-sm font-medium text-brand-orange border border-brand-orange/20">
+            <div className="mb-6 inline-flex items-center gap-2 self-start rounded-full border border-brand-orange/20 bg-brand-orange/10 px-4 py-2 text-sm font-medium text-brand-orange">
               <Sparkles className="h-4 w-4" />
               <span>Build teams of AI agents</span>
             </div>
@@ -36,14 +38,15 @@ export function Hero() {
               Build teams of{' '}
               <span className="relative inline-block">
                 <span className="relative z-10 text-brand-orange">AI agents</span>
-                <span className="absolute bottom-2 left-0 right-0 h-3 bg-brand-orange/20 -z-0" />
+                <span className="absolute bottom-2 left-0 right-0 -z-0 h-3 bg-brand-orange/20" />
               </span>{' '}
               that deliver human-quality work
             </h1>
 
             {/* Subheadline */}
-            <p className="mb-10 text-lg text-brand-slate/70 sm:text-xl max-w-2xl leading-relaxed">
-              Get fully built and manage AI agents for sales, research, and workflows—no coding required. Our marketplace brings AI to work for you.
+            <p className="mb-10 max-w-2xl text-lg leading-relaxed text-brand-slate/70 sm:text-xl">
+              Get fully built and manage AI agents for sales, research, and workflows—no coding
+              required. Our marketplace brings AI to work for you.
             </p>
 
             {/* CTA Buttons */}
@@ -51,7 +54,7 @@ export function Hero() {
               <Link href="/agents">
                 <Button
                   size="lg"
-                  className="group rounded-2xl bg-brand-orange px-8 py-6 text-base font-semibold text-white shadow-lg shadow-brand-orange/30 transition-all hover:bg-brand-orange/90 hover:shadow-xl hover:shadow-brand-orange/40 hover:-translate-y-0.5"
+                  className="group rounded-2xl bg-brand-orange px-8 py-6 text-base font-semibold text-white shadow-lg shadow-brand-orange/30 transition-all hover:-translate-y-0.5 hover:bg-brand-orange/90 hover:shadow-xl hover:shadow-brand-orange/40"
                 >
                   Browse Agents
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -61,7 +64,7 @@ export function Hero() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-2xl border-2 border-brand-slate/20 bg-white px-8 py-6 text-base font-semibold text-brand-slate transition-all hover:border-brand-teal hover:bg-brand-teal/5"
+                  className="rounded-2xl border-2 border-brand-slate/20 bg-white px-8 py-6 text-base font-semibold text-brand-slate transition-all hover:border-brand-orange hover:bg-brand-orange/5"
                 >
                   Request a demo
                 </Button>
@@ -72,13 +75,13 @@ export function Hero() {
             <div className="mt-12 flex items-center gap-6 text-sm text-brand-slate/60">
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2">
-                  <div className="h-8 w-8 rounded-full bg-brand-orange/20 border-2 border-white flex items-center justify-center">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-orange/20">
                     <Bot className="h-4 w-4 text-brand-orange" />
                   </div>
-                  <div className="h-8 w-8 rounded-full bg-brand-teal/20 border-2 border-white flex items-center justify-center">
-                    <Zap className="h-4 w-4 text-brand-teal" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-orange/20">
+                    <Zap className="h-4 w-4 text-brand-orange" />
                   </div>
-                  <div className="h-8 w-8 rounded-full bg-brand-orange/20 border-2 border-white flex items-center justify-center">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-orange/20">
                     <TrendingUp className="h-4 w-4 text-brand-orange" />
                   </div>
                 </div>
@@ -88,18 +91,24 @@ export function Hero() {
           </div>
 
           {/* Right Column - Visual/Preview */}
-          <div className={`relative hidden lg:block transition-all duration-1000 delay-300 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+          <div
+            className={`relative hidden transition-all delay-300 duration-1000 lg:block ${mounted ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}
+          >
             <div className="relative">
               {/* Main Card - Agent Preview */}
-              <div className="relative rounded-3xl bg-white p-8 shadow-2xl shadow-brand-slate/10 border border-brand-slate/10">
+              <div className="relative rounded-3xl border border-brand-slate/10 bg-white p-8 shadow-2xl shadow-brand-slate/10">
                 {/* Card Header */}
                 <div className="mb-6 flex items-start justify-between">
                   <div>
-                    <div className="mb-2 inline-flex items-center gap-2 rounded-xl bg-brand-teal/10 px-3 py-1 text-xs font-medium text-brand-teal">
+                    <div className="mb-2 inline-flex items-center gap-2 rounded-xl bg-brand-orange/10 px-3 py-1 text-xs font-medium text-brand-orange">
                       AI BDR Agent
                     </div>
-                    <h3 className="text-xl font-bold text-brand-slate">Sales Outreach Automation</h3>
-                    <p className="mt-1 text-sm text-brand-slate/60">Engages leads instantly. Drives pipeline 24/7</p>
+                    <h3 className="text-xl font-bold text-brand-slate">
+                      Sales Outreach Automation
+                    </h3>
+                    <p className="mt-1 text-sm text-brand-slate/60">
+                      Engages leads instantly. Drives pipeline 24/7
+                    </p>
                   </div>
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-orange to-brand-orange/80 shadow-lg">
                     <Bot className="h-6 w-6 text-white" />
@@ -120,7 +129,7 @@ export function Hero() {
 
                   <div className="flex items-center gap-3 rounded-2xl bg-brand-cream p-4 transition-all hover:bg-brand-cream/70">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm">
-                      <Zap className="h-5 w-5 text-brand-teal" />
+                      <Zap className="h-5 w-5 text-brand-orange" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-brand-slate">Speed to lead</p>
@@ -140,12 +149,14 @@ export function Hero() {
                 </div>
 
                 {/* CTA in Card */}
-                <div className="mt-6 pt-6 border-t border-brand-slate/10">
+                <div className="mt-6 border-t border-brand-slate/10 pt-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-2xl font-bold text-brand-slate">$49<span className="text-sm font-normal text-brand-slate/60">/month</span></p>
+                      <p className="text-2xl font-bold text-brand-slate">
+                        $49<span className="text-sm font-normal text-brand-slate/60">/month</span>
+                      </p>
                     </div>
-                    <Button className="rounded-xl bg-brand-orange hover:bg-brand-orange/90 text-white shadow-lg shadow-brand-orange/30">
+                    <Button className="rounded-xl bg-brand-orange text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90">
                       Get Started
                     </Button>
                   </div>
@@ -153,14 +164,17 @@ export function Hero() {
               </div>
 
               {/* Floating Elements */}
-              <div className="absolute -top-6 -right-6 rounded-2xl bg-white px-4 py-3 shadow-xl border border-brand-slate/10 animate-float">
+              <div className="animate-float absolute -right-6 -top-6 rounded-2xl border border-brand-slate/10 bg-white px-4 py-3 shadow-xl">
                 <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-brand-teal animate-pulse" />
+                  <div className="h-2 w-2 animate-pulse rounded-full bg-brand-orange" />
                   <span className="text-sm font-medium text-brand-slate">Live and working</span>
                 </div>
               </div>
 
-              <div className="absolute -bottom-6 -left-6 rounded-2xl bg-brand-slate px-4 py-3 shadow-xl animate-float" style={{ animationDelay: '1s' }}>
+              <div
+                className="animate-float absolute -bottom-6 -left-6 rounded-2xl bg-brand-slate px-4 py-3 shadow-xl"
+                style={{ animationDelay: '1s' }}
+              >
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-brand-orange" />
                   <span className="text-sm font-medium text-white">AI-Powered</span>
@@ -173,7 +187,8 @@ export function Hero() {
 
       <style jsx>{`
         @keyframes float {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px);
           }
           50% {

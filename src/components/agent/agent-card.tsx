@@ -26,7 +26,7 @@ interface AgentCardProps {
 export function AgentCard({ agent }: AgentCardProps) {
   return (
     <Link href={`/agents/${agent.slug}`} className="group">
-      <Card className="h-full border-gray-300 bg-white transition-all duration-300 hover:border-[#8DEC42] hover:shadow-lg hover:-translate-y-1">
+      <Card className="h-full border-gray-300 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-brand-orange hover:shadow-lg">
         {/* Thumbnail */}
         <div className="relative aspect-video w-full overflow-hidden rounded-t-lg bg-gray-100">
           {agent.thumbnailUrl ? (
@@ -63,7 +63,7 @@ export function AgentCard({ agent }: AgentCardProps) {
           </div>
 
           {/* Title */}
-          <h3 className="mb-2 line-clamp-2 text-base font-normal text-black transition-colors group-hover:text-[#8DEC42]">
+          <h3 className="mb-2 line-clamp-2 text-base font-normal text-black transition-colors group-hover:text-brand-orange">
             {agent.title}
           </h3>
 

@@ -7,20 +7,20 @@ export function Principles() {
       icon: Target,
       number: '1',
       title: 'Solves a real business problem',
-      description: 'Every agent addresses actual challenges faced by businesses'
+      description: 'Every agent addresses actual challenges faced by businesses',
     },
     {
       icon: FileText,
       number: '2',
       title: 'Comes with clear setup documentation',
-      description: 'Comprehensive guides ensure smooth implementation'
+      description: 'Comprehensive guides ensure smooth implementation',
     },
     {
       icon: Users,
       number: '3',
       title: 'Designed to be usable by non-experts',
-      description: 'No AI expertise required to deploy and use'
-    }
+      description: 'No AI expertise required to deploy and use',
+    },
   ]
 
   return (
@@ -39,19 +39,15 @@ export function Principles() {
           {principles.map((principle, index) => (
             <div key={index} className="text-center">
               <div className="mb-4 flex justify-center">
-                <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#8DEC42] to-[#7ACC3B]">
+                <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-brand-orange to-[brand-orange/90]">
                   <principle.icon className="h-8 w-8 text-white" />
                   <div className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#404145] text-xs font-semibold text-white">
                     {principle.number}
                   </div>
                 </div>
               </div>
-              <h3 className="mb-2 text-lg font-normal text-black">
-                {principle.title}
-              </h3>
-              <p className="font-light text-gray-700">
-                {principle.description}
-              </p>
+              <h3 className="mb-2 text-lg font-normal text-black">{principle.title}</h3>
+              <p className="font-light text-gray-700">{principle.description}</p>
             </div>
           ))}
         </div>
