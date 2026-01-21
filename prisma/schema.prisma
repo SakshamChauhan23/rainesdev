@@ -8,21 +8,23 @@ datasource db {
 }
 
 model User {
-  id                      String           @id
-  email                   String           @unique
-  role                    UserRole         @default(BUYER)
+  id                      String              @id
+  email                   String              @unique
+  role                    UserRole            @default(BUYER)
   name                    String?
-  avatarUrl               String?          @map("avatar_url")
-  createdAt               DateTime         @default(now()) @map("created_at")
-  updatedAt               DateTime         @updatedAt @map("updated_at")
+  avatarUrl               String?             @map("avatar_url")
+  createdAt               DateTime            @default(now()) @map("created_at")
+  updatedAt               DateTime            @updatedAt @map("updated_at")
   adminLogs               AdminLog[]
-  agentsCreated           Agent[]          @relation("SellerAgents")
+  agentsCreated           Agent[]             @relation("SellerAgents")
   purchases               Purchase[]
   reviews                 Review[]
   sellerProfile           SellerProfile?
-  supportRequestsAssigned SupportRequest[] @relation("AssignedSupport")
-  supportRequestsAsBuyer  SupportRequest[] @relation("BuyerSupport")
-  supportRequestsAsSeller SupportRequest[] @relation("SellerSupport")
+  sellerApplication       SellerApplication?
+  applicationsReviewed    SellerApplication[] @relation("ApplicationReviewer")
+  supportRequestsAssigned SupportRequest[]    @relation("AssignedSupport")
+  supportRequestsAsBuyer  SupportRequest[]    @relation("BuyerSupport")
+  supportRequestsAsSeller SupportRequest[]    @relation("SellerSupport")
   setupRequests           SetupRequest[]
 
   @@map("users")
@@ -40,6 +42,27 @@ model SellerProfile {
   user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("seller_profiles")
+}
+
+model SellerApplication {
+  id              String                  @id @default(cuid())
+  userId          String                  @unique @map("user_id")
+  fullName        String                  @map("full_name")
+  experience      String
+  agentIdeas      String                  @map("agent_ideas")
+  relevantLinks   String?                 @map("relevant_links")
+  status          SellerApplicationStatus @default(PENDING_REVIEW)
+  rejectionReason String?                 @map("rejection_reason")
+  reviewedAt      DateTime?               @map("reviewed_at")
+  reviewedBy      String?                 @map("reviewed_by")
+  createdAt       DateTime                @default(now()) @map("created_at")
+  updatedAt       DateTime                @updatedAt @map("updated_at")
+  user            User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviewer        User?                   @relation("ApplicationReviewer", fields: [reviewedBy], references: [id])
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("seller_applications")
 }
 
 model Category {
@@ -274,6 +297,8 @@ enum AdminAction {
   REFUND_PURCHASE
   ASSIGN_SUPPORT
   UPDATE_CATEGORY
+  APPROVE_SELLER_APPLICATION
+  REJECT_SELLER_APPLICATION
 }
 
 enum SetupType {
@@ -296,4 +321,10 @@ enum SetupComplexity {
   QUICK
   STANDARD
   COMPLEX
+}
+
+enum SellerApplicationStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
 }

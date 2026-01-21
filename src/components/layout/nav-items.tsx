@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Package, LayoutDashboard, ShieldCheck } from 'lucide-react'
+import { Package, LayoutDashboard, ShieldCheck, UserPlus } from 'lucide-react'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 export function UserNavItems({ role }: { role?: 'BUYER' | 'SELLER' | 'ADMIN' }) {
@@ -16,6 +16,16 @@ export function UserNavItems({ role }: { role?: 'BUYER' | 'SELLER' | 'ADMIN' }) 
           My Library
         </Link>
       </DropdownMenuItem>
+
+      {/* Buyers can apply to become sellers */}
+      {role === 'BUYER' && (
+        <DropdownMenuItem asChild>
+          <Link href="/become-seller">
+            <UserPlus className="mr-2 h-4 w-4" />
+            Become a Seller
+          </Link>
+        </DropdownMenuItem>
+      )}
 
       {/* Sellers can see dashboard AND library (they can buy too) */}
       {(role === 'SELLER' || role === 'ADMIN') && (
@@ -58,6 +68,16 @@ export function MobileNavItems({
       >
         My Library
       </Link>
+
+      {role === 'BUYER' && (
+        <Link
+          href="/become-seller"
+          onClick={onNavigate}
+          className="text-sm font-medium transition-colors hover:text-primary"
+        >
+          Become a Seller
+        </Link>
+      )}
 
       {(role === 'SELLER' || role === 'ADMIN') && (
         <Link

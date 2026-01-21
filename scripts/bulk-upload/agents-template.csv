@@ -1,0 +1,61 @@
+title,category_slug,price,short_description,workflow_overview,use_case,setup_guide,demo_video_url,thumbnail_url,status,seller_email,assisted_setup_enabled,assisted_setup_price,book_call_enabled
+"Customer Support AI Bot","customer-support",49.99,"Automate tier-1 customer support with AI-powered responses","# How It Works
+
+1. **Receives Customer Queries** - Integrates with your helpdesk
+2. **Analyzes Intent** - Uses NLP to understand customer needs
+3. **Provides Responses** - Sends accurate, helpful replies
+
+## Features
+- 24/7 automated support
+- Multi-language support
+- Escalation to human agents","Best for SaaS companies, e-commerce stores, and service businesses looking to reduce support ticket volume and response times.","# Setup Guide
+
+## Step 1: Install Dependencies
+```bash
+npm install ai-support-bot
+```
+
+## Step 2: Configure API Keys
+Create a `.env` file with your keys:
+```
+OPENAI_API_KEY=your_key
+HELPDESK_API_KEY=your_key
+```
+
+## Step 3: Deploy
+```bash
+npm run deploy
+```","https://youtube.com/watch?v=example1","https://example.com/images/support-bot.jpg","APPROVED","seller@example.com",false,0,false
+"Lead Qualification Agent","sales-marketing",79.99,"Automatically qualify leads and score them based on engagement","# Lead Qualification Workflow
+
+1. **Capture Leads** - From forms, emails, or chat
+2. **Score Leads** - Based on behavior and demographics
+3. **Route to Sales** - High-value leads to your team
+
+## Scoring Criteria
+- Company size
+- Budget indicators
+- Engagement level","Ideal for B2B companies with high lead volume who need to prioritize sales efforts effectively.","# Setup Instructions
+
+## Prerequisites
+- CRM access (Salesforce, HubSpot, etc.)
+- Email integration
+
+## Configuration
+1. Connect your CRM
+2. Define scoring rules
+3. Set routing thresholds
+
+## Launch
+Run the agent and start qualifying!","https://youtube.com/watch?v=example2","https://example.com/images/lead-qual.jpg","APPROVED","seller@example.com",true,99.99,true
+"Content Writer AI","content-creation",39.99,"Generate blog posts, social media content, and marketing copy","# Content Generation Pipeline
+
+- **Topic Research** - Finds trending topics
+- **Outline Creation** - Structures content
+- **Draft Writing** - Generates initial content
+- **SEO Optimization** - Adds keywords naturally","Perfect for marketing teams, bloggers, and agencies needing consistent high-quality content.","# Quick Start
+
+1. Install the package
+2. Add your OpenAI API key
+3. Configure content preferences
+4. Start generating!","","","UNDER_REVIEW","seller@example.com",false,0,false

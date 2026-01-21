@@ -1,4 +1,3 @@
-
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
@@ -8,15 +7,12 @@ const PROTECTED_ROUTES = [
   '/library',
   '/checkout',
   '/submit-agent',
+  '/become-seller',
   '/admin',
 ]
 
 // Define public API routes that don't need auth checks
-const PUBLIC_API_ROUTES = [
-  '/api/agents',
-  '/api/categories',
-  '/api/reviews',
-]
+const PUBLIC_API_ROUTES = ['/api/agents', '/api/categories', '/api/reviews']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl

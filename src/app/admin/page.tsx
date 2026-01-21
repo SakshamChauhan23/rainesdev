@@ -16,6 +16,7 @@ import {
   TrendingUp,
   Eye,
   Shield,
+  UserPlus,
 } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
@@ -98,9 +99,18 @@ export default async function AdminDashboard() {
     prisma.user.count({ where: { role: 'SELLER' } }),
     prisma.user.count({ where: { role: 'BUYER' } }),
     prisma.purchase.count({ where: { status: 'COMPLETED' } }),
+    prisma.sellerApplication.count({ where: { status: 'PENDING_REVIEW' } }),
   ])
 
-  const [pendingCount, approvedCount, rejectedCount, sellerCount, buyerCount, purchaseCount] = stats
+  const [
+    pendingCount,
+    approvedCount,
+    rejectedCount,
+    sellerCount,
+    buyerCount,
+    purchaseCount,
+    pendingSellerApplications,
+  ] = stats
 
   // Get total views across all agents
   const totalViewsResult = await prisma.agent.aggregate({
@@ -211,6 +221,34 @@ export default async function AdminDashboard() {
             </div>
           </div>
         </div>
+
+        {/* Seller Applications Card */}
+        {pendingSellerApplications > 0 && (
+          <div className="mb-12">
+            <Link href="/admin/seller-applications">
+              <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
+                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+                <div className="relative flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                      <UserPlus className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold">
+                        {pendingSellerApplications} Seller Application
+                        {pendingSellerApplications !== 1 ? 's' : ''} Pending
+                      </p>
+                      <p className="text-sm text-white/70">Click to review seller applications</p>
+                    </div>
+                  </div>
+                  <Button variant="secondary" size="sm" className="rounded-xl">
+                    Review Now
+                  </Button>
+                </div>
+              </div>
+            </Link>
+          </div>
+        )}
 
         {/* Pending Agents Review Queue */}
         <div className="mb-12">

@@ -13,22 +13,34 @@ export function Footer() {
               <h3 className="mb-4 text-sm font-semibold text-brand-slate">Categories</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="/agents?category=customer-support" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/agents?category=customer-support"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Customer Support
                   </Link>
                 </li>
                 <li>
-                  <Link href="/agents?category=sales-marketing" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/agents?category=sales-marketing"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Sales & Marketing
                   </Link>
                 </li>
                 <li>
-                  <Link href="/agents?category=data-analysis" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/agents?category=data-analysis"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Data Analysis
                   </Link>
                 </li>
                 <li>
-                  <Link href="/agents?category=content-creation" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/agents?category=content-creation"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Content Creation
                   </Link>
                 </li>
@@ -40,17 +52,26 @@ export function Footer() {
               <h3 className="mb-4 text-sm font-semibold text-brand-slate">For Clients</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="/agents" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/agents"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Browse Agents
                   </Link>
                 </li>
                 <li>
-                  <Link href="/#how-it-works" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/#how-it-works"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     How It Works
                   </Link>
                 </li>
                 <li>
-                  <Link href="/library" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/library"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Your Purchases
                   </Link>
                 </li>
@@ -62,17 +83,26 @@ export function Footer() {
               <h3 className="mb-4 text-sm font-semibold text-brand-slate">For Sellers</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="/signup" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/become-seller"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Become a Seller
                   </Link>
                 </li>
                 <li>
-                  <Link href="/submit-agent" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/submit-agent"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Submit Agent
                   </Link>
                 </li>
                 <li>
-                  <Link href="/dashboard" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/dashboard"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Seller Dashboard
                   </Link>
                 </li>
@@ -84,12 +114,18 @@ export function Footer() {
               <h3 className="mb-4 text-sm font-semibold text-brand-slate">Business Solutions</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="/enterprise" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/enterprise"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Enterprise
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/contact"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Contact Sales
                   </Link>
                 </li>
@@ -101,17 +137,26 @@ export function Footer() {
               <h3 className="mb-4 text-sm font-semibold text-brand-slate">Company</h3>
               <ul className="space-y-2.5 text-sm">
                 <li>
-                  <Link href="/about" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/about"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="/legal/privacy" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/legal/privacy"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="/legal/terms" className="text-brand-slate/70 transition-colors hover:text-brand-orange">
+                  <Link
+                    href="/legal/terms"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
                     Terms of Service
                   </Link>
                 </li>
