@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useEffect, useCallback } from 'react'
 import { Container } from '@/components/layout/container'
 import { AgentGrid } from '@/components/agent/agent-grid'
 import { SearchBar } from '@/components/shared/search-bar'
@@ -9,7 +8,9 @@ import { Pagination } from '@/components/shared/pagination'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { logger } from '@/lib/logger'
-import { SlidersHorizontal, X, Sparkles, TrendingUp } from 'lucide-react'
+import { SlidersHorizontal, X, Sparkles, TrendingUp, ChevronDown } from 'lucide-react'
+
+const PAGE_SIZE_OPTIONS = [10, 50, 100] as const
 
 type Agent = {
   id: string
@@ -55,9 +56,6 @@ export function AgentsPageClient({
   initialCategorySlug,
   initialSearch,
 }: AgentsPageClientProps) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
   // State initialized from server-fetched data (P2.26)
   const [agents, setAgents] = useState<Agent[]>(initialAgents)
   const [loading, setLoading] = useState(false)
@@ -66,6 +64,7 @@ export function AgentsPageClient({
     initialCategorySlug
   )
   const [currentPage, setCurrentPage] = useState(initialPagination.page)
+  const [pageSize, setPageSize] = useState(initialPagination.limit)
   const [totalPages, setTotalPages] = useState(initialPagination.totalPages)
   const [showFilters, setShowFilters] = useState(!!initialCategorySlug)
   const [totalAgents, setTotalAgents] = useState(initialPagination.total)
@@ -75,35 +74,16 @@ export function AgentsPageClient({
     setIsVisible(true)
   }, [])
 
-  // Update URL when filters change
-  const updateUrl = (params: { category?: string | null; page?: number; search?: string }) => {
-    const newParams = new URLSearchParams()
-    if (params.category) newParams.set('category', params.category)
-    if (params.page && params.page > 1) newParams.set('page', params.page.toString())
-    if (params.search) newParams.set('search', params.search)
-    const queryString = newParams.toString()
-    router.push(`/agents${queryString ? `?${queryString}` : ''}`, { scroll: false })
-  }
-
-  // Fetch agents when filters change (client-side updates)
-  useEffect(() => {
-    // Skip initial fetch since we have server data
-    if (
-      searchQuery === initialSearch &&
-      selectedCategorySlug === initialCategorySlug &&
-      currentPage === initialPagination.page
-    ) {
-      return
-    }
-
-    const fetchAgents = async () => {
+  // Fetch agents from API
+  const fetchAgents = useCallback(
+    async (page: number, limit: number, search: string, category: string | null) => {
       setLoading(true)
       try {
         const params = new URLSearchParams()
-        params.set('page', currentPage.toString())
-        params.set('limit', '12')
-        if (searchQuery) params.set('search', searchQuery)
-        if (selectedCategorySlug) params.set('categorySlug', selectedCategorySlug)
+        params.set('page', page.toString())
+        params.set('limit', limit.toString())
+        if (search) params.set('search', search)
+        if (category) params.set('categorySlug', category)
 
         const response = await fetch(`/api/agents?${params.toString()}`)
         const data = await response.json()
@@ -112,33 +92,81 @@ export function AgentsPageClient({
           setAgents(data.data)
           setTotalPages(data.pagination.totalPages)
           setTotalAgents(data.pagination.total)
+          setCurrentPage(data.pagination.page)
         }
       } catch (error) {
         logger.error('Failed to fetch agents', error)
       } finally {
         setLoading(false)
       }
-    }
+    },
+    []
+  )
 
-    fetchAgents()
-    updateUrl({ category: selectedCategorySlug, page: currentPage, search: searchQuery })
-  }, [currentPage, searchQuery, selectedCategorySlug])
+  // Update URL without navigation (just for bookmarking/sharing)
+  const updateUrl = useCallback(
+    (params: { category?: string | null; page?: number; search?: string; limit?: number }) => {
+      const newParams = new URLSearchParams()
+      if (params.category) newParams.set('category', params.category)
+      if (params.page && params.page > 1) newParams.set('page', params.page.toString())
+      if (params.search) newParams.set('search', params.search)
+      if (params.limit && params.limit !== 10) newParams.set('limit', params.limit.toString())
+      const queryString = newParams.toString()
+      window.history.replaceState({}, '', `/agents${queryString ? `?${queryString}` : ''}`)
+    },
+    []
+  )
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query)
-    setCurrentPage(1)
-  }
+  // Handle page change
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setCurrentPage(page)
+      fetchAgents(page, pageSize, searchQuery, selectedCategorySlug)
+      updateUrl({ category: selectedCategorySlug, page, search: searchQuery, limit: pageSize })
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    },
+    [fetchAgents, updateUrl, pageSize, searchQuery, selectedCategorySlug]
+  )
 
-  const toggleCategory = (slug: string) => {
-    setSelectedCategorySlug(prev => (prev === slug ? null : slug))
-    setCurrentPage(1)
-  }
+  // Handle page size change
+  const handlePageSizeChange = useCallback(
+    (newSize: number) => {
+      setPageSize(newSize)
+      setCurrentPage(1)
+      fetchAgents(1, newSize, searchQuery, selectedCategorySlug)
+      updateUrl({ category: selectedCategorySlug, page: 1, search: searchQuery, limit: newSize })
+    },
+    [fetchAgents, updateUrl, searchQuery, selectedCategorySlug]
+  )
 
-  const clearFilters = () => {
+  const handleSearch = useCallback(
+    (query: string) => {
+      setSearchQuery(query)
+      setCurrentPage(1)
+      fetchAgents(1, pageSize, query, selectedCategorySlug)
+      updateUrl({ category: selectedCategorySlug, page: 1, search: query, limit: pageSize })
+    },
+    [fetchAgents, updateUrl, pageSize, selectedCategorySlug]
+  )
+
+  const toggleCategory = useCallback(
+    (slug: string) => {
+      const newCategory = selectedCategorySlug === slug ? null : slug
+      setSelectedCategorySlug(newCategory)
+      setCurrentPage(1)
+      fetchAgents(1, pageSize, searchQuery, newCategory)
+      updateUrl({ category: newCategory, page: 1, search: searchQuery, limit: pageSize })
+    },
+    [fetchAgents, updateUrl, pageSize, searchQuery, selectedCategorySlug]
+  )
+
+  const clearFilters = useCallback(() => {
     setSelectedCategorySlug(null)
     setSearchQuery('')
     setCurrentPage(1)
-  }
+    fetchAgents(1, pageSize, '', null)
+    updateUrl({ category: null, page: 1, search: '', limit: pageSize })
+  }, [fetchAgents, updateUrl, pageSize])
 
   return (
     <div className="min-h-screen bg-brand-cream">
@@ -247,9 +275,28 @@ export function AgentsPageClient({
               )}
             </div>
 
-            <div className="text-sm font-medium text-brand-slate/70">
-              Showing <span className="font-semibold text-brand-orange">{agents.length}</span> of{' '}
-              <span className="font-semibold text-brand-orange">{totalAgents}</span> agents
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-brand-slate/70">Show</span>
+                <div className="relative">
+                  <select
+                    value={pageSize}
+                    onChange={e => handlePageSizeChange(Number(e.target.value))}
+                    className="appearance-none rounded-lg border-2 border-brand-slate/10 bg-white py-1.5 pl-3 pr-8 text-sm font-medium text-brand-slate transition-colors hover:border-brand-orange focus:border-brand-orange focus:outline-none"
+                  >
+                    {PAGE_SIZE_OPTIONS.map(size => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-slate/50" />
+                </div>
+              </div>
+              <div className="text-sm font-medium text-brand-slate/70">
+                Showing <span className="font-semibold text-brand-orange">{agents.length}</span> of{' '}
+                <span className="font-semibold text-brand-orange">{totalAgents}</span> agents
+              </div>
             </div>
           </div>
 
@@ -297,7 +344,7 @@ export function AgentsPageClient({
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={setCurrentPage}
+              onPageChange={handlePageChange}
             />
           </div>
         )}

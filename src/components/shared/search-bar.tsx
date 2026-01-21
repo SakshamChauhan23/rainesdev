@@ -2,7 +2,7 @@
 
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface SearchBarProps {
   onSearch: (query: string) => void
@@ -18,15 +18,27 @@ export function SearchBar({
   className = '',
 }: SearchBarProps) {
   const [value, setValue] = useState(defaultValue)
+  const onSearchRef = useRef(onSearch)
+  const isInitialMount = useRef(true)
 
-  // Debounce search
+  // Keep ref updated
   useEffect(() => {
+    onSearchRef.current = onSearch
+  }, [onSearch])
+
+  // Debounce search - only trigger on value changes after initial mount
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+
     const timer = setTimeout(() => {
-      onSearch(value)
+      onSearchRef.current(value)
     }, 300)
 
     return () => clearTimeout(timer)
-  }, [value, onSearch])
+  }, [value])
 
   return (
     <div className="relative">

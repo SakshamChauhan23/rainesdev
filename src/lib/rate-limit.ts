@@ -23,14 +23,17 @@ interface RequestLog {
 const requestLogs = new Map<string, RequestLog>()
 
 // Cleanup old entries every 5 minutes
-setInterval(() => {
-  const now = Date.now()
-  for (const [key, log] of requestLogs.entries()) {
-    if (log.resetTime < now) {
-      requestLogs.delete(key)
+setInterval(
+  () => {
+    const now = Date.now()
+    for (const [key, log] of requestLogs.entries()) {
+      if (log.resetTime < now) {
+        requestLogs.delete(key)
+      }
     }
-  }
-}, 5 * 60 * 1000)
+  },
+  5 * 60 * 1000
+)
 
 /**
  * Rate limit check
@@ -49,12 +52,12 @@ export function checkRateLimit(
   if (!log || log.resetTime < now) {
     requestLogs.set(identifier, {
       count: 1,
-      resetTime
+      resetTime,
     })
     return {
       allowed: true,
       remaining: config.uniqueTokenPerInterval - 1,
-      resetTime
+      resetTime,
     }
   }
 
@@ -63,7 +66,7 @@ export function checkRateLimit(
     return {
       allowed: false,
       remaining: 0,
-      resetTime: log.resetTime
+      resetTime: log.resetTime,
     }
   }
 
@@ -72,7 +75,7 @@ export function checkRateLimit(
   return {
     allowed: true,
     remaining: config.uniqueTokenPerInterval - log.count,
-    resetTime: log.resetTime
+    resetTime: log.resetTime,
   }
 }
 
@@ -96,38 +99,38 @@ export const RateLimitPresets = {
   // Public API endpoints (aggressive protection)
   PUBLIC_API: {
     interval: 60 * 1000, // 1 minute
-    uniqueTokenPerInterval: 30 // 30 requests per minute
+    uniqueTokenPerInterval: 30, // 30 requests per minute
   },
 
   // Search/listing endpoints
   SEARCH: {
     interval: 60 * 1000, // 1 minute
-    uniqueTokenPerInterval: 20 // 20 requests per minute
+    uniqueTokenPerInterval: 100, // 100 requests per minute
   },
 
   // Mutation endpoints (create/update/delete)
   MUTATION: {
     interval: 60 * 1000, // 1 minute
-    uniqueTokenPerInterval: 10 // 10 requests per minute
+    uniqueTokenPerInterval: 10, // 10 requests per minute
   },
 
   // Admin endpoints (more restrictive)
   ADMIN: {
     interval: 60 * 1000, // 1 minute
-    uniqueTokenPerInterval: 60 // 60 requests per minute (admins need more)
+    uniqueTokenPerInterval: 60, // 60 requests per minute (admins need more)
   },
 
   // Review/rating endpoints (prevent spam)
   REVIEW: {
     interval: 5 * 60 * 1000, // 5 minutes
-    uniqueTokenPerInterval: 5 // 5 reviews per 5 minutes
+    uniqueTokenPerInterval: 5, // 5 reviews per 5 minutes
   },
 
   // Very restrictive (e.g., password reset, email sending)
   STRICT: {
     interval: 15 * 60 * 1000, // 15 minutes
-    uniqueTokenPerInterval: 3 // 3 requests per 15 minutes
-  }
+    uniqueTokenPerInterval: 3, // 3 requests per 15 minutes
+  },
 }
 
 /**
@@ -162,7 +165,7 @@ export function withRateLimit(
         {
           error: 'Too many requests',
           message: 'Rate limit exceeded. Please try again later.',
-          retryAfter: Math.ceil((resetTime - Date.now()) / 1000)
+          retryAfter: Math.ceil((resetTime - Date.now()) / 1000),
         },
         { status: 429 }
       )

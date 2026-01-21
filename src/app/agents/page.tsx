@@ -3,6 +3,9 @@ import { Sparkles } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { AgentsPageClient } from './agents-page-client'
 
+// Force dynamic rendering to ensure pagination works
+export const dynamic = 'force-dynamic'
+
 // Server component metadata for SEO (P2.26)
 export const metadata = {
   title: 'AI Agents Marketplace | Browse & Discover',
@@ -40,10 +43,19 @@ type PaginationInfo = {
   totalPages: number
 }
 
+// Valid page sizes
+const VALID_PAGE_SIZES = [10, 50, 100] as const
+
 // Server-side data fetching (P2.26)
-async function getInitialData(searchParams: { category?: string; page?: string; search?: string }) {
+async function getInitialData(searchParams: {
+  category?: string
+  page?: string
+  search?: string
+  limit?: string
+}) {
   const page = parseInt(searchParams.page || '1')
-  const limit = 12
+  const requestedLimit = parseInt(searchParams.limit || '10')
+  const limit = VALID_PAGE_SIZES.includes(requestedLimit as 10 | 50 | 100) ? requestedLimit : 10
   const categorySlug = searchParams.category || null
   const search = searchParams.search || ''
 
@@ -139,10 +151,11 @@ function AgentsPageLoading() {
 export default async function AgentsPage({
   searchParams,
 }: {
-  searchParams: { category?: string; page?: string; search?: string }
+  searchParams: Promise<{ category?: string; page?: string; search?: string; limit?: string }>
 }) {
+  const resolvedParams = await searchParams
   const { categories, initialAgents, initialPagination, initialCategorySlug, initialSearch } =
-    await getInitialData(searchParams)
+    await getInitialData(resolvedParams)
 
   return (
     <Suspense fallback={<AgentsPageLoading />}>
