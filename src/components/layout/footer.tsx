@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="border-t border-brand-slate/10 bg-white">
       <Container>
         <div className="py-12">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {/* Categories */}
             <div>
               <h3 className="mb-4 text-sm font-semibold text-brand-slate">Categories</h3>
@@ -104,29 +104,6 @@ export function Footer() {
                     className="text-brand-slate/70 transition-colors hover:text-brand-orange"
                   >
                     Seller Dashboard
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Business Solutions */}
-            <div>
-              <h3 className="mb-4 text-sm font-semibold text-brand-slate">Business Solutions</h3>
-              <ul className="space-y-2.5 text-sm">
-                <li>
-                  <Link
-                    href="/enterprise"
-                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
-                  >
-                    Enterprise
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
-                  >
-                    Contact Sales
                   </Link>
                 </li>
               </ul>
