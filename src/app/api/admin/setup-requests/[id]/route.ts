@@ -7,9 +7,11 @@ import { prisma } from '@/lib/prisma'
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
+
     // Verify authentication
     const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
@@ -66,7 +68,7 @@ export async function PATCH(
 
     // Update setup request
     const setupRequest = await prisma.setupRequest.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       include: {
         buyer: {

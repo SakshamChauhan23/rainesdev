@@ -7,9 +7,11 @@ import { getUserWithRole } from '@/lib/user-sync'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
+
     // Verify admin authentication
     const supabase = createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -51,7 +53,7 @@ export async function POST(
 
     // Update agent configuration
     const agent = await prisma.agent.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         assistedSetupEnabled,
         assistedSetupPrice: price,
@@ -70,7 +72,7 @@ export async function POST(
         adminId: user.id,
         action: 'UPDATE_CATEGORY', // Reusing existing enum value
         entityType: 'AGENT_SETUP_CONFIG',
-        entityId: params.id,
+        entityId: id,
         metadata: {
           assistedSetupEnabled,
           assistedSetupPrice: price,

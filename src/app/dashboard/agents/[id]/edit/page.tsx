@@ -5,17 +5,18 @@ import { Container } from '@/components/layout/container'
 import { EditAgentForm } from '@/components/agent/edit-agent-form'
 import { VideoPlayer } from '@/components/agent/video-player'
 
-export default async function EditAgentPage({ params }: { params: { id: string } }) {
+export default async function EditAgentPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
-        redirect('/login?next=/dashboard/agents/' + params.id + '/edit')
+        redirect('/login?next=/dashboard/agents/' + id + '/edit')
     }
 
     // Fetch agent with relations
     const agent = await prisma.agent.findUnique({
-        where: { id: params.id },
+        where: { id },
         include: {
             category: true,
             seller: true

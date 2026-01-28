@@ -11,11 +11,12 @@ import { VideoPlayer } from '@/components/agent/video-player'
 import { ApproveRejectButtons } from '@/components/admin/approve-reject-buttons'
 import ReactMarkdown from 'react-markdown'
 
-export default async function ReviewAgentPage({ params }: { params: { id: string } }) {
+export default async function ReviewAgentPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
     await requireAdmin()
 
     const agent = await prisma.agent.findUnique({
-        where: { id: params.id },
+        where: { id },
         include: {
             seller: {
                 select: {

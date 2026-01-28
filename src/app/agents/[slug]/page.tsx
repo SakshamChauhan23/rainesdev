@@ -20,12 +20,12 @@ import { Metadata } from 'next'
 import type { Review, ReviewStats, ReviewPagination } from '@/components/reviews/review-list'
 
 interface AgentPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
-  searchParams?: {
+  }>
+  searchParams?: Promise<{
     unlocked?: string
-  }
+  }>
 }
 
 // Server-side review data fetching (P2.27)
@@ -177,7 +177,8 @@ async function getRecommendedAgents(categoryId: string, currentAgentId: string) 
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }: AgentPageProps): Promise<Metadata> {
-  const agent = await getAgentBySlug(params.slug)
+  const { slug } = await params
+  const agent = await getAgentBySlug(slug)
 
   if (!agent) {
     return {
@@ -192,7 +193,9 @@ export async function generateMetadata({ params }: AgentPageProps): Promise<Meta
 }
 
 export default async function AgentPage({ params, searchParams }: AgentPageProps) {
-  const agent = await getAgentBySlug(params.slug)
+  const { slug } = await params
+  const resolvedSearchParams = await searchParams
+  const agent = await getAgentBySlug(slug)
 
   if (!agent) {
     notFound()
@@ -203,7 +206,7 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  const showSuccessBanner = searchParams?.unlocked === 'true'
+  const showSuccessBanner = resolvedSearchParams?.unlocked === 'true'
 
   // Fetch initial reviews and recommended agents server-side
   const [initialReviewData, recommendedAgents] = await Promise.all([
