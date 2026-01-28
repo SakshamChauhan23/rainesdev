@@ -21,7 +21,7 @@ export async function updateAgent(
     prevState: UpdateAgentState,
     formData: FormData
 ): Promise<UpdateAgentState> {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     logger.info('🔍 Update Agent - User check:', { userId: user?.id, email: user?.email })

@@ -10,7 +10,7 @@ import { logger } from '@/lib/logger'
  * Handle post-login redirect based on user role
  */
 export async function handlePostLoginRedirect(nextUrl?: string) {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
     if (!user || error) {
@@ -45,7 +45,7 @@ export async function handlePostLoginRedirect(nextUrl?: string) {
  * Login action
  */
 export async function loginAction(email: string, password: string, nextUrl?: string) {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     try {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -102,7 +102,7 @@ export async function loginAction(email: string, password: string, nextUrl?: str
  * Signup action
  */
 export async function signupAction(email: string, password: string, name?: string) {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     try {
         const { data, error } = await supabase.auth.signUp({
@@ -163,7 +163,7 @@ export async function signupAction(email: string, password: string, name?: strin
  * Logout action
  */
 export async function logoutAction() {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     try {
         await supabase.auth.signOut()

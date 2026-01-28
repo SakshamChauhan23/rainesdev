@@ -13,7 +13,7 @@ export async function POST(
     const { id } = await params
 
     // Verify admin authentication
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (!user || authError) {

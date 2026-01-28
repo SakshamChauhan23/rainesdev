@@ -20,7 +20,7 @@ export async function createAgent(
   prevState: CreateAgentState,
   formData: FormData
 ): Promise<CreateAgentState> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()

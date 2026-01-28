@@ -11,7 +11,7 @@ import { logger } from '@/lib/logger'
  * Approve an agent
  */
 export async function approveAgent(agentId: string) {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
     if (!user || error) {
@@ -59,7 +59,7 @@ export async function approveAgent(agentId: string) {
  * Reject an agent
  */
 export async function rejectAgent(agentId: string, reason: string) {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
     if (!user || error) {

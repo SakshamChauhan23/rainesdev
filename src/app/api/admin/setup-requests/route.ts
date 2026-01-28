@@ -8,7 +8,7 @@ import { prisma } from '@/lib/prisma'
 async function handler(_request: NextRequest) {
   try {
     // Verify authentication
-    const supabase = createClient()
+    const supabase = await createClient()
     const {
       data: { user },
       error,

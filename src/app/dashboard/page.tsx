@@ -16,7 +16,7 @@ import { PerformanceCharts } from '@/components/dashboard/performance-charts'
 
 export default async function DashboardPage({ searchParams }: { searchParams?: Promise<{ success?: string }> }) {
     const resolvedSearchParams = await searchParams
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
     logger.info('🔍 Dashboard auth check:', { user: user?.email, error })
