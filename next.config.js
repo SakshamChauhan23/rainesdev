@@ -5,6 +5,8 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Standalone output for optimized VPS deployment (smaller footprint, faster cold starts)
+  output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
   },

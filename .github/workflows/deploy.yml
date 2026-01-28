@@ -28,6 +28,10 @@ jobs:
             cd ${{ secrets.VPS_PATH }}
             git pull origin main
             npm install
+            npx prisma generate
             npm run build
+            # Copy static files for standalone build (required for output: 'standalone')
+            cp -r public .next/standalone/
+            cp -r .next/static .next/standalone/.next/
             pm2 restart hireyourai
           EOF
