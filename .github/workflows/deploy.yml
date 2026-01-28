@@ -34,6 +34,8 @@ jobs:
           ssh -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             cd ${{ secrets.VPS_PATH }}
             git pull origin main
+            # Clean Prisma modules to fix architecture mismatch
+            rm -rf node_modules/.prisma node_modules/@prisma
             npm install
             npx prisma generate
             npm run build
