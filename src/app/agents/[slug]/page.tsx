@@ -10,6 +10,7 @@ import { PurchaseSuccessBanner } from '@/components/agent/purchase-success-banne
 import { getAgentBySlug } from '@/lib/agents'
 import { createClient } from '@/lib/supabase/server'
 import { ReviewSection } from '@/components/reviews/review-section'
+import { RecommendedAgents } from '@/components/agent/recommended-agents'
 import { AssistedSetupConfig } from '@/components/admin/assisted-setup-config'
 import { AssistedSetupWrapper } from '@/components/agent/assisted-setup-wrapper'
 import { SetupStatus } from '@/components/agent/setup-status'
@@ -104,6 +105,76 @@ async function getInitialReviews(agentId: string): Promise<{
   }
 }
 
+// Fetch recommended agents from same/similar categories
+async function getRecommendedAgents(categoryId: string, currentAgentId: string) {
+  // Get agents from the same category first
+  const sameCategory = await prisma.agent.findMany({
+    where: {
+      categoryId,
+      status: 'APPROVED',
+      id: { not: currentAgentId },
+    },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      shortDescription: true,
+      price: true,
+      thumbnailUrl: true,
+      category: {
+        select: {
+          name: true,
+          slug: true,
+        },
+      },
+      seller: {
+        select: {
+          name: true,
+          avatarUrl: true,
+        },
+      },
+    },
+    take: 6,
+    orderBy: [{ featured: 'desc' }, { purchaseCount: 'desc' }],
+  })
+
+  // If we have less than 6, fetch from other categories
+  if (sameCategory.length < 6) {
+    const otherAgents = await prisma.agent.findMany({
+      where: {
+        categoryId: { not: categoryId },
+        status: 'APPROVED',
+        id: { not: currentAgentId },
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        shortDescription: true,
+        price: true,
+        thumbnailUrl: true,
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        seller: {
+          select: {
+            name: true,
+            avatarUrl: true,
+          },
+        },
+      },
+      take: 6 - sameCategory.length,
+      orderBy: [{ featured: 'desc' }, { purchaseCount: 'desc' }],
+    })
+    return [...sameCategory, ...otherAgents]
+  }
+
+  return sameCategory
+}
+
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }: AgentPageProps): Promise<Metadata> {
   const agent = await getAgentBySlug(params.slug)
@@ -134,8 +205,11 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
   } = await supabase.auth.getUser()
   const showSuccessBanner = searchParams?.unlocked === 'true'
 
-  // Fetch initial reviews server-side (P2.27)
-  const initialReviewData = await getInitialReviews(agent.id)
+  // Fetch initial reviews and recommended agents server-side
+  const [initialReviewData, recommendedAgents] = await Promise.all([
+    getInitialReviews(agent.id),
+    getRecommendedAgents(agent.categoryId, agent.id),
+  ])
 
   // Optimize: Combine all user-related queries into one using Promise.all
   let isPurchased = false
@@ -248,6 +322,13 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
               initialReviews={initialReviewData.reviews}
               initialStats={initialReviewData.stats}
               initialPagination={initialReviewData.pagination}
+            />
+
+            {/* Recommended Agents Section */}
+            <RecommendedAgents
+              agents={recommendedAgents}
+              currentAgentId={agent.id}
+              categoryName={agent.category.name}
             />
           </div>
 
