@@ -138,6 +138,12 @@ async function getRecommendedAgents(categoryId: string, currentAgentId: string) 
     orderBy: [{ featured: 'desc' }, { purchaseCount: 'desc' }],
   })
 
+  // Helper to convert Decimal price to number
+  const convertPrice = (agent: typeof sameCategory[0]) => ({
+    ...agent,
+    price: Number(agent.price),
+  })
+
   // If we have less than 6, fetch from other categories
   if (sameCategory.length < 6) {
     const otherAgents = await prisma.agent.findMany({
@@ -169,10 +175,10 @@ async function getRecommendedAgents(categoryId: string, currentAgentId: string) 
       take: 6 - sameCategory.length,
       orderBy: [{ featured: 'desc' }, { purchaseCount: 'desc' }],
     })
-    return [...sameCategory, ...otherAgents]
+    return [...sameCategory, ...otherAgents].map(convertPrice)
   }
 
-  return sameCategory
+  return sameCategory.map(convertPrice)
 }
 
 // Generate dynamic metadata for SEO
