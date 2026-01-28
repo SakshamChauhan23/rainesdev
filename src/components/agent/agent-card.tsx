@@ -47,16 +47,22 @@ export function AgentCard({ agent }: AgentCardProps) {
           {/* Seller */}
           <div className="mb-2 flex items-center space-x-2">
             {agent.seller.avatarUrl ? (
-              <Image
+              <img
                 src={agent.seller.avatarUrl}
                 alt={agent.seller.name || 'Seller'}
                 width={20}
                 height={20}
-                className="rounded-full"
+                className="rounded-full object-cover"
+                onError={(e) => {
+                  // Fallback to initials on error
+                  const target = e.target as HTMLImageElement
+                  const name = agent.seller.name || 'S'
+                  target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f97316&color=fff&size=40&bold=true`
+                }}
               />
             ) : (
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-100">
-                <User className="h-3 w-3 text-gray-600" />
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white">
+                {(agent.seller.name || 'S').charAt(0).toUpperCase()}
               </div>
             )}
             <span className="text-sm font-light text-gray-700">{agent.seller.name}</span>

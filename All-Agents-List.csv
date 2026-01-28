@@ -1,0 +1,60 @@
+Category,Agent Name,GitHub URL,Stars,License,SMB Use Case,Integration Effort,Recommended Price,Priority
+Customer Support,Chatwoot,https://github.com/chatwoot/chatwoot,22k+,MIT,"Omnichannel support (web, email, WhatsApp, SMS)",Medium,$99-299/mo,🥇 High
+Customer Support,Hexabot,https://github.com/Hexastack/Hexabot,1k+,AGPL,Multi-channel chatbot builder with visual editor,Low,$79-149/mo,🥈 Medium
+Customer Support,Tiledesk,https://github.com/tiledesk,2k+,MIT,No-code chatbot + human handoff,Low,$99-199/mo,🥈 Medium
+Customer Support,LobeChat,https://github.com/lobehub/lobe-chat,55k+,MIT,Self-hosted ChatGPT alternative with plugins,Medium,$149-299/mo,🥉 Low
+Appointment Booking,Easy!Appointments,https://github.com/alextselegidis/easyappointments,3k+,GPL-3.0,Self-hosted booking system,Low,$49-99/mo,🥈 Medium
+Appointment Booking,Appointment Agent,https://github.com/mjunaidca/appointment-agent,200+,MIT,LangGraph + Google Calendar + Gmail integration,Medium,$149-399/mo,🥇 High
+Appointment Booking,MedoraAI,https://github.com/extremecoder-rgb/medoraAI,100+,MIT,Voice-first medical appointment booking,Medium,$199-499/mo,🥇 High
+Appointment Booking,AI Booking System,https://github.com/aniket-work/Lets-Build-Online-Booking-System-Using-AI-Agents,50+,MIT,Streamlit + LangChain booking manager,Low,$79-149/mo,🥉 Low
+Sales & SDR,SalesGPT,https://github.com/filip-michalsky/SalesGPT,2k+,MIT,AI sales conversations + Stripe integration,Medium,$199-499/mo,🥇 High
+Sales & SDR,Open-SDR,https://github.com/MatthewDailey/open-sdr,500+,MIT,Lead research + outreach automation via MCP,Medium,$149-299/mo,🥈 Medium
+Sales & SDR,Knotie-AI,https://github.com/avijeett007/Knotie-AI,300+,MIT,Inbound/outbound AI sales agent,Medium,$199-399/mo,🥈 Medium
+Sales & SDR,Sales Outreach Automation,https://github.com/kaymen99/sales-outreach-automation-langgraph,200+,MIT,"Lead research + CRM integration (HubSpot, Airtable)",Medium,$149-299/mo,🥈 Medium
+Sales & SDR,AI SDR Agent,https://github.com/brightdata/ai-sdr-bdr-agent,100+,MIT,CrewAI multi-agent SDR system,High,$299-599/mo,🥉 Low
+Invoice Processing,Invoice Processing AI,https://github.com/ruizguille/invoice-processing,100+,MIT,GPT-4o invoice extraction → Excel,Low,$79-199/mo,🥇 High
+Invoice Processing,LlamaOCR,https://github.com/yYorky/LlamaOCR,500+,MIT,Llama 3.2 Vision for invoice OCR,Low,$49-99/mo,🥈 Medium
+Invoice Processing,GenAI Invoice Processor,https://github.com/aws-samples/genai-invoice-processor,100+,MIT-0,Bedrock + Claude for invoice extraction,Medium,$99-199/mo,🥈 Medium
+Invoice Processing,Invoice Automation AI,https://github.com/shrestha-sachin/invoice-automation-ai,50+,MIT,n8n workflow + Azure OpenAI,Low,$79-149/mo,🥉 Low
+Healthcare,AI Healthcare Appointment,https://github.com/sujitmahapatra/AI-Healthcare-Appointment-System,50+,MIT,Patient scheduling + AI chatbot,Medium,$199-399/mo,🥈 Medium
+Healthcare,MedGraph Scheduler,Search GitHub: MedGraph Scheduler LangGraph,N/A,MIT,Multi-agent doctor appointment assistant,Medium,$249-499/mo,🥈 Medium
+Email Automation,Inbox Zero,https://github.com/elie222/inbox-zero,15k+,AGPL,"AI email management - auto-categorize, unsubscribe, cold email blocker",Medium,$49-149/mo,🥇 High
+Email Automation,LangGraph Email Automation,https://github.com/kaymen99/langgraph-email-automation,500+,MIT,Multi-agent customer support email automation with RAG,Medium,$99-249/mo,🥇 High
+Email Automation,Email Agent,https://github.com/haasonsaas/email-agent,200+,MIT,"AI email management with action extraction, smart labels, daily briefs",Medium,$79-199/mo,🥈 Medium
+Email Automation,ATAT Email Agents,https://github.com/semanticsean/ATAT,100+,MIT,Deploy AI agents via email aliases - IMAP/SMTP integration,Low,$49-99/mo,🥉 Low
+Social Media,Social Media Agent (LangChain),https://github.com/langchain-ai/social-media-agent,1k+,MIT,"Source, curate, schedule social posts with human-in-the-loop",Medium,$149-299/mo,🥇 High
+Social Media,Social Media Agents,https://github.com/Klaudiusz321/social-media-agents,200+,MIT,"Multi-agent system for Twitter, Instagram, LinkedIn with scheduling",Medium,$99-249/mo,🥈 Medium
+Social Media,Social GPT,https://github.com/Social-GPT/agent,500+,MIT,Autonomous social media strategy and execution with GPT,Low,$79-149/mo,🥈 Medium
+Social Media,Content Marketing Agent,https://github.com/agentuity/agent-social-marketing,100+,MIT,Multi-agent content marketing automation with Typefully API,Medium,$99-199/mo,🥉 Low
+Web Scraping,Crawl4AI,https://github.com/unclecode/crawl4ai,50k+,Apache 2.0,LLM-friendly web crawler - turns websites into clean markdown,Low,$99-249/mo,🥇 High
+Web Scraping,Scraping Agent AI,https://github.com/hmshb/scraping-agent-ai,200+,MIT,LangGraph + Firecrawl intelligent web scraping with error recovery,Medium,$79-199/mo,🥈 Medium
+Web Scraping,ScraperAI,https://github.com/scraperai/scraperai,500+,MIT,AI-powered scraper with auto field detection and XPath generation,Low,$49-149/mo,🥈 Medium
+Web Scraping,Open Agent Builder,https://github.com/firecrawl/open-agent-builder,1k+,MIT,Visual workflow builder for AI scraping agents with Firecrawl,Low,$99-199/mo,🥇 High
+Meeting Notes,Meetily,https://github.com/Zackriya-Solutions/meeting-minutes,7k+,MIT,"Privacy-first meeting transcription + AI summaries, 100% local",Medium,$99-249/mo,🥇 High
+Meeting Notes,Meeting Transcriber,https://github.com/jfcostello/meeting-transcriber,300+,MIT,Whisper + multi-LLM meeting transcription and summarization,Low,$49-99/mo,🥈 Medium
+Meeting Notes,MeetingScribe,https://github.com/0x77dev/meetingscribe,200+,MIT,"CLI tool for transcription, translation, and action item extraction",Low,$39-79/mo,🥉 Low
+Knowledge Base,Casibase,https://github.com/casibase/casibase,3k+,Apache 2.0,"Enterprise AI knowledge base with SSO, multi-model support",Medium,$149-399/mo,🥇 High
+Knowledge Base,FastGPT,https://github.com/labring/FastGPT,20k+,Apache 2.0,Visual workflow + knowledge base for Q&A bots,Medium,$99-299/mo,🥇 High
+Knowledge Base,Khoj,https://github.com/khoj-ai/khoj,15k+,AGPL,Personal AI second brain - multi-source knowledge integration,Medium,$49-149/mo,🥈 Medium
+HR & Recruiting,AIHawk,https://github.com/AIHawk-co/AIHawk,25k+,AGPL,Automated job application agent - generates tailored applications,Medium,$49-149/mo,🥇 High
+HR & Recruiting,Autonomous HR Chatbot,Search GitHub: HR chatbot agent,N/A,MIT,HR query agent with tools for employee self-service,Low,$99-249/mo,🥈 Medium
+Personal Assistant,Leon AI,https://github.com/leon-ai/leon,15k+,MIT,"Open-source personal assistant with skills, offline capable, voice & text",Medium,$99-249/mo,🥇 High
+Personal Assistant,OpenDAN,https://github.com/fiatrete/OpenDAN-Personal-AI-OS,3k+,MIT,"Personal AI OS - Jarvis assistant, knowledge base, IoT integration",Medium,$149-399/mo,🥇 High
+Personal Assistant,PyGPT,https://github.com/szczyglis-dev/py-gpt,5k+,MIT,"Desktop AI assistant - 12 modes, vision, agents, code interpreter",Low,$79-199/mo,🥈 Medium
+Personal Assistant,Eigent,https://github.com/eigent-ai/eigent,1k+,MIT,"Multi-agent desktop coworker - dev, browser, document agents",Low,$99-249/mo,🥈 Medium
+Finance,FinRobot,https://github.com/AI4Finance-Foundation/FinRobot,2k+,MIT,"Financial AI agents - equity research, market forecasting, trading",Medium,$199-499/mo,🥇 High
+Finance,TaxHacker,https://github.com/vas3k/TaxHacker,3k+,MIT,"Self-hosted AI accounting - receipt/invoice scanning, expense tracking",Low,$49-149/mo,🥇 High
+Finance,Bigcapital,https://github.com/bigcapitalhq/bigcapital,3k+,AGPL,Open-source accounting software - QuickBooks/Xero alternative with AI,Medium,$99-299/mo,🥈 Medium
+Finance,FinGenius,https://github.com/anujdevsingh/fin_genius-ai-agent,200+,MIT,"Personal finance advisor - spending analysis, RAG, LangGraph agents",Low,$49-99/mo,🥉 Low
+Voice Agent,Bolna,https://github.com/bolna-ai/bolna,2k+,MIT,"Conversational voice AI - Twilio/Plivo, multi-LLM, ElevenLabs/Deepgram",Medium,$199-499/mo,🥇 High
+Voice Agent,Call-GPT (Twilio Labs),https://github.com/twilio-labs/call-gpt,1k+,MIT,"Generative AI phone toolkit - Twilio Media Streams, GPT, Deepgram",Medium,$149-399/mo,🥇 High
+Voice Agent,BentoVoiceAgent,https://github.com/bentoml/BentoVoiceAgent,500+,Apache 2.0,"Voice agent with open-source LLMs, TTS/STT, Twilio integration",Medium,$149-349/mo,🥈 Medium
+E-commerce,Enthusiast,https://github.com/upsidelab/enthusiast,500+,MIT,"E-commerce AI agent - product recommendations, content, support",Medium,$149-399/mo,🥇 High
+E-commerce,ShoppingGPT,https://github.com/Hoanganhvu123/ShoppingGPT,300+,MIT,"RAG shopping assistant - semantic search, product recommendations",Low,$99-249/mo,🥈 Medium
+E-commerce,Shopify AI Agent,https://github.com/Shopify/shop-chat-agent,Official,MIT,"Shopify MCP storefront agent - product search, cart, checkout",Low,$99-299/mo,🥇 High
+Real Estate,Real Estate AI Agent,https://github.com/brightdata/real-estate-ai-agent,200+,MIT,Property data extraction from Zillow/Redfin with AI + proxy rotation,Medium,$99-249/mo,🥈 Medium
+Real Estate,Realtor AI,https://github.com/saminkhan1/realtor-ai,100+,MIT,"Real estate chatbot - property search, appointments, Google Calendar",Medium,$149-349/mo,🥈 Medium
+Real Estate,PropertyLoop,https://github.com/Kaos599/PropertyLoop,100+,MIT,"Multi-agent real estate assistant - landlords, tenants, maintenance",Medium,$99-249/mo,🥉 Low
+Travel,Travel Planner AI,https://github.com/hardikverma22/travel-planner-ai,500+,MIT,"AI trip planner - itineraries, hotels, spots, budget planning",Low,$79-199/mo,🥇 High
+Travel,AI Travel Agent Advanced,https://github.com/naakaarafr/AI-Travel-Agent-Advanced,200+,MIT,"Multi-agent travel planner - CrewAI, destination analysis, itinerary",Medium,$99-249/mo,🥈 Medium
+Travel,Tripper,https://github.com/embabel/tripper,100+,MIT,"Travel planning agent - web search, mapping, Airbnb integration",Medium,$79-199/mo,🥉 Low

@@ -23,7 +23,7 @@ export function SellerCard({ name, avatarUrl, bio, portfolioSlug, socialLinks }:
         <div className="flex items-center gap-4">
           <Avatar className="h-12 w-12">
             <AvatarImage src={avatarUrl || ''} alt={name} />
-            <AvatarFallback className="bg-gray-100 text-gray-700">{name.charAt(0)}</AvatarFallback>
+            <AvatarFallback className="bg-orange-500 text-white font-bold">{name.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>
             <div className="font-semibold text-gray-900">{name}</div>
