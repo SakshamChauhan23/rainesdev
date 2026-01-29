@@ -5,9 +5,9 @@ import { Container } from '@/components/layout/container'
 import { EditAgentForm } from '@/components/agent/edit-agent-form'
 import { VideoPlayer } from '@/components/agent/video-player'
 
-export default async function EditAgentPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params
-    const supabase = await createClient()
+export default async function EditAgentPage({ params }: { params: { id: string } }) {
+    const { id } = params
+    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {

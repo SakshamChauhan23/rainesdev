@@ -11,7 +11,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { SellerApplicationActions } from '@/components/admin/seller-application-actions'
 
 export default async function SellerApplicationsPage() {
-  const supabase = await createClient()
+  const supabase = createClient()
   const {
     data: { user },
     error,

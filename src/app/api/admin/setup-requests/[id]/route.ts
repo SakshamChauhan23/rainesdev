@@ -7,13 +7,13 @@ import { prisma } from '@/lib/prisma'
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params
+    const { id } = params
 
     // Verify authentication
-    const supabase = await createClient()
+    const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
     if (!user || error) {

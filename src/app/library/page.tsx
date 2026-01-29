@@ -12,7 +12,7 @@ import { formatPrice } from '@/lib/utils'
 import { prisma } from '@/lib/prisma'
 
 export default async function LibraryPage() {
-    const supabase = await createClient()
+    const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
     if (!user || error) {

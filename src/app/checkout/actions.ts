@@ -38,7 +38,7 @@ export async function processTestPurchase(
     }
   }
 
-  const supabase = await createClient()
+  const supabase = createClient()
   const {
     data: { user },
     error,

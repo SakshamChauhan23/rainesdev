@@ -14,9 +14,8 @@ import { RequestUpdateButton } from '@/components/agent/request-update-button'
 import { SellerReviews } from '@/components/dashboard/seller-reviews'
 import { PerformanceCharts } from '@/components/dashboard/performance-charts'
 
-export default async function DashboardPage({ searchParams }: { searchParams?: Promise<{ success?: string }> }) {
-    const resolvedSearchParams = await searchParams
-    const supabase = await createClient()
+export default async function DashboardPage({ searchParams }: { searchParams?: { success?: string } }) {
+    const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
     logger.info('🔍 Dashboard auth check:', { user: user?.email, error })
@@ -132,7 +131,7 @@ export default async function DashboardPage({ searchParams }: { searchParams?: P
 
             <Container className="py-12">
                 {/* Success Banner */}
-                {resolvedSearchParams?.success === 'created' && (
+                {searchParams?.success === 'created' && (
                     <div className="mb-8 rounded-3xl bg-gradient-to-br from-green-50 to-green-100/50 border-2 border-green-200 p-6 shadow-lg animate-fade-in">
                         <div className="flex items-start gap-4">
                             <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-green-400 to-green-600 shadow-lg shadow-green-500/30">

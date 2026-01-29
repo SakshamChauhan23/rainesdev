@@ -24,7 +24,7 @@ import { formatPrice } from '@/lib/utils'
 import { AdminAgentActions } from '@/components/admin/admin-agent-actions'
 
 export default async function AdminDashboard() {
-  const supabase = await createClient()
+  const supabase = createClient()
   const {
     data: { user },
     error,

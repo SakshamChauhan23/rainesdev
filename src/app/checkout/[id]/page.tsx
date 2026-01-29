@@ -8,9 +8,9 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { CheckoutContent } from '@/components/checkout/checkout-content'
 
-export default async function CheckoutPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params
-    const supabase = await createClient()
+export default async function CheckoutPage({ params }: { params: { id: string } }) {
+    const { id } = params
+    const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
     if (!user || error) {

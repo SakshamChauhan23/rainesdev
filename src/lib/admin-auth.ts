@@ -21,7 +21,7 @@ interface AdminCheckResult {
  */
 export async function requireAdmin(): Promise<AdminCheckResult> {
     // Step 1: Verify Supabase authentication
-    const supabase = await createClient()
+    const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
     if (!user || error) {
@@ -64,7 +64,7 @@ export async function requireAdmin(): Promise<AdminCheckResult> {
 export async function checkIsAdmin(): Promise<AdminCheckResult | null> {
     try {
         // Step 1: Verify Supabase authentication
-        const supabase = await createClient()
+        const supabase = createClient()
         const { data: { user }, error } = await supabase.auth.getUser()
 
         if (!user || error) {
@@ -105,7 +105,7 @@ export async function checkIsAdmin(): Promise<AdminCheckResult | null> {
  */
 export async function requireRole(allowedRoles: UserRole[]): Promise<AdminCheckResult> {
     // Step 1: Verify Supabase authentication
-    const supabase = await createClient()
+    const supabase = createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
 
     if (!user || error) {

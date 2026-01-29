@@ -12,7 +12,7 @@ import {
 } from '@/lib/agent-versions'
 
 export async function submitAgentForReview(agentId: string) {
-  const supabase = await createClient()
+  const supabase = createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -66,7 +66,7 @@ export async function submitAgentForReview(agentId: string) {
 }
 
 export async function requestAgentUpdate(agentId: string) {
-  const supabase = await createClient()
+  const supabase = createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()

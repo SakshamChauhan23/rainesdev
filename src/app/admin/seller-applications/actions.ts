@@ -8,7 +8,7 @@ import { logger } from '@/lib/logger'
 import { slugify } from '@/lib/utils'
 
 async function verifyAdmin() {
-  const supabase = await createClient()
+  const supabase = createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
