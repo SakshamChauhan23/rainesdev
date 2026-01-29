@@ -38,4 +38,7 @@ jobs:
             npm run build
             cp -r public .next/standalone/
             cp -r .next/static .next/standalone/.next/
-            pm2 restart hireyourai || pm2 start .next/standalone/server.js --name hireyourai
+            mkdir -p logs
+            pm2 delete hireyourai 2>/dev/null || true
+            pm2 start ecosystem.config.js
+            pm2 save
