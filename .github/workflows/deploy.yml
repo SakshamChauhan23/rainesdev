@@ -30,11 +30,12 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             cd ${{ secrets.VPS_PATH }}
-            git pull origin main
-            rm -rf node_modules/.prisma node_modules/@prisma
+            git fetch origin
+            git reset --hard origin/main
+            rm -rf .next node_modules/.prisma node_modules/@prisma
             npm install
             npx prisma generate
             npm run build
             cp -r public .next/standalone/
             cp -r .next/static .next/standalone/.next/
-            pm2 restart hireyourai
+            pm2 restart hireyourai || pm2 start .next/standalone/server.js --name hireyourai
