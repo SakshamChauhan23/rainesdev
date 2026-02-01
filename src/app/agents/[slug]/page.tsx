@@ -1,18 +1,19 @@
 import { notFound } from 'next/navigation'
 import { Container } from '@/components/layout/container'
-import { AgentHero } from '@/components/agent/agent-hero'
+import { ProductGallery } from '@/components/agent/product-gallery'
+import { ProductInfo } from '@/components/agent/product-info'
+import { ProductSpecs } from '@/components/agent/product-specs'
+import { ProductFeatures } from '@/components/agent/product-features'
+import { CompareAgents } from '@/components/agent/compare-agents'
+import { SimilarItemsSidebar } from '@/components/agent/similar-items-sidebar'
 import { SellerCard } from '@/components/agent/seller-card'
-import { VideoPlayer } from '@/components/agent/video-player'
-import { WorkflowContent } from '@/components/agent/workflow-content'
 import { LockedSetupGuide } from '@/components/agent/locked-setup-guide'
 import { UnlockedSetupGuide } from '@/components/agent/unlocked-setup-guide'
 import { PurchaseSuccessBanner } from '@/components/agent/purchase-success-banner'
 import { getAgentBySlug } from '@/lib/agents'
 import { createClient } from '@/lib/supabase/server'
 import { ReviewSection } from '@/components/reviews/review-section'
-import { RecommendedAgents } from '@/components/agent/recommended-agents'
 import { AssistedSetupConfig } from '@/components/admin/assisted-setup-config'
-import { AssistedSetupWrapper } from '@/components/agent/assisted-setup-wrapper'
 import { SetupStatus } from '@/components/agent/setup-status'
 import { BookCallCard } from '@/components/agent/book-call-card'
 import { prisma } from '@/lib/prisma'
@@ -139,7 +140,7 @@ async function getRecommendedAgents(categoryId: string, currentAgentId: string) 
   })
 
   // Helper to convert Decimal price to number
-  const convertPrice = (agent: typeof sameCategory[0]) => ({
+  const convertPrice = (agent: (typeof sameCategory)[0]) => ({
     ...agent,
     price: Number(agent.price),
   })
@@ -193,7 +194,7 @@ export async function generateMetadata({ params }: AgentPageProps): Promise<Meta
   }
 
   return {
-    title: `${agent.title} | Neura`,
+    title: `${agent.title} | Rouze.ai`,
     description: agent.shortDescription,
   }
 }
@@ -271,77 +272,57 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
   }
 
   return (
-    <div className="bg-white">
-      <Container className="py-12 md:py-16">
+    <div className="min-h-screen bg-background">
+      <Container className="py-6 md:py-10">
         {showSuccessBanner && isPurchased && <PurchaseSuccessBanner />}
 
-        <AgentHero
-          title={agent.title}
-          shortDescription={agent.shortDescription}
-          price={Number(agent.price)}
-          category={agent.category}
-          viewCount={agent.viewCount}
-          purchaseCount={agent.purchaseCount}
-          agentId={agent.id}
-          agentSlug={agent.slug}
-          isPurchased={isPurchased}
-          isApproved={agent.status === 'APPROVED'}
-          assistedSetupEnabled={agent.assistedSetupEnabled}
-        />
-
-        <div className="mt-8 grid gap-8 lg:grid-cols-3">
-          {/* Main Content (Left Column) */}
-          <div className="space-y-8 lg:col-span-2">
-            <VideoPlayer url={agent.demoVideoUrl} thumbnailUrl={agent.thumbnailUrl} />
-
-            <WorkflowContent overview={agent.workflowOverview} useCase={agent.useCase} />
-
-            {/* Setup Status - Show if purchased with assisted setup */}
-            {isPurchased && setupRequest && (
-              <SetupStatus
-                status={setupRequest.status}
-                setupCost={Number(setupRequest.setupCost)}
-                completedAt={setupRequest.completedAt}
-                adminNotes={setupRequest.adminNotes}
+        {/* Main Product Section - Amazon/Samsung Style */}
+        <div className="grid gap-8 lg:grid-cols-12">
+          {/* Left Column - Gallery */}
+          <div className="lg:col-span-5">
+            <div className="sticky top-24">
+              <ProductGallery
+                thumbnailUrl={agent.thumbnailUrl}
+                demoVideoUrl={agent.demoVideoUrl}
+                title={agent.title}
               />
-            )}
+            </div>
+          </div>
 
-            {/* Assisted Setup Option - Show only if not purchased */}
-            {!isPurchased && agent.assistedSetupEnabled && (
-              <AssistedSetupWrapper
-                enabled={agent.assistedSetupEnabled}
-                price={Number(agent.assistedSetupPrice)}
-                agentId={agent.id}
-              />
-            )}
-
-            {/* Setup Guide - Locked or Unlocked */}
-            {isPurchased ? (
-              <UnlockedSetupGuide setupGuide={agent.setupGuide} />
-            ) : (
-              <LockedSetupGuide agentId={agent.id} isApproved={agent.status === 'APPROVED'} />
-            )}
-
-            {/* Reviews Section - Server-preloaded data for faster initial load (P2.27) */}
-            <ReviewSection
+          {/* Center Column - Product Info */}
+          <div className="lg:col-span-4">
+            <ProductInfo
+              title={agent.title}
+              shortDescription={agent.shortDescription}
+              price={Number(agent.price)}
+              category={agent.category}
+              viewCount={agent.viewCount}
+              purchaseCount={agent.purchaseCount}
               agentId={agent.id}
-              userId={user?.id || null}
-              userRole={userWithRole?.role}
-              initialReviews={initialReviewData.reviews}
-              initialStats={initialReviewData.stats}
-              initialPagination={initialReviewData.pagination}
-            />
-
-            {/* Recommended Agents Section */}
-            <RecommendedAgents
-              agents={recommendedAgents}
-              currentAgentId={agent.id}
-              categoryName={agent.category.name}
+              agentSlug={agent.slug}
+              isPurchased={isPurchased}
+              isApproved={agent.status === 'APPROVED'}
+              assistedSetupEnabled={agent.assistedSetupEnabled}
+              reviewStats={initialReviewData.stats}
             />
           </div>
 
-          {/* Sidebar (Right Column) */}
-          <div className="space-y-6">
+          {/* Right Column - Sidebar */}
+          <div className="space-y-4 lg:col-span-3">
+            {/* Similar Items */}
+            <SimilarItemsSidebar agents={recommendedAgents} />
+
+            {/* Seller Card */}
+            <SellerCard
+              name={agent.seller.name || 'Anonymous Seller'}
+              avatarUrl={agent.seller.avatarUrl}
+              bio={agent.seller.sellerProfile?.bio || null}
+              portfolioSlug={agent.seller.sellerProfile?.portfolioUrlSlug || '#'}
+              socialLinks={
+                agent.seller.sellerProfile?.socialLinks as import('@/types').SocialLinks | null
+              }
+            />
+
             {/* Book a Call - Show if purchased with assisted setup and book call requested */}
             {isPurchased && setupRequest && setupRequest.bookCallRequested && <BookCallCard />}
 
@@ -353,17 +334,64 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
                 currentPrice={Number(agent.assistedSetupPrice)}
               />
             )}
+          </div>
+        </div>
 
-            <SellerCard
-              name={agent.seller.name || 'Anonymous Seller'}
-              avatarUrl={agent.seller.avatarUrl}
-              bio={agent.seller.sellerProfile?.bio || null}
-              portfolioSlug={agent.seller.sellerProfile?.portfolioUrlSlug || '#'}
-              socialLinks={
-                agent.seller.sellerProfile?.socialLinks as import('@/types').SocialLinks | null
-              }
+        {/* Specifications Section */}
+        <div className="mt-10">
+          <ProductSpecs
+            category={agent.category.name}
+            purchaseCount={agent.purchaseCount}
+            assistedSetupEnabled={agent.assistedSetupEnabled}
+            assistedSetupPrice={Number(agent.assistedSetupPrice)}
+          />
+        </div>
+
+        {/* Compare with Similar Products */}
+        <div className="mt-10">
+          <CompareAgents agents={recommendedAgents} categoryName={agent.category.name} />
+        </div>
+
+        {/* Product Features Section */}
+        <div className="mt-10">
+          <ProductFeatures
+            workflowOverview={agent.workflowOverview}
+            useCase={agent.useCase}
+            title={agent.title}
+          />
+        </div>
+
+        {/* Setup Status - Show if purchased with assisted setup */}
+        {isPurchased && setupRequest && (
+          <div className="mt-10">
+            <SetupStatus
+              status={setupRequest.status}
+              setupCost={Number(setupRequest.setupCost)}
+              completedAt={setupRequest.completedAt}
+              adminNotes={setupRequest.adminNotes}
             />
           </div>
+        )}
+
+        {/* Setup Guide - Locked or Unlocked */}
+        <div className="mt-10">
+          {isPurchased ? (
+            <UnlockedSetupGuide setupGuide={agent.setupGuide} />
+          ) : (
+            <LockedSetupGuide agentId={agent.id} isApproved={agent.status === 'APPROVED'} />
+          )}
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-10">
+          <ReviewSection
+            agentId={agent.id}
+            userId={user?.id || null}
+            userRole={userWithRole?.role}
+            initialReviews={initialReviewData.reviews}
+            initialStats={initialReviewData.stats}
+            initialPagination={initialReviewData.pagination}
+          />
         </div>
       </Container>
     </div>
