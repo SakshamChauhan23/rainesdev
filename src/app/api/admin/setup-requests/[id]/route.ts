@@ -7,14 +7,18 @@ import { prisma } from '@/lib/prisma'
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
-    const { id } = params
+    const resolvedParams = await Promise.resolve(context.params)
+    const { id } = resolvedParams
 
     // Verify authentication
     const supabase = createClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser()
 
     if (!user || error) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -75,25 +79,22 @@ export async function PATCH(
           select: {
             id: true,
             name: true,
-            email: true
-          }
+            email: true,
+          },
         },
         agent: {
           select: {
             id: true,
             title: true,
-            slug: true
-          }
-        }
-      }
+            slug: true,
+          },
+        },
+      },
     })
 
     return NextResponse.json({ setupRequest })
   } catch (error) {
     logger.error('Error updating setup request:', error)
-    return NextResponse.json(
-      { error: 'Failed to update setup request' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update setup request' }, { status: 500 })
   }
 }

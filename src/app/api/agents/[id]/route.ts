@@ -7,10 +7,11 @@ import { cookies } from 'next/headers'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
-    const { id } = params
+    const resolvedParams = await Promise.resolve(context.params)
+    const { id } = resolvedParams
     const cookieStore = cookies()
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,7 +25,9 @@ export async function GET(
       }
     )
 
-    const { data: { user } } = await supabase.auth.getUser()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
     const userId = user?.id
 
     // Find agent by ID or slug

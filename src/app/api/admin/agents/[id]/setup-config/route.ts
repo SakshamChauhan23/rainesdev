@@ -7,29 +7,27 @@ import { getUserWithRole } from '@/lib/user-sync'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> | { id: string } }
 ) {
   try {
-    const { id } = params
+    const resolvedParams = await Promise.resolve(context.params)
+    const { id } = resolvedParams
 
     // Verify admin authentication
     const supabase = createClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
 
     if (!user || authError) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // Check if user is admin
     const prismaUser = await getUserWithRole(user.id)
     if (!prismaUser || prismaUser.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'Admin access required' },
-        { status: 403 }
-      )
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
     }
 
     // Parse request body
@@ -37,18 +35,12 @@ export async function POST(
     const { assistedSetupEnabled, assistedSetupPrice } = body
 
     if (typeof assistedSetupEnabled !== 'boolean') {
-      return NextResponse.json(
-        { error: 'assistedSetupEnabled must be a boolean' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'assistedSetupEnabled must be a boolean' }, { status: 400 })
     }
 
     const price = parseFloat(assistedSetupPrice) || 0
     if (price < 0) {
-      return NextResponse.json(
-        { error: 'Price cannot be negative' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Price cannot be negative' }, { status: 400 })
     }
 
     // Update agent configuration
@@ -86,9 +78,6 @@ export async function POST(
     })
   } catch (error) {
     logger.error('Error updating assisted setup config:', error)
-    return NextResponse.json(
-      { error: 'Failed to update configuration' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update configuration' }, { status: 500 })
   }
 }
