@@ -30,6 +30,9 @@
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
