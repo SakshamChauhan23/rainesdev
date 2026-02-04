@@ -49,6 +49,7 @@ export function CompareAgents({ agents, categoryName }: CompareAgentsProps) {
             key={agent.id}
             href={`/agents/${agent.slug}`}
             className="group rounded-xl border border-gray-100 bg-white p-4 transition-all hover:border-gray-200 hover:shadow-md"
+            prefetch={true}
           >
             {/* Image */}
             <div className="relative mb-3 aspect-square overflow-hidden rounded-lg bg-gray-100">
@@ -59,6 +60,7 @@ export function CompareAgents({ agents, categoryName }: CompareAgentsProps) {
                   fill
                   className="object-cover transition-transform group-hover:scale-105"
                   sizes="(max-width: 640px) 50vw, 25vw"
+                  loading="lazy"
                 />
               ) : (
                 <div className="flex h-full items-center justify-center">
@@ -92,6 +94,7 @@ export function CompareAgents({ agents, categoryName }: CompareAgentsProps) {
                   width={20}
                   height={20}
                   className="rounded-full"
+                  loading="lazy"
                 />
               ) : (
                 <div className="h-5 w-5 rounded-full bg-gray-200" />

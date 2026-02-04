@@ -10,7 +10,7 @@ import { SellerCard } from '@/components/agent/seller-card'
 import { LockedSetupGuide } from '@/components/agent/locked-setup-guide'
 import { UnlockedSetupGuide } from '@/components/agent/unlocked-setup-guide'
 import { PurchaseSuccessBanner } from '@/components/agent/purchase-success-banner'
-import { getAgentBySlug } from '@/lib/agents'
+import { getCachedAgentBySlug } from '@/lib/agents'
 import { createClient } from '@/lib/supabase/server'
 import { ReviewSection } from '@/components/reviews/review-section'
 import { AssistedSetupConfig } from '@/components/admin/assisted-setup-config'
@@ -18,7 +18,21 @@ import { SetupStatus } from '@/components/agent/setup-status'
 import { BookCallCard } from '@/components/agent/book-call-card'
 import { prisma } from '@/lib/prisma'
 import { Metadata } from 'next'
+import { unstable_cache } from 'next/cache'
 import type { Review, ReviewStats, ReviewPagination } from '@/components/reviews/review-list'
+
+// Use ISR with 30 second revalidation
+export const revalidate = 30
+
+// Allow dynamic paths - pages are generated on-demand and cached
+export const dynamicParams = true
+
+// Pre-generate only featured agents at build time to avoid connection limits
+export async function generateStaticParams() {
+  // Return empty array - let pages be generated on-demand with ISR
+  // This avoids hitting Supabase connection limits during build
+  return []
+}
 
 interface AgentPageProps {
   params: {
@@ -31,6 +45,21 @@ interface AgentPageProps {
 
 // Server-side review data fetching (P2.27)
 const REVIEW_PAGE_SIZE = 10
+
+// Cached version of getInitialReviews
+const getCachedInitialReviews = unstable_cache(
+  async (agentId: string) => getInitialReviews(agentId),
+  ['agent-reviews'],
+  { revalidate: 60, tags: ['reviews'] }
+)
+
+// Cached version of getRecommendedAgents
+const getCachedRecommendedAgents = unstable_cache(
+  async (categoryId: string, currentAgentId: string) =>
+    getRecommendedAgents(categoryId, currentAgentId),
+  ['recommended-agents'],
+  { revalidate: 120, tags: ['agents'] }
+)
 
 async function getInitialReviews(agentId: string): Promise<{
   reviews: Review[]
@@ -185,7 +214,7 @@ async function getRecommendedAgents(categoryId: string, currentAgentId: string) 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }: AgentPageProps): Promise<Metadata> {
   const { slug } = params
-  const agent = await getAgentBySlug(slug)
+  const agent = await getCachedAgentBySlug(slug)
 
   if (!agent) {
     return {
@@ -201,7 +230,7 @@ export async function generateMetadata({ params }: AgentPageProps): Promise<Meta
 
 export default async function AgentPage({ params, searchParams }: AgentPageProps) {
   const { slug } = params
-  const agent = await getAgentBySlug(slug)
+  const agent = await getCachedAgentBySlug(slug)
 
   if (!agent) {
     notFound()
@@ -214,10 +243,10 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
   } = await supabase.auth.getUser()
   const showSuccessBanner = searchParams?.unlocked === 'true'
 
-  // Fetch initial reviews and recommended agents server-side
+  // Fetch initial reviews and recommended agents server-side (cached)
   const [initialReviewData, recommendedAgents] = await Promise.all([
-    getInitialReviews(agent.id),
-    getRecommendedAgents(agent.categoryId, agent.id),
+    getCachedInitialReviews(agent.id),
+    getCachedRecommendedAgents(agent.categoryId, agent.id),
   ])
 
   // Optimize: Combine all user-related queries into one using Promise.all

@@ -45,7 +45,7 @@ export function AgentGrid({ agents, loading }: AgentGridProps) {
         <div className="mb-4 text-6xl">🔍</div>
         <h3 className="mb-2 text-xl font-semibold">No agents found</h3>
         <p className="text-muted-foreground">
-          Try adjusting your filters or search query to find what you're looking for.
+          Try adjusting your filters or search query to find what you&apos;re looking for.
         </p>
       </div>
     )
@@ -53,8 +53,12 @@ export function AgentGrid({ agents, loading }: AgentGridProps) {
 
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {agents.map(agent => (
-        <AgentCard key={agent.id} agent={agent} />
+      {agents.map((agent, index) => (
+        <AgentCard
+          key={agent.id}
+          agent={agent}
+          priority={index < 6} // Prioritize first 6 images (above the fold)
+        />
       ))}
     </div>
   )

@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { formatPrice } from '@/lib/utils'
-import { User } from 'lucide-react'
 
 interface AgentCardProps {
   agent: {
@@ -21,12 +20,13 @@ interface AgentCardProps {
       avatarUrl?: string | null
     }
   }
+  priority?: boolean // For above-the-fold images
 }
 
-export function AgentCard({ agent }: AgentCardProps) {
+export function AgentCard({ agent, priority = false }: AgentCardProps) {
   return (
-    <Link href={`/agents/${agent.slug}`} className="group">
-      <Card className="h-full border-gray-300 bg-white transition-all duration-300 hover:border-[#8DEC42] hover:shadow-lg hover:-translate-y-1">
+    <Link href={`/agents/${agent.slug}`} className="group" prefetch={true}>
+      <Card className="h-full border-gray-300 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#8DEC42] hover:shadow-lg">
         {/* Thumbnail */}
         <div className="relative aspect-video w-full overflow-hidden rounded-t-lg bg-gray-100">
           {agent.thumbnailUrl ? (
@@ -34,7 +34,10 @@ export function AgentCard({ agent }: AgentCardProps) {
               src={agent.thumbnailUrl}
               alt={agent.title}
               fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover transition-transform duration-300 group-hover:scale-110"
+              priority={priority}
+              loading={priority ? 'eager' : 'lazy'}
             />
           ) : (
             <div className="flex h-full items-center justify-center">
@@ -46,25 +49,22 @@ export function AgentCard({ agent }: AgentCardProps) {
         <CardContent className="p-4">
           {/* Seller */}
           <div className="mb-2 flex items-center space-x-2">
-            {agent.seller.avatarUrl ? (
-              <img
-                src={agent.seller.avatarUrl}
-                alt={agent.seller.name || 'Seller'}
-                width={20}
-                height={20}
-                className="rounded-full object-cover"
-                onError={(e) => {
-                  // Fallback to initials on error
-                  const target = e.target as HTMLImageElement
-                  const name = agent.seller.name || 'S'
-                  target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f97316&color=fff&size=40&bold=true`
-                }}
-              />
-            ) : (
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white">
-                {(agent.seller.name || 'S').charAt(0).toUpperCase()}
-              </div>
-            )}
+            <div className="relative h-5 w-5 flex-shrink-0">
+              {agent.seller.avatarUrl ? (
+                <Image
+                  src={agent.seller.avatarUrl}
+                  alt={agent.seller.name || 'Seller'}
+                  width={20}
+                  height={20}
+                  className="rounded-full object-cover"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white">
+                  {(agent.seller.name || 'S').charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
             <span className="text-sm font-light text-gray-700">{agent.seller.name}</span>
           </div>
 

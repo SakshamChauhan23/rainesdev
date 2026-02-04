@@ -2,9 +2,10 @@ import { Suspense } from 'react'
 import { Sparkles } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { AgentsPageClient } from './agents-page-client'
+import { unstable_cache } from 'next/cache'
 
-// Force dynamic rendering to ensure pagination works
-export const dynamic = 'force-dynamic'
+// Use ISR with 60 second revalidation for better performance
+export const revalidate = 60
 
 // Server component metadata for SEO (P2.26)
 export const metadata = {
@@ -46,6 +47,18 @@ type PaginationInfo = {
 // Valid page sizes
 const VALID_PAGE_SIZES = [10, 50, 100] as const
 
+// Cached categories fetch - revalidates every 5 minutes
+const getCachedCategories = unstable_cache(
+  async () => {
+    return prisma.category.findMany({
+      select: { id: true, name: true, slug: true },
+      orderBy: { name: 'asc' },
+    })
+  },
+  ['categories'],
+  { revalidate: 300, tags: ['categories'] }
+)
+
 // Server-side data fetching (P2.26)
 async function getInitialData(searchParams: {
   category?: string
@@ -86,12 +99,9 @@ async function getInitialData(searchParams: {
     ]
   }
 
-  // Fetch data in parallel
+  // Fetch data in parallel - categories are cached
   const [categories, agents, total] = await Promise.all([
-    prisma.category.findMany({
-      select: { id: true, name: true, slug: true },
-      orderBy: { name: 'asc' },
-    }),
+    getCachedCategories(),
     prisma.agent.findMany({
       where,
       skip: (page - 1) * limit,

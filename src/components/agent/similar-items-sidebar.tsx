@@ -38,7 +38,12 @@ export function SimilarItemsSidebar({
       <h3 className="mb-4 text-sm font-semibold text-gray-900">{title}</h3>
       <div className="space-y-4">
         {agents.slice(0, 5).map(agent => (
-          <Link key={agent.id} href={`/agents/${agent.slug}`} className="group flex gap-3">
+          <Link
+            key={agent.id}
+            href={`/agents/${agent.slug}`}
+            className="group flex gap-3"
+            prefetch={true}
+          >
             {/* Thumbnail */}
             <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
               {agent.thumbnailUrl ? (
@@ -48,6 +53,7 @@ export function SimilarItemsSidebar({
                   fill
                   className="object-cover"
                   sizes="64px"
+                  loading="lazy"
                 />
               ) : (
                 <div className="flex h-full items-center justify-center">
