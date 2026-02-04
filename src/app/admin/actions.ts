@@ -11,95 +11,101 @@ import { logger } from '@/lib/logger'
  * Approve an agent
  */
 export async function approveAgent(agentId: string) {
-    const supabase = createClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
-    if (!user || error) {
-        redirect('/login')
-    }
+  if (!user || error) {
+    redirect('/login')
+  }
 
-    // Verify user is admin
-    const prismaUser = await getUserWithRole(user.id)
+  // Verify user is admin
+  const prismaUser = await getUserWithRole(user.id)
 
-    if (!prismaUser || prismaUser.role !== 'ADMIN') {
-        return { success: false, error: 'Unauthorized' }
-    }
+  if (!prismaUser || prismaUser.role !== 'ADMIN') {
+    return { success: false, error: 'Unauthorized' }
+  }
 
-    try {
-        await prisma.agent.update({
-            where: { id: agentId },
-            data: {
-                status: 'APPROVED',
-                approvedAt: new Date(),
-                rejectionReason: null
-            }
-        })
+  try {
+    await prisma.agent.update({
+      where: { id: agentId },
+      data: {
+        status: 'APPROVED',
+        approvedAt: new Date(),
+        rejectionReason: null,
+      },
+    })
 
-        // Log admin action
-        await prisma.adminLog.create({
-            data: {
-                adminId: user.id,
-                action: 'APPROVE_AGENT',
-                entityType: 'agent',
-                entityId: agentId
-            }
-        })
+    // Log admin action
+    await prisma.adminLog.create({
+      data: {
+        adminId: user.id,
+        action: 'APPROVE_AGENT',
+        entityType: 'agent',
+        entityId: agentId,
+      },
+    })
 
-        revalidatePath('/admin')
-        revalidatePath('/agents')
+    revalidatePath('/admin')
+    revalidatePath('/agents')
 
-        return { success: true }
-    } catch (error) {
-        logger.error('Error approving agent:', error)
-        return { success: false, error: 'Failed to approve agent' }
-    }
+    return { success: true }
+  } catch (error) {
+    logger.error('Error approving agent:', error)
+    return { success: false, error: 'Failed to approve agent' }
+  }
 }
 
 /**
  * Reject an agent
  */
 export async function rejectAgent(agentId: string, reason: string) {
-    const supabase = createClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
-    if (!user || error) {
-        redirect('/login')
-    }
+  if (!user || error) {
+    redirect('/login')
+  }
 
-    // Verify user is admin
-    const prismaUser = await getUserWithRole(user.id)
+  // Verify user is admin
+  const prismaUser = await getUserWithRole(user.id)
 
-    if (!prismaUser || prismaUser.role !== 'ADMIN') {
-        return { success: false, error: 'Unauthorized' }
-    }
+  if (!prismaUser || prismaUser.role !== 'ADMIN') {
+    return { success: false, error: 'Unauthorized' }
+  }
 
-    try {
-        await prisma.agent.update({
-            where: { id: agentId },
-            data: {
-                status: 'REJECTED',
-                rejectionReason: reason,
-                approvedAt: new Date() // Track when action was taken
-            }
-        })
+  try {
+    await prisma.agent.update({
+      where: { id: agentId },
+      data: {
+        status: 'REJECTED',
+        rejectionReason: reason,
+        approvedAt: new Date(), // Track when action was taken
+      },
+    })
 
-        // Log admin action
-        await prisma.adminLog.create({
-            data: {
-                adminId: user.id,
-                action: 'REJECT_AGENT',
-                entityType: 'agent',
-                entityId: agentId,
-                metadata: { reason }
-            }
-        })
+    // Log admin action
+    await prisma.adminLog.create({
+      data: {
+        adminId: user.id,
+        action: 'REJECT_AGENT',
+        entityType: 'agent',
+        entityId: agentId,
+        metadata: { reason },
+      },
+    })
 
-        revalidatePath('/admin')
-        revalidatePath('/dashboard')
+    revalidatePath('/admin')
+    revalidatePath('/dashboard')
 
-        return { success: true }
-    } catch (error) {
-        logger.error('Error rejecting agent:', error)
-        return { success: false, error: 'Failed to reject agent' }
-    }
+    return { success: true }
+  } catch (error) {
+    logger.error('Error rejecting agent:', error)
+    return { success: false, error: 'Failed to reject agent' }
+  }
 }

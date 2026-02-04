@@ -12,7 +12,7 @@ export async function GET(
   try {
     const resolvedParams = await Promise.resolve(context.params)
     const { id } = resolvedParams
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

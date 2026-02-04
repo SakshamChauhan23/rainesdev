@@ -237,7 +237,7 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
   }
 
   // Check if user is logged in
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()

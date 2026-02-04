@@ -38,7 +38,7 @@ export async function processTestPurchase(
     }
   }
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     data: { user },
     error,
@@ -96,7 +96,7 @@ export async function processTestPurchase(
     }
 
     // Use transaction to ensure purchase and setup request are created atomically (P2.6)
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async tx => {
       // Create purchase with assisted setup flag
       const purchase = await tx.purchase.create({
         data: {

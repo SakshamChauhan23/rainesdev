@@ -6,7 +6,7 @@ import { SubmitAgentForm } from '@/components/agent/submit-agent-form'
 import { getUserWithRole } from '@/lib/user-sync'
 
 export default async function SubmitAgentPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()

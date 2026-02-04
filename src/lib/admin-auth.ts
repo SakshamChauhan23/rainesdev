@@ -7,9 +7,9 @@ import { UserRole } from '@prisma/client'
  * Properly typed Supabase user for admin checks
  */
 interface AdminCheckResult {
-    userId: string
-    email: string
-    role: UserRole
+  userId: string
+  email: string
+  role: UserRole
 }
 
 /**
@@ -20,39 +20,42 @@ interface AdminCheckResult {
  * @throws Never returns on auth failure (redirects instead)
  */
 export async function requireAdmin(): Promise<AdminCheckResult> {
-    // Step 1: Verify Supabase authentication
-    const supabase = createClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
+  // Step 1: Verify Supabase authentication
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
-    if (!user || error) {
-        redirect('/login?next=/admin')
-    }
+  if (!user || error) {
+    redirect('/login?next=/admin')
+  }
 
-    // Step 2: Get role from Prisma (source of truth, not Supabase metadata)
-    const prismaUser = await prisma.user.findUnique({
-        where: { id: user.id },
-        select: {
-            id: true,
-            email: true,
-            role: true
-        }
-    })
+  // Step 2: Get role from Prisma (source of truth, not Supabase metadata)
+  const prismaUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+    },
+  })
 
-    // Step 3: Verify user exists in database
-    if (!prismaUser) {
-        redirect('/login?next=/admin')
-    }
+  // Step 3: Verify user exists in database
+  if (!prismaUser) {
+    redirect('/login?next=/admin')
+  }
 
-    // Step 4: Verify admin role from database (not user-controllable metadata)
-    if (prismaUser.role !== 'ADMIN') {
-        redirect('/403') // Unauthorized page
-    }
+  // Step 4: Verify admin role from database (not user-controllable metadata)
+  if (prismaUser.role !== 'ADMIN') {
+    redirect('/403') // Unauthorized page
+  }
 
-    return {
-        userId: prismaUser.id,
-        email: prismaUser.email,
-        role: prismaUser.role
-    }
+  return {
+    userId: prismaUser.id,
+    email: prismaUser.email,
+    role: prismaUser.role,
+  }
 }
 
 /**
@@ -62,38 +65,41 @@ export async function requireAdmin(): Promise<AdminCheckResult> {
  * @returns Admin user info or null
  */
 export async function checkIsAdmin(): Promise<AdminCheckResult | null> {
-    try {
-        // Step 1: Verify Supabase authentication
-        const supabase = createClient()
-        const { data: { user }, error } = await supabase.auth.getUser()
+  try {
+    // Step 1: Verify Supabase authentication
+    const supabase = await createClient()
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser()
 
-        if (!user || error) {
-            return null
-        }
-
-        // Step 2: Get role from Prisma (source of truth)
-        const prismaUser = await prisma.user.findUnique({
-            where: { id: user.id },
-            select: {
-                id: true,
-                email: true,
-                role: true
-            }
-        })
-
-        // Step 3: Verify user exists and is admin
-        if (!prismaUser || prismaUser.role !== 'ADMIN') {
-            return null
-        }
-
-        return {
-            userId: prismaUser.id,
-            email: prismaUser.email,
-            role: prismaUser.role
-        }
-    } catch (error) {
-        return null
+    if (!user || error) {
+      return null
     }
+
+    // Step 2: Get role from Prisma (source of truth)
+    const prismaUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+      },
+    })
+
+    // Step 3: Verify user exists and is admin
+    if (!prismaUser || prismaUser.role !== 'ADMIN') {
+      return null
+    }
+
+    return {
+      userId: prismaUser.id,
+      email: prismaUser.email,
+      role: prismaUser.role,
+    }
+  } catch (error) {
+    return null
+  }
 }
 
 /**
@@ -104,37 +110,40 @@ export async function checkIsAdmin(): Promise<AdminCheckResult | null> {
  * @returns User info if role matches, redirects otherwise
  */
 export async function requireRole(allowedRoles: UserRole[]): Promise<AdminCheckResult> {
-    // Step 1: Verify Supabase authentication
-    const supabase = createClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
+  // Step 1: Verify Supabase authentication
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
-    if (!user || error) {
-        redirect('/login')
-    }
+  if (!user || error) {
+    redirect('/login')
+  }
 
-    // Step 2: Get role from Prisma
-    const prismaUser = await prisma.user.findUnique({
-        where: { id: user.id },
-        select: {
-            id: true,
-            email: true,
-            role: true
-        }
-    })
+  // Step 2: Get role from Prisma
+  const prismaUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+    },
+  })
 
-    // Step 3: Verify user exists
-    if (!prismaUser) {
-        redirect('/login')
-    }
+  // Step 3: Verify user exists
+  if (!prismaUser) {
+    redirect('/login')
+  }
 
-    // Step 4: Verify role is in allowed list
-    if (!allowedRoles.includes(prismaUser.role)) {
-        redirect('/403')
-    }
+  // Step 4: Verify role is in allowed list
+  if (!allowedRoles.includes(prismaUser.role)) {
+    redirect('/403')
+  }
 
-    return {
-        userId: prismaUser.id,
-        email: prismaUser.email,
-        role: prismaUser.role
-    }
+  return {
+    userId: prismaUser.id,
+    email: prismaUser.email,
+    role: prismaUser.role,
+  }
 }

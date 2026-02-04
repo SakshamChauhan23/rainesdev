@@ -20,7 +20,7 @@ export async function submitSellerApplication(
   prevState: SellerApplicationState,
   formData: FormData
 ): Promise<SellerApplicationState> {
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()

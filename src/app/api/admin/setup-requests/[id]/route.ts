@@ -14,7 +14,7 @@ export async function PATCH(
     const { id } = resolvedParams
 
     // Verify authentication
-    const supabase = createClient()
+    const supabase = await createClient()
     const {
       data: { user },
       error,

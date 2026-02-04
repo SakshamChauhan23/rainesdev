@@ -14,7 +14,7 @@ export async function POST(
     const { id } = resolvedParams
 
     // Verify admin authentication
-    const supabase = createClient()
+    const supabase = await createClient()
     const {
       data: { user },
       error: authError,
