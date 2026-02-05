@@ -21,18 +21,8 @@ import { Metadata } from 'next'
 import { unstable_cache } from 'next/cache'
 import type { Review, ReviewStats, ReviewPagination } from '@/components/reviews/review-list'
 
-// Use ISR with 30 second revalidation
-export const revalidate = 30
-
-// Allow dynamic paths - pages are generated on-demand and cached
-export const dynamicParams = true
-
-// Pre-generate only featured agents at build time to avoid connection limits
-export async function generateStaticParams() {
-  // Return empty array - let pages be generated on-demand with ISR
-  // This avoids hitting Supabase connection limits during build
-  return []
-}
+// Force dynamic rendering since this page uses cookies() for auth
+export const dynamic = 'force-dynamic'
 
 interface AgentPageProps {
   params: {
