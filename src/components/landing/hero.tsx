@@ -45,8 +45,8 @@ export function Hero() {
 
             {/* Subheadline */}
             <p className="mb-10 max-w-2xl text-lg leading-relaxed text-brand-slate/70 sm:text-xl">
-              Get fully built and manage AI agents for sales, research, and workflows - no coding
-              required. Our marketplace brings AI to work for you.
+              Deploy AI agents for any business task in minutes. No coding required. Browse hundreds
+              of plug-and-play agents built for your team.
             </p>
 
             {/* CTA Buttons */}
