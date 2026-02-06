@@ -1,15 +1,15 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { getBuyerPurchases } from '@/lib/purchases'
+import { getSubscriptionState } from '@/lib/subscription'
+import { prisma } from '@/lib/prisma'
 import { Container } from '@/components/layout/container'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Package, Calendar, Phone } from 'lucide-react'
+import { Package, Bot, ArrowRight, Crown } from 'lucide-react'
 import Link from 'next/link'
-import { formatDistanceToNow } from 'date-fns'
-import { formatPrice } from '@/lib/utils'
-import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 
 export default async function LibraryPage() {
   const supabase = await createClient()
@@ -22,159 +22,136 @@ export default async function LibraryPage() {
     redirect('/login?next=/library')
   }
 
-  // Optimize: Combine both queries into one using Promise.all
-  const [purchases, setupRequestsWithBookCall] = await Promise.all([
-    getBuyerPurchases(user.id),
-    prisma.setupRequest.findMany({
-      where: {
-        buyerId: user.id,
-        bookCallRequested: true,
+  const subscriptionState = await getSubscriptionState(user.id)
+
+  // If subscribed, show ALL approved agents
+  if (subscriptionState.hasAccess) {
+    const allAgents = await prisma.agent.findMany({
+      where: { status: 'APPROVED', hasActiveUpdate: false },
+      orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        shortDescription: true,
+        thumbnailUrl: true,
+        version: true,
+        category: { select: { name: true } },
       },
-      include: {
-        agent: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-          },
-        },
-      },
-    }),
-  ])
+    })
 
-  return (
-    <div className="min-h-screen bg-muted/40">
-      <div className="border-b bg-background p-6">
-        <Container>
-          <h1 className="text-3xl font-bold tracking-tight">My Library</h1>
-          <p className="text-muted-foreground">
-            {purchases.length} agent{purchases.length !== 1 ? 's' : ''} unlocked
-          </p>
-        </Container>
-      </div>
+    const statusLabel = subscriptionState.isTrial
+      ? 'Free Trial'
+      : subscriptionState.isLegacy
+        ? 'Legacy Access'
+        : 'Active'
 
-      <Container className="py-8">
-        {/* Book Call Banner - Show if user has any agents with book call requested */}
-        {setupRequestsWithBookCall.length > 0 && (
-          <Card className="mb-6 border-2 border-brand-orange/30 bg-gradient-to-br from-brand-orange/5 to-brand-orange/10">
-            <CardHeader>
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-brand-orange/20">
-                  <Phone className="h-6 w-6 text-brand-orange" />
-                </div>
-                <div className="flex-1">
-                  <CardTitle className="mb-2 text-xl text-brand-slate">
-                    Schedule Your Admin Consultation
-                  </CardTitle>
-                  <CardDescription className="text-brand-slate/70">
-                    You requested admin assistance for {setupRequestsWithBookCall.length} agent
-                    {setupRequestsWithBookCall.length !== 1 ? 's' : ''}. Book a call with our team
-                    to get personalized setup help.
-                  </CardDescription>
-                  <ul className="mt-3 space-y-1">
-                    {setupRequestsWithBookCall.map(request => (
-                      <li key={request.id} className="text-sm text-brand-slate/80">
-                        • {request.agent.title}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+    const statusClass = subscriptionState.isTrial
+      ? 'bg-brand-teal/10 text-brand-teal'
+      : subscriptionState.isLegacy
+        ? 'bg-brand-orange/10 text-brand-orange'
+        : 'bg-green-100 text-green-800'
+
+    return (
+      <div className="min-h-screen bg-muted/40">
+        <div className="border-b bg-background p-6">
+          <Container>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">My Library</h1>
+                <p className="text-muted-foreground">
+                  {allAgents.length} agent{allAgents.length !== 1 ? 's' : ''} available
+                </p>
               </div>
-            </CardHeader>
-            <CardContent>
-              <Link
-                href={
-                  process.env.NEXT_PUBLIC_BOOKING_CALENDAR_URL ||
-                  'https://calendar.app.google/QyuK9XKQ52r6dNPD6'
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button
-                  size="lg"
-                  className="w-full bg-brand-orange font-semibold text-white shadow-lg shadow-brand-orange/30 transition-all hover:bg-brand-orange/90 hover:shadow-xl hover:shadow-brand-orange/40"
-                >
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Book a Call Now
-                </Button>
-              </Link>
-              <p className="mt-3 text-center text-xs text-brand-slate/60">
-                Free consultation • 30-minute session • Discuss all your agents
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
-        {purchases.length === 0 ? (
-          <Card>
-            <CardContent className="flex min-h-[400px] flex-col items-center justify-center text-center">
-              <div className="mb-4 rounded-full bg-muted p-4">
-                <Package className="h-8 w-8 text-muted-foreground" />
+              <div className="flex items-center gap-3">
+                <Badge className={statusClass}>{statusLabel}</Badge>
+                <Link href="/account">
+                  <Button variant="outline" size="sm" className="rounded-xl">
+                    Manage Subscription
+                  </Button>
+                </Link>
               </div>
-              <h3 className="mb-2 text-lg font-semibold">No agents unlocked yet</h3>
-              <p className="mb-4 max-w-sm text-sm text-muted-foreground">
-                Browse the marketplace to find and unlock AI agents
-              </p>
-              <Link href="/agents">
-                <Button>Browse Agents</Button>
-              </Link>
-            </CardContent>
-          </Card>
-        ) : (
+            </div>
+          </Container>
+        </div>
+
+        <Container className="py-8">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {purchases.map(purchase => (
-              <Card key={purchase.id} className="flex flex-col transition-colors hover:bg-muted/50">
+            {allAgents.map(agent => (
+              <Card key={agent.id} className="flex flex-col transition-colors hover:bg-muted/50">
                 <CardHeader>
-                  {purchase.agent.thumbnailUrl && (
+                  {agent.thumbnailUrl && (
                     <img
-                      src={purchase.agent.thumbnailUrl}
-                      alt={purchase.agent.title}
+                      src={agent.thumbnailUrl}
+                      alt={agent.title}
                       className="mb-4 h-40 w-full rounded-lg object-cover"
                     />
                   )}
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1">
-                      <CardTitle className="line-clamp-1">{purchase.agent.title}</CardTitle>
-                      <CardDescription className="mt-1">
-                        {purchase.agent.category.name}
-                      </CardDescription>
+                      <CardTitle className="line-clamp-1">{agent.title}</CardTitle>
+                      <CardDescription className="mt-1">{agent.category.name}</CardDescription>
                     </div>
                     <Badge variant="secondary" className="text-xs">
-                      v{purchase.agent.version}
+                      v{agent.version}
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="flex-1 space-y-4">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    <span>
-                      Unlocked{' '}
-                      {formatDistanceToNow(new Date(purchase.purchasedAt), { addSuffix: true })}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Amount paid:</span>
-                    <span className="font-semibold">
-                      {formatPrice(Number(purchase.amountPaid))}
-                    </span>
-                  </div>
-                  {purchase.source === 'TEST_MODE' && (
-                    <Badge variant="outline" className="text-xs">
-                      Test Purchase
-                    </Badge>
-                  )}
+                <CardContent className="flex-1">
+                  <p className="line-clamp-2 text-sm text-muted-foreground">
+                    {agent.shortDescription}
+                  </p>
                 </CardContent>
                 <div className="border-t p-4">
-                  <Link href={`/agents/${purchase.agent.slug}`}>
+                  <Link href={`/agents/${agent.slug}`}>
                     <Button className="w-full" variant="default">
-                      View Agent
+                      View Setup Guide
                     </Button>
                   </Link>
                 </div>
               </Card>
             ))}
           </div>
-        )}
+        </Container>
+      </div>
+    )
+  }
+
+  // Not subscribed — show upsell
+  return (
+    <div className="min-h-screen bg-muted/40">
+      <div className="border-b bg-background p-6">
+        <Container>
+          <h1 className="text-3xl font-bold tracking-tight">My Library</h1>
+          <p className="text-muted-foreground">Subscribe to unlock all agents</p>
+        </Container>
+      </div>
+
+      <Container className="py-8">
+        <Card className="border-2 border-brand-orange/20 bg-gradient-to-br from-brand-orange/5 to-brand-teal/5">
+          <CardContent className="flex min-h-[400px] flex-col items-center justify-center text-center">
+            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-brand-orange/10">
+              <Crown className="h-10 w-10 text-brand-orange" />
+            </div>
+            <h3 className="mb-2 text-2xl font-bold text-brand-slate">Unlock All AI Agents</h3>
+            <p className="mb-2 max-w-md text-brand-slate/70">
+              Get instant access to our entire library of 50+ AI agents with setup guides and
+              workflows.
+            </p>
+            <p className="mb-8 text-2xl font-bold text-brand-slate">
+              $12.99<span className="text-base font-normal text-brand-slate/60">/month</span>
+            </p>
+            <Link href="/subscribe">
+              <Button
+                size="lg"
+                className="group rounded-2xl bg-brand-orange px-8 py-6 text-base font-semibold text-white shadow-lg shadow-brand-orange/30 transition-all hover:-translate-y-0.5 hover:bg-brand-orange/90"
+              >
+                Start 14-Day Free Trial
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
       </Container>
     </div>
   )

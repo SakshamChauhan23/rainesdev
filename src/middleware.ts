@@ -6,13 +6,15 @@ const PROTECTED_ROUTES = [
   '/dashboard',
   '/library',
   '/checkout',
+  '/subscribe',
+  '/account',
   '/submit-agent',
   '/become-seller',
   '/admin',
 ]
 
 // Define public API routes that don't need auth checks
-const PUBLIC_API_ROUTES = ['/api/agents', '/api/categories', '/api/reviews']
+const PUBLIC_API_ROUTES = ['/api/agents', '/api/categories', '/api/reviews', '/api/webhooks']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl

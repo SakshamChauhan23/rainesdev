@@ -60,7 +60,7 @@ export function Hero() {
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Link href="/signup">
+              <Link href="/pricing">
                 <Button
                   size="lg"
                   variant="outline"
@@ -153,12 +153,12 @@ export function Hero() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-2xl font-bold text-brand-slate">
-                        $14.99
-                        <span className="text-sm font-normal text-brand-slate/60"> one-time</span>
+                        $12.99
+                        <span className="text-sm font-normal text-brand-slate/60">/mo</span>
                       </p>
                     </div>
                     <Button className="rounded-xl bg-brand-orange text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90">
-                      Get Started
+                      Start Free Trial
                     </Button>
                   </div>
                 </div>

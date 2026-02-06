@@ -223,15 +223,12 @@ async function fetchGitHubReadme(githubUrl: string): Promise<GitHubReadme | null
     }
 
     // Fetch README
-    const readmeResponse = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/readme`,
-      {
-        headers: {
-          Accept: 'application/vnd.github.v3+json',
-          'User-Agent': 'Rouze-AI-Agent-Importer',
-        },
-      }
-    )
+    const readmeResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, {
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        'User-Agent': 'Rouze-AI-Agent-Importer',
+      },
+    })
 
     if (!readmeResponse.ok) {
       console.log(`    ⚠️  Could not fetch README for ${owner}/${repo}`)
@@ -312,26 +309,40 @@ function extractWorkflowOverview(readme: string, useCase: string, agentName: str
 function generateThumbnailUrl(category: string): string {
   // Generate Unsplash thumbnail based on category
   const categoryImages: Record<string, string> = {
-    'Customer Support': 'https://images.unsplash.com/photo-1556745757-8d76bdb6984b?w=800&h=600&fit=crop',
-    'Appointment Booking': 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=800&h=600&fit=crop',
+    'Customer Support':
+      'https://images.unsplash.com/photo-1556745757-8d76bdb6984b?w=800&h=600&fit=crop',
+    'Appointment Booking':
+      'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=800&h=600&fit=crop',
     'Sales & SDR': 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop',
-    'Invoice Processing': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=600&fit=crop',
+    'Invoice Processing':
+      'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=600&fit=crop',
     Healthcare: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=600&fit=crop',
-    'Email Automation': 'https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&h=600&fit=crop',
-    'Social Media': 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop',
-    'Web Scraping': 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=600&fit=crop',
-    'Meeting Notes': 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=600&fit=crop',
-    'Knowledge Base': 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&h=600&fit=crop',
-    'HR & Recruiting': 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&h=600&fit=crop',
-    'Personal Assistant': 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&h=600&fit=crop',
+    'Email Automation':
+      'https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&h=600&fit=crop',
+    'Social Media':
+      'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop',
+    'Web Scraping':
+      'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=600&fit=crop',
+    'Meeting Notes':
+      'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=600&fit=crop',
+    'Knowledge Base':
+      'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&h=600&fit=crop',
+    'HR & Recruiting':
+      'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&h=600&fit=crop',
+    'Personal Assistant':
+      'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&h=600&fit=crop',
     Finance: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&h=600&fit=crop',
-    'Voice Agent': 'https://images.unsplash.com/photo-1589254065878-42c9da997008?w=800&h=600&fit=crop',
+    'Voice Agent':
+      'https://images.unsplash.com/photo-1589254065878-42c9da997008?w=800&h=600&fit=crop',
     'E-commerce': 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop',
     'Real Estate': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=600&fit=crop',
     Travel: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop',
   }
 
-  return categoryImages[category] || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop'
+  return (
+    categoryImages[category] ||
+    'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop'
+  )
 }
 
 async function ensureCategories(): Promise<Map<string, string>> {
@@ -466,9 +477,6 @@ async function main() {
       thumbnailUrl: generateThumbnailUrl(agent.category),
       status: 'APPROVED' as AgentStatus,
       approvedAt: new Date(),
-      assistedSetupEnabled: true,
-      assistedSetupPrice: 49,
-      bookCallEnabled: true,
     }
 
     if (dryRun) {

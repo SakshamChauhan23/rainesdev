@@ -13,6 +13,7 @@ model User {
   role                    UserRole            @default(BUYER)
   name                    String?
   avatarUrl               String?             @map("avatar_url")
+  stripeCustomerId        String?             @unique @map("stripe_customer_id")
   createdAt               DateTime            @default(now()) @map("created_at")
   updatedAt               DateTime            @updatedAt @map("updated_at")
   adminLogs               AdminLog[]
@@ -22,7 +23,7 @@ model User {
   applicationsReviewed    SellerApplication[] @relation("ApplicationReviewer")
   sellerApplication       SellerApplication?
   sellerProfile           SellerProfile?
-  setupRequests           SetupRequest[]
+  subscription            Subscription?
   supportRequestsAssigned SupportRequest[]    @relation("AssignedSupport")
   supportRequestsAsBuyer  SupportRequest[]    @relation("BuyerSupport")
   supportRequestsAsSeller SupportRequest[]    @relation("SellerSupport")
@@ -90,8 +91,6 @@ model Agent {
   useCase              String           @map("use_case")
   price                Decimal          @db.Decimal(10, 2)
   supportAddonPrice    Decimal          @default(0) @map("support_addon_price") @db.Decimal(10, 2)
-  assistedSetupEnabled Boolean          @default(false) @map("assisted_setup_enabled")
-  assistedSetupPrice   Decimal          @default(0) @map("assisted_setup_price") @db.Decimal(10, 2)
   demoVideoUrl         String?          @map("demo_video_url")
   thumbnailUrl         String?          @map("thumbnail_url")
   status               AgentStatus      @default(DRAFT)
@@ -108,14 +107,12 @@ model Agent {
   isLatestVersion      Boolean          @default(true) @map("is_latest_version")
   parentAgentId        String?          @map("parent_agent_id")
   version              Int              @default(1)
-  bookCallEnabled      Boolean          @default(false) @map("book_call_enabled")
   category             Category         @relation(fields: [categoryId], references: [id])
   parentAgent          Agent?           @relation("AgentVersions", fields: [parentAgentId], references: [id])
   childVersions        Agent[]          @relation("AgentVersions")
   seller               User             @relation("SellerAgents", fields: [sellerId], references: [id], onDelete: Cascade)
   purchases            Purchase[]
   reviews              Review[]
-  setupRequests        SetupRequest[]
   supportRequests      SupportRequest[]
 
   @@index([sellerId])
@@ -134,7 +131,6 @@ model Purchase {
   agentId                String           @map("agent_id")
   amountPaid             Decimal          @map("amount_paid") @db.Decimal(10, 2)
   supportAddonPurchased  Boolean          @default(false) @map("support_addon_purchased")
-  assistedSetupRequested Boolean          @default(false) @map("assisted_setup_requested")
   stripePaymentIntentId  String?          @unique @map("stripe_payment_intent_id")
   status                 PurchaseStatus   @default(PENDING)
   purchasedAt            DateTime         @default(now()) @map("purchased_at")
@@ -143,7 +139,6 @@ model Purchase {
   source                 PurchaseSource   @default(TEST_MODE)
   agent                  Agent            @relation(fields: [agentId], references: [id])
   buyer                  User             @relation(fields: [buyerId], references: [id])
-  setupRequest           SetupRequest?
   supportRequests        SupportRequest[]
 
   @@unique([buyerId, agentVersionId])
@@ -206,35 +201,6 @@ model Review {
   @@map("reviews")
 }
 
-model SetupRequest {
-  id                String           @id @default(cuid())
-  purchaseId        String           @unique @map("purchase_id")
-  buyerId           String           @map("buyer_id")
-  agentId           String           @map("agent_id")
-  agentVersionId    String           @map("agent_version_id")
-  setupType         SetupType        @default(ADMIN_ASSISTED) @map("setup_type")
-  setupCost         Decimal          @default(0) @map("setup_cost") @db.Decimal(10, 2)
-  status            SetupStatus      @default(PENDING)
-  complexity        SetupComplexity? @map("complexity")
-  adminNotes        String?          @map("admin_notes")
-  createdAt         DateTime         @default(now()) @map("created_at")
-  completedAt       DateTime?        @map("completed_at")
-  updatedAt         DateTime         @updatedAt @map("updated_at")
-  bookCallRequested Boolean          @default(false) @map("book_call_requested")
-  callStatus        CallStatus       @default(PENDING) @map("call_status")
-  agent             Agent            @relation(fields: [agentId], references: [id])
-  buyer             User             @relation(fields: [buyerId], references: [id])
-  purchase          Purchase         @relation(fields: [purchaseId], references: [id])
-
-  @@index([buyerId])
-  @@index([agentId])
-  @@index([status])
-  @@index([complexity])
-  @@index([status, createdAt])
-  @@index([callStatus])
-  @@map("setup_requests")
-}
-
 model AdminLog {
   id         String      @id @default(cuid())
   adminId    String      @map("admin_id")
@@ -250,6 +216,36 @@ model AdminLog {
   @@index([createdAt])
   @@index([action, createdAt])
   @@map("admin_logs")
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String             @unique @map("user_id")
+  stripeSubscriptionId String?            @unique @map("stripe_subscription_id")
+  stripePriceId        String?            @map("stripe_price_id")
+  status               SubscriptionStatus @default(TRIALING)
+  currentPeriodStart   DateTime?          @map("current_period_start")
+  currentPeriodEnd     DateTime?          @map("current_period_end")
+  trialEnd             DateTime?          @map("trial_end")
+  cancelAtPeriodEnd    Boolean            @default(false) @map("cancel_at_period_end")
+  canceledAt           DateTime?          @map("canceled_at")
+  gracePeriodEnd       DateTime?          @map("grace_period_end")
+  createdAt            DateTime           @default(now()) @map("created_at")
+  updatedAt            DateTime           @updatedAt @map("updated_at")
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([currentPeriodEnd])
+  @@map("subscriptions")
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  EXPIRED
+  LEGACY_GRACE
 }
 
 enum UserRole {
@@ -299,28 +295,9 @@ enum AdminAction {
   UPDATE_CATEGORY
   APPROVE_SELLER_APPLICATION
   REJECT_SELLER_APPLICATION
-}
-
-enum SetupType {
-  ADMIN_ASSISTED
-}
-
-enum SetupStatus {
-  PENDING
-  COMPLETED
-  IN_PROGRESS
-}
-
-enum CallStatus {
-  PENDING
-  SCHEDULED
-  COMPLETED
-}
-
-enum SetupComplexity {
-  QUICK
-  STANDARD
-  COMPLEX
+  GRANT_SUBSCRIPTION
+  REVOKE_SUBSCRIPTION
+  EXTEND_GRACE_PERIOD
 }
 
 enum SellerApplicationStatus {

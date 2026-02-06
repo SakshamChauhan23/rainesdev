@@ -100,6 +100,9 @@ export default async function AdminDashboard() {
     prisma.user.count({ where: { role: 'BUYER' } }),
     prisma.purchase.count({ where: { status: 'COMPLETED' } }),
     prisma.sellerApplication.count({ where: { status: 'PENDING_REVIEW' } }),
+    prisma.subscription.count({ where: { status: 'ACTIVE' } }),
+    prisma.subscription.count({ where: { status: 'TRIALING' } }),
+    prisma.subscription.count({ where: { status: 'LEGACY_GRACE' } }),
   ])
 
   const [
@@ -110,7 +113,12 @@ export default async function AdminDashboard() {
     buyerCount,
     purchaseCount,
     pendingSellerApplications,
+    activeSubscribers,
+    trialUsers,
+    legacyUsers,
   ] = stats
+
+  const mrr = activeSubscribers * 12.99
 
   // Get total views across all agents
   const totalViewsResult = await prisma.agent.aggregate({
@@ -174,16 +182,18 @@ export default async function AdminDashboard() {
               </div>
             </div>
 
-            {/* Total Purchases */}
+            {/* Active Subscribers */}
             <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-teal to-brand-teal/90 p-6 text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
               <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
               <div className="relative">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
                   <ShoppingCart className="h-6 w-6" />
                 </div>
-                <p className="mb-1 text-sm font-medium text-white/80">Total Purchases</p>
-                <p className="text-3xl font-bold">{purchaseCount}</p>
-                <div className="mt-3 text-xs text-white/70">Completed transactions</div>
+                <p className="mb-1 text-sm font-medium text-white/80">Active Subscribers</p>
+                <p className="text-3xl font-bold">{activeSubscribers}</p>
+                <div className="mt-3 text-xs text-white/70">
+                  MRR: ${mrr.toFixed(2)} | {trialUsers} trial | {legacyUsers} legacy
+                </div>
               </div>
             </div>
 

@@ -463,9 +463,6 @@ async function main() {
         thumbnailUrl: agent.thumbnailUrl,
         status: 'APPROVED',
         approvedAt: new Date(),
-        assistedSetupEnabled: true,
-        assistedSetupPrice: 0,
-        bookCallEnabled: false,
       },
     })
 

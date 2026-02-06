@@ -30,9 +30,6 @@ interface AgentRow {
   thumbnail_url?: string
   status?: string
   seller_email: string
-  assisted_setup_enabled?: string
-  assisted_setup_price?: string
-  book_call_enabled?: string
 }
 
 interface ImportResult {
@@ -277,9 +274,6 @@ async function importAgents(
       demoVideoUrl: row.demo_video_url || null,
       thumbnailUrl: row.thumbnail_url || null,
       status: parseStatus(row.status),
-      assistedSetupEnabled: row.assisted_setup_enabled?.toLowerCase() === 'true',
-      assistedSetupPrice: parseFloat(row.assisted_setup_price || '0') || 0,
-      bookCallEnabled: row.book_call_enabled?.toLowerCase() === 'true',
       approvedAt: parseStatus(row.status) === 'APPROVED' ? new Date() : null,
     }
 

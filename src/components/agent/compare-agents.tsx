@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Star, ChevronRight } from 'lucide-react'
-import { formatPrice } from '@/lib/utils'
 
 interface Agent {
   id: string
@@ -82,8 +81,8 @@ export function CompareAgents({ agents, categoryName }: CompareAgentsProps) {
               <span className="ml-1 text-xs text-gray-500">(New)</span>
             </div>
 
-            {/* Price */}
-            <p className="text-base font-bold text-gray-900">{formatPrice(agent.price)}</p>
+            {/* Included */}
+            <p className="text-sm font-medium text-brand-teal">Included</p>
 
             {/* Seller */}
             <div className="mt-2 flex items-center gap-2">

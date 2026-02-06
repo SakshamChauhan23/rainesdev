@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
-import { formatPrice } from '@/lib/utils'
 
 interface Agent {
   id: string
@@ -72,7 +71,7 @@ export function SimilarItemsSidebar({
                   <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <p className="mt-1 text-sm font-bold text-gray-900">{formatPrice(agent.price)}</p>
+              <p className="mt-1 text-sm font-medium text-brand-teal">Included</p>
             </div>
           </Link>
         ))}

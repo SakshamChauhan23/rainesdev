@@ -2,7 +2,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { formatPrice } from '@/lib/utils'
 
 interface AgentCardProps {
   agent: {
@@ -85,8 +84,8 @@ export function AgentCard({ agent, priority = false }: AgentCardProps) {
         </CardContent>
 
         <CardFooter className="flex items-center justify-between border-t border-gray-300 p-4">
-          {/* Price */}
-          <div className="text-base font-normal text-black">{formatPrice(Number(agent.price))}</div>
+          {/* Included Badge */}
+          <span className="text-sm font-medium text-brand-teal">Included with Rouze.ai</span>
         </CardFooter>
       </Card>
     </Link>

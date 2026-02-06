@@ -1,4 +1,4 @@
-title,category_slug,price,short_description,workflow_overview,use_case,setup_guide,demo_video_url,thumbnail_url,status,seller_email,assisted_setup_enabled,assisted_setup_price,book_call_enabled
+title,category_slug,price,short_description,workflow_overview,use_case,setup_guide,demo_video_url,thumbnail_url,status,seller_email
 "Customer Support AI Bot","customer-support",49.99,"Automate tier-1 customer support with AI-powered responses","# How It Works
 
 1. **Receives Customer Queries** - Integrates with your helpdesk
@@ -25,7 +25,7 @@ HELPDESK_API_KEY=your_key
 ## Step 3: Deploy
 ```bash
 npm run deploy
-```","https://youtube.com/watch?v=example1","https://example.com/images/support-bot.jpg","APPROVED","seller@example.com",false,0,false
+```","https://youtube.com/watch?v=example1","https://example.com/images/support-bot.jpg","APPROVED","seller@example.com"
 "Lead Qualification Agent","sales-marketing",79.99,"Automatically qualify leads and score them based on engagement","# Lead Qualification Workflow
 
 1. **Capture Leads** - From forms, emails, or chat
@@ -47,7 +47,7 @@ npm run deploy
 3. Set routing thresholds
 
 ## Launch
-Run the agent and start qualifying!","https://youtube.com/watch?v=example2","https://example.com/images/lead-qual.jpg","APPROVED","seller@example.com",true,99.99,true
+Run the agent and start qualifying!","https://youtube.com/watch?v=example2","https://example.com/images/lead-qual.jpg","APPROVED","seller@example.com"
 "Content Writer AI","content-creation",39.99,"Generate blog posts, social media content, and marketing copy","# Content Generation Pipeline
 
 - **Topic Research** - Finds trending topics
@@ -58,4 +58,4 @@ Run the agent and start qualifying!","https://youtube.com/watch?v=example2","htt
 1. Install the package
 2. Add your OpenAI API key
 3. Configure content preferences
-4. Start generating!","","","UNDER_REVIEW","seller@example.com",false,0,false
+4. Start generating!","","","UNDER_REVIEW","seller@example.com"

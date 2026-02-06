@@ -25,22 +25,19 @@ Upload multiple AI agents at once using a CSV file.
 
 ## CSV Format
 
-| Column                   | Required | Description                                        | Example                       |
-| ------------------------ | -------- | -------------------------------------------------- | ----------------------------- |
-| `title`                  | Yes      | Agent name (min 3 chars)                           | "Customer Support Bot"        |
-| `category_slug`          | Yes      | Category identifier                                | "customer-support"            |
-| `price`                  | Yes      | Price in USD                                       | 49.99                         |
-| `short_description`      | Yes      | Brief summary                                      | "Automate tier-1 support"     |
-| `workflow_overview`      | Yes      | Full description (Markdown)                        | "# How It Works..."           |
-| `use_case`               | Yes      | Target audience                                    | "Best for SaaS companies"     |
-| `setup_guide`            | Yes      | Installation instructions (Markdown, min 10 chars) | "# Setup Guide..."            |
-| `demo_video_url`         | No       | YouTube/Loom URL                                   | "https://youtube.com/..."     |
-| `thumbnail_url`          | No       | Image URL                                          | "https://example.com/img.jpg" |
-| `status`                 | No       | Agent status (default: DRAFT)                      | "APPROVED"                    |
-| `seller_email`           | Yes      | Email of the seller account                        | "seller@example.com"          |
-| `assisted_setup_enabled` | No       | Enable setup assistance (default: false)           | "true"                        |
-| `assisted_setup_price`   | No       | Setup assistance price (default: 0)                | 99.99                         |
-| `book_call_enabled`      | No       | Enable call booking (default: false)               | "true"                        |
+| Column              | Required | Description                                        | Example                       |
+| ------------------- | -------- | -------------------------------------------------- | ----------------------------- |
+| `title`             | Yes      | Agent name (min 3 chars)                           | "Customer Support Bot"        |
+| `category_slug`     | Yes      | Category identifier                                | "customer-support"            |
+| `price`             | Yes      | Price in USD                                       | 49.99                         |
+| `short_description` | Yes      | Brief summary                                      | "Automate tier-1 support"     |
+| `workflow_overview` | Yes      | Full description (Markdown)                        | "# How It Works..."           |
+| `use_case`          | Yes      | Target audience                                    | "Best for SaaS companies"     |
+| `setup_guide`       | Yes      | Installation instructions (Markdown, min 10 chars) | "# Setup Guide..."            |
+| `demo_video_url`    | No       | YouTube/Loom URL                                   | "https://youtube.com/..."     |
+| `thumbnail_url`     | No       | Image URL                                          | "https://example.com/img.jpg" |
+| `status`            | No       | Agent status (default: DRAFT)                      | "APPROVED"                    |
+| `seller_email`      | Yes      | Email of the seller account                        | "seller@example.com"          |
 
 ## Available Categories
 
@@ -105,13 +102,13 @@ Consider splitting into multiple files (100-200 agents each) to:
 ## Example CSV Content
 
 ```csv
-title,category_slug,price,short_description,workflow_overview,use_case,setup_guide,demo_video_url,thumbnail_url,status,seller_email,assisted_setup_enabled,assisted_setup_price,book_call_enabled
+title,category_slug,price,short_description,workflow_overview,use_case,setup_guide,demo_video_url,thumbnail_url,status,seller_email
 "My AI Agent","customer-support",49.99,"Short description here","# Overview
 
 Detailed markdown content...","Use case description","# Setup
 
 1. Step one
-2. Step two","https://youtube.com/watch?v=xxx","https://example.com/thumb.jpg","APPROVED","seller@example.com",true,99.99,false
+2. Step two","https://youtube.com/watch?v=xxx","https://example.com/thumb.jpg","APPROVED","seller@example.com"
 ```
 
 ## Troubleshooting

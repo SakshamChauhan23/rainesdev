@@ -1,31 +1,13 @@
 'use client'
 
-import {
-  Cpu,
-  Clock,
-  Layers,
-  Shield,
-  Zap,
-  Users,
-  Globe,
-  Settings,
-  FileText,
-  HelpCircle,
-} from 'lucide-react'
+import { Cpu, Clock, Layers, Settings, Users, Globe, FileText, HelpCircle } from 'lucide-react'
 
 interface ProductSpecsProps {
   category: string
   purchaseCount: number
-  assistedSetupEnabled: boolean
-  assistedSetupPrice?: number
 }
 
-export function ProductSpecs({
-  category,
-  purchaseCount,
-  assistedSetupEnabled,
-  assistedSetupPrice,
-}: ProductSpecsProps) {
+export function ProductSpecs({ category, purchaseCount }: ProductSpecsProps) {
   const specs = [
     {
       icon: Layers,
@@ -35,7 +17,7 @@ export function ProductSpecs({
     {
       icon: Clock,
       label: 'Setup Time',
-      value: assistedSetupEnabled ? '< 1 hour (assisted)' : '1-2 hours',
+      value: '1-2 hours',
     },
     {
       icon: Cpu,
@@ -65,7 +47,7 @@ export function ProductSpecs({
     {
       icon: HelpCircle,
       label: 'Support',
-      value: assistedSetupEnabled ? 'Setup Assistance' : 'Community',
+      value: 'Community',
     },
   ]
 
@@ -89,27 +71,6 @@ export function ProductSpecs({
           )
         })}
       </div>
-
-      {/* Assisted Setup Highlight */}
-      {assistedSetupEnabled && (
-        <div className="mt-6 flex items-center gap-4 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 p-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary">
-            <Zap className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900">Assisted Setup Available</h3>
-            <p className="text-sm text-gray-600">
-              Get expert help setting up this agent.{' '}
-              {assistedSetupPrice && assistedSetupPrice > 0 && (
-                <span className="font-medium text-primary">
-                  Starting at ${assistedSetupPrice.toFixed(2)}
-                </span>
-              )}
-            </p>
-          </div>
-          <Shield className="ml-auto h-8 w-8 text-primary/30" />
-        </div>
-      )}
     </div>
   )
 }

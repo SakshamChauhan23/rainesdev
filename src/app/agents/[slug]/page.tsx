@@ -13,10 +13,8 @@ import { PurchaseSuccessBanner } from '@/components/agent/purchase-success-banne
 import { getCachedAgentBySlug } from '@/lib/agents'
 import { createClient } from '@/lib/supabase/server'
 import { ReviewSection } from '@/components/reviews/review-section'
-import { AssistedSetupConfig } from '@/components/admin/assisted-setup-config'
-import { SetupStatus } from '@/components/agent/setup-status'
-import { BookCallCard } from '@/components/agent/book-call-card'
 import { prisma } from '@/lib/prisma'
+import { getSubscriptionState } from '@/lib/subscription'
 import { Metadata } from 'next'
 import { unstable_cache } from 'next/cache'
 import type { Review, ReviewStats, ReviewPagination } from '@/components/reviews/review-list'
@@ -239,23 +237,13 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
     getCachedRecommendedAgents(agent.categoryId, agent.id),
   ])
 
-  // Optimize: Combine all user-related queries into one using Promise.all
-  let isPurchased = false
+  // Check subscription access and user data
+  let hasAccess = false
   let userWithRole = null
-  let setupRequest = null
 
   if (user) {
-    const [purchaseData, userData, setupData] = await Promise.all([
-      // Check if purchased
-      prisma.purchase.findFirst({
-        where: {
-          buyerId: user.id,
-          agentId: agent.id,
-          status: 'COMPLETED',
-        },
-        select: { id: true },
-      }),
-      // Get user with role
+    const [subState, userData] = await Promise.all([
+      getSubscriptionState(user.id),
       prisma.user.findUnique({
         where: { id: user.id },
         select: {
@@ -272,28 +260,16 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
           },
         },
       }),
-      // Get setup request (only if conditions might be met)
-      prisma.setupRequest.findFirst({
-        where: {
-          buyerId: user.id,
-          agentId: agent.id,
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      }),
     ])
 
-    isPurchased = !!purchaseData
+    hasAccess = subState.hasAccess
     userWithRole = userData
-    // Only use setupRequest if user has actually purchased
-    setupRequest = isPurchased ? setupData : null
   }
 
   return (
     <div className="min-h-screen bg-background">
       <Container className="py-6 md:py-10">
-        {showSuccessBanner && isPurchased && <PurchaseSuccessBanner />}
+        {showSuccessBanner && hasAccess && <PurchaseSuccessBanner />}
 
         {/* Main Product Section - Amazon/Samsung Style */}
         <div className="grid gap-8 lg:grid-cols-12">
@@ -313,15 +289,13 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
             <ProductInfo
               title={agent.title}
               shortDescription={agent.shortDescription}
-              price={Number(agent.price)}
               category={agent.category}
               viewCount={agent.viewCount}
               purchaseCount={agent.purchaseCount}
               agentId={agent.id}
               agentSlug={agent.slug}
-              isPurchased={isPurchased}
+              hasAccess={hasAccess}
               isApproved={agent.status === 'APPROVED'}
-              assistedSetupEnabled={agent.assistedSetupEnabled}
               reviewStats={initialReviewData.stats}
             />
           </div>
@@ -341,29 +315,12 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
                 agent.seller.sellerProfile?.socialLinks as import('@/types').SocialLinks | null
               }
             />
-
-            {/* Book a Call - Show if purchased with assisted setup and book call requested */}
-            {isPurchased && setupRequest && setupRequest.bookCallRequested && <BookCallCard />}
-
-            {/* Admin: Assisted Setup Configuration */}
-            {userWithRole?.role === 'ADMIN' && (
-              <AssistedSetupConfig
-                agentId={agent.id}
-                currentEnabled={agent.assistedSetupEnabled}
-                currentPrice={Number(agent.assistedSetupPrice)}
-              />
-            )}
           </div>
         </div>
 
         {/* Specifications Section */}
         <div className="mt-10">
-          <ProductSpecs
-            category={agent.category.name}
-            purchaseCount={agent.purchaseCount}
-            assistedSetupEnabled={agent.assistedSetupEnabled}
-            assistedSetupPrice={Number(agent.assistedSetupPrice)}
-          />
+          <ProductSpecs category={agent.category.name} purchaseCount={agent.purchaseCount} />
         </div>
 
         {/* Compare with Similar Products */}
@@ -380,21 +337,9 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
           />
         </div>
 
-        {/* Setup Status - Show if purchased with assisted setup */}
-        {isPurchased && setupRequest && (
-          <div className="mt-10">
-            <SetupStatus
-              status={setupRequest.status}
-              setupCost={Number(setupRequest.setupCost)}
-              completedAt={setupRequest.completedAt}
-              adminNotes={setupRequest.adminNotes}
-            />
-          </div>
-        )}
-
         {/* Setup Guide - Locked or Unlocked */}
         <div className="mt-10">
-          {isPurchased ? (
+          {hasAccess ? (
             <UnlockedSetupGuide setupGuide={agent.setupGuide} />
           ) : (
             <LockedSetupGuide agentId={agent.id} isApproved={agent.status === 'APPROVED'} />

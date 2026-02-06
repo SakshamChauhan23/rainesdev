@@ -3,19 +3,7 @@
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Star,
-  CheckCircle2,
-  Share2,
-  Heart,
-  Check,
-  Copy,
-  ShoppingCart,
-  Zap,
-  Shield,
-  Clock,
-} from 'lucide-react'
-import { formatPrice } from '@/lib/utils'
+import { Star, CheckCircle2, Share2, Heart, Check, Copy, Zap, Shield, Clock } from 'lucide-react'
 import Link from 'next/link'
 import {
   Dialog,
@@ -25,50 +13,40 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { PurchaseConfirmationModal } from './purchase-confirmation-modal'
 
 interface ProductInfoProps {
   title: string
   shortDescription: string
-  price: number
   category: { name: string; slug: string }
   viewCount: number
   purchaseCount: number
   agentId: string
   agentSlug: string
-  isPurchased: boolean
+  hasAccess: boolean
   isApproved: boolean
-  assistedSetupEnabled: boolean
   reviewStats?: { averageRating: number; totalReviews: number } | null
 }
 
 export function ProductInfo({
   title,
   shortDescription,
-  price,
   category,
   viewCount,
   purchaseCount,
   agentId,
   agentSlug,
-  isPurchased,
+  hasAccess,
   isApproved,
-  assistedSetupEnabled,
   reviewStats,
 }: ProductInfoProps) {
   const [copied, setCopied] = useState(false)
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
-  const [purchaseModalOpen, setPurchaseModalOpen] = useState(false)
   const [isWishlisted, setIsWishlisted] = useState(false)
   const shareUrl =
     typeof window !== 'undefined' ? `${window.location.origin}/agents/${agentSlug}` : ''
 
   const handleShare = () => {
     setShareDialogOpen(true)
-  }
-
-  const handlePurchaseClick = () => {
-    setPurchaseModalOpen(true)
   }
 
   const copyToClipboard = async () => {
@@ -134,18 +112,11 @@ export function ProductInfo({
         <span className="text-gray-600">{viewCount} views</span>
       </div>
 
-      {/* Price */}
+      {/* Included Badge */}
       <div className="border-b border-t border-gray-100 py-4">
-        <div className="flex items-baseline gap-2">
-          <span className="text-3xl font-bold text-gray-900">{formatPrice(price)}</span>
-          {price > 0 && <span className="text-sm text-gray-500">one-time payment</span>}
-        </div>
-        {assistedSetupEnabled && (
-          <p className="mt-1 text-sm text-secondary">
-            <Zap className="mr-1 inline h-4 w-4" />
-            Assisted setup available
-          </p>
-        )}
+        <Badge className="border-brand-teal/20 bg-brand-teal/10 px-3 py-1 text-sm font-medium text-brand-teal">
+          Included with Rouze.ai
+        </Badge>
       </div>
 
       {/* Description */}
@@ -159,41 +130,29 @@ export function ProductInfo({
         </li>
         <li className="flex items-center gap-2">
           <Shield className="h-4 w-4 text-secondary" />
-          <span>Secure payment processing</span>
+          <span>Included with subscription</span>
         </li>
         <li className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-secondary" />
-          <span>Lifetime access to updates</span>
+          <span>Access all agents instantly</span>
         </li>
       </ul>
 
       {/* Action Buttons */}
       <div className="space-y-3">
-        {isPurchased ? (
-          <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90" disabled>
-            <CheckCircle2 className="mr-2 h-5 w-5" />
-            Already Unlocked
-          </Button>
+        {hasAccess ? (
+          <a href="#setup-guide">
+            <Button size="lg" className="w-full bg-green-600 hover:bg-green-700">
+              <CheckCircle2 className="mr-2 h-5 w-5" />
+              Access Setup Guide
+            </Button>
+          </a>
         ) : isApproved ? (
-          <>
-            <Button
-              size="lg"
-              className="w-full bg-primary text-white hover:bg-primary/90"
-              onClick={handlePurchaseClick}
-            >
-              <ShoppingCart className="mr-2 h-5 w-5" />
-              Unlock Now - {formatPrice(price)}
+          <Link href="/subscribe">
+            <Button size="lg" className="w-full bg-primary text-white hover:bg-primary/90">
+              Subscribe to Unlock — $12.99/mo
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full border-secondary text-secondary hover:bg-secondary/10"
-              onClick={handlePurchaseClick}
-            >
-              <Zap className="mr-2 h-5 w-5" />
-              Buy with Assisted Setup
-            </Button>
-          </>
+          </Link>
         ) : (
           <Button size="lg" className="w-full" disabled>
             Not Available
@@ -260,15 +219,6 @@ export function ProductInfo({
           {copied && <p className="text-sm text-secondary">Link copied to clipboard!</p>}
         </DialogContent>
       </Dialog>
-
-      {/* Purchase Confirmation Modal */}
-      <PurchaseConfirmationModal
-        isOpen={purchaseModalOpen}
-        onClose={() => setPurchaseModalOpen(false)}
-        agentId={agentId}
-        agentTitle={title}
-        assistedSetupEnabled={assistedSetupEnabled}
-      />
     </div>
   )
 }

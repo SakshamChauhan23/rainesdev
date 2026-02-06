@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Package, LayoutDashboard, ShieldCheck, UserPlus } from 'lucide-react'
+import { Package, LayoutDashboard, ShieldCheck, UserPlus, CreditCard } from 'lucide-react'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 export function UserNavItems({ role }: { role?: 'BUYER' | 'SELLER' | 'ADMIN' }) {
@@ -14,6 +14,14 @@ export function UserNavItems({ role }: { role?: 'BUYER' | 'SELLER' | 'ADMIN' }) 
         <Link href="/library">
           <Package className="mr-2 h-4 w-4" />
           My Library
+        </Link>
+      </DropdownMenuItem>
+
+      {/* Account / Subscription management */}
+      <DropdownMenuItem asChild>
+        <Link href="/account">
+          <CreditCard className="mr-2 h-4 w-4" />
+          Subscription
         </Link>
       </DropdownMenuItem>
 
@@ -67,6 +75,14 @@ export function MobileNavItems({
         className="text-sm font-medium transition-colors hover:text-primary"
       >
         My Library
+      </Link>
+
+      <Link
+        href="/account"
+        onClick={onNavigate}
+        className="text-sm font-medium transition-colors hover:text-primary"
+      >
+        Subscription
       </Link>
 
       {role === 'BUYER' && (

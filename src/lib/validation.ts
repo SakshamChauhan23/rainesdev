@@ -55,16 +55,11 @@ export function validateAmountPaid(amount: number | Decimal): void {
 export function validateAgentPrices(data: {
   price: number | Decimal
   supportAddonPrice?: number | Decimal
-  assistedSetupPrice?: number | Decimal
 }): void {
   validatePrice(data.price, 'price')
 
   if (data.supportAddonPrice !== undefined) {
     validatePrice(data.supportAddonPrice, 'supportAddonPrice')
-  }
-
-  if (data.assistedSetupPrice !== undefined) {
-    validatePrice(data.assistedSetupPrice, 'assistedSetupPrice')
   }
 }
 
@@ -183,21 +178,10 @@ export const agentDetailSchema = z.object({
 })
 
 /**
- * Setup request schemas
- */
-export const setupRequestUpdateSchema = z.object({
-  status: z.enum(['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED']).optional(),
-  callStatus: z.enum(['NOT_SCHEDULED', 'SCHEDULED', 'COMPLETED', 'NO_SHOW']).optional(),
-  notes: maxStringLength(2000).optional(),
-})
-
-/**
  * Checkout schemas
  */
 export const checkoutSchema = z.object({
   agentId: uuidPattern,
-  assistedSetupRequested: z.boolean().optional().default(false),
-  bookCallRequested: z.boolean().optional().default(false),
 })
 
 /**
@@ -211,9 +195,6 @@ export const agentSubmissionSchema = z.object({
   categoryId: uuidPattern,
   price: nonNegativeNumber,
   supportAddonPrice: nonNegativeNumber.optional(),
-  assistedSetupEnabled: z.boolean().optional(),
-  assistedSetupPrice: nonNegativeNumber.optional(),
-  bookCallEnabled: z.boolean().optional(),
   demoVideoUrl: z.string().url().optional().or(z.literal('')),
   thumbnailUrl: z.string().url().optional().or(z.literal('')),
   setupGuide: z.string().min(20).max(5000),

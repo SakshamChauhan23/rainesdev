@@ -8,7 +8,7 @@ async function main() {
   // Get or create seller profile for admin
   const admin = await prisma.user.findUnique({
     where: { email: 'sakshamchauhan23@gmail.com' },
-    include: { sellerProfile: true }
+    include: { sellerProfile: true },
   })
 
   if (!admin) {
@@ -26,7 +26,7 @@ async function main() {
         portfolioUrlSlug: 'saksham-chauhan',
         bio: 'Full-stack developer and AI automation expert',
         verificationStatus: 'VERIFIED',
-      }
+      },
     })
     console.log('✓ Seller profile created\n')
   } else {
@@ -48,8 +48,10 @@ async function main() {
       title: 'The Supplier Watchdog',
       slug: 'the-supplier-watchdog',
       shortDescription: 'Monitor supplier performance and get real-time alerts on delivery issues',
-      workflowOverview: 'This AI agent continuously monitors your supplier network, tracking delivery times, quality metrics, and pricing changes. It automatically flags anomalies and sends alerts when intervention is needed.',
-      useCase: 'Perfect for procurement teams managing multiple suppliers who need to maintain visibility over their supply chain without manual tracking.',
+      workflowOverview:
+        'This AI agent continuously monitors your supplier network, tracking delivery times, quality metrics, and pricing changes. It automatically flags anomalies and sends alerts when intervention is needed.',
+      useCase:
+        'Perfect for procurement teams managing multiple suppliers who need to maintain visibility over their supply chain without manual tracking.',
       setupGuide: `# Setup Guide
 
 ## Prerequisites
@@ -81,9 +83,7 @@ The agent will begin monitoring automatically and send alerts based on your conf
       sellerId: admin.id,
       demoVideoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       thumbnailUrl: '/placeholder-agent.jpg',
-      assistedSetupEnabled: true,
-      assistedSetupPrice: 25.00,
-    }
+    },
   })
   console.log(`✓ Created: ${agent1.title}`)
 
@@ -92,9 +92,12 @@ The agent will begin monitoring automatically and send alerts based on your conf
     data: {
       title: 'Email Campaign Automator',
       slug: 'email-campaign-automator',
-      shortDescription: 'Automate personalized email campaigns based on customer behavior and engagement',
-      workflowOverview: 'This agent analyzes customer interactions and automatically sends personalized follow-up emails at optimal times. It segments audiences, A/B tests subject lines, and optimizes send times for maximum engagement.',
-      useCase: 'Ideal for marketing teams running email campaigns who want to increase open rates and conversions through intelligent automation.',
+      shortDescription:
+        'Automate personalized email campaigns based on customer behavior and engagement',
+      workflowOverview:
+        'This agent analyzes customer interactions and automatically sends personalized follow-up emails at optimal times. It segments audiences, A/B tests subject lines, and optimizes send times for maximum engagement.',
+      useCase:
+        'Ideal for marketing teams running email campaigns who want to increase open rates and conversions through intelligent automation.',
       setupGuide: `# Setup Guide
 
 ## Prerequisites
@@ -126,9 +129,7 @@ Review your settings and activate the automation. The agent will handle the rest
       sellerId: admin.id,
       demoVideoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       thumbnailUrl: '/placeholder-agent.jpg',
-      assistedSetupEnabled: true,
-      assistedSetupPrice: 35.00,
-    }
+    },
   })
   console.log(`✓ Created: ${agent2.title}`)
 
@@ -137,9 +138,12 @@ Review your settings and activate the automation. The agent will handle the rest
     data: {
       title: 'Smart Customer Support Assistant',
       slug: 'smart-customer-support-assistant',
-      shortDescription: 'AI-powered chatbot that handles customer inquiries 24/7 with human-like responses',
-      workflowOverview: 'This intelligent chatbot understands customer questions, searches your knowledge base, and provides accurate answers instantly. It escalates complex issues to human agents and learns from every interaction.',
-      useCase: 'Perfect for customer support teams looking to reduce response times and handle high volumes of common questions automatically.',
+      shortDescription:
+        'AI-powered chatbot that handles customer inquiries 24/7 with human-like responses',
+      workflowOverview:
+        'This intelligent chatbot understands customer questions, searches your knowledge base, and provides accurate answers instantly. It escalates complex issues to human agents and learns from every interaction.',
+      useCase:
+        'Perfect for customer support teams looking to reduce response times and handle high volumes of common questions automatically.',
       setupGuide: `# Setup Guide
 
 ## Prerequisites
@@ -171,9 +175,7 @@ Activate the chatbot and monitor performance. It will improve over time!`,
       sellerId: admin.id,
       demoVideoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       thumbnailUrl: '/placeholder-agent.jpg',
-      assistedSetupEnabled: false, // This one without assisted setup for variety
-      assistedSetupPrice: 0,
-    }
+    },
   })
   console.log(`✓ Created: ${agent3.title}`)
 
@@ -182,9 +184,12 @@ Activate the chatbot and monitor performance. It will improve over time!`,
     data: {
       title: 'Automated Data Insights Dashboard',
       slug: 'automated-data-insights-dashboard',
-      shortDescription: 'Transform raw data into actionable insights with AI-powered analytics and visualizations',
-      workflowOverview: 'This agent connects to your data sources, automatically identifies trends and patterns, and generates visual dashboards with key insights. It sends weekly reports and alerts you to significant changes.',
-      useCase: 'Essential for business analysts and decision-makers who need quick insights from complex datasets without manual analysis.',
+      shortDescription:
+        'Transform raw data into actionable insights with AI-powered analytics and visualizations',
+      workflowOverview:
+        'This agent connects to your data sources, automatically identifies trends and patterns, and generates visual dashboards with key insights. It sends weekly reports and alerts you to significant changes.',
+      useCase:
+        'Essential for business analysts and decision-makers who need quick insights from complex datasets without manual analysis.',
       setupGuide: `# Setup Guide
 
 ## Prerequisites
@@ -216,9 +221,7 @@ Configure automated reports and start tracking your metrics!`,
       sellerId: admin.id,
       demoVideoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       thumbnailUrl: '/placeholder-agent.jpg',
-      assistedSetupEnabled: true,
-      assistedSetupPrice: 50.00,
-    }
+    },
   })
   console.log(`✓ Created: ${agent4.title}\n`)
 
@@ -241,7 +244,7 @@ main()
   .then(async () => {
     await prisma.$disconnect()
   })
-  .catch(async (e) => {
+  .catch(async e => {
     console.error('Error creating test agents:', e)
     await prisma.$disconnect()
     process.exit(1)
