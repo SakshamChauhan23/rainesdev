@@ -125,28 +125,28 @@ export function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden items-center space-x-8 md:flex">
             <Link
+              href="/"
+              className="text-sm font-medium text-brand-slate/70 transition-all hover:scale-105 hover:text-brand-orange"
+            >
+              Home
+            </Link>
+            <Link
+              href="/about"
+              className="text-sm font-medium text-brand-slate/70 transition-all hover:scale-105 hover:text-brand-orange"
+            >
+              About Us
+            </Link>
+            <Link
               href="/agents"
               className="text-sm font-medium text-brand-slate/70 transition-all hover:scale-105 hover:text-brand-orange"
             >
               Browse Agents
             </Link>
             <Link
-              href="/#how-it-works"
-              className="text-sm font-medium text-brand-slate/70 transition-all hover:scale-105 hover:text-brand-orange"
-            >
-              How It Works
-            </Link>
-            <Link
-              href="/about"
-              className="text-sm font-medium text-brand-teal transition-all hover:scale-105 hover:text-brand-teal/80"
-            >
-              About Us
-            </Link>
-            <Link
               href="/pricing"
               className="text-sm font-medium text-brand-orange transition-all hover:scale-105 hover:text-brand-orange/80"
             >
-              Pricing
+              Pricings
             </Link>
           </nav>
 
@@ -245,6 +245,20 @@ export function Header() {
           <div className="animate-fade-in border-t border-brand-slate/10 py-4 md:hidden">
             <nav className="flex flex-col space-y-1">
               <Link
+                href="/"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-slate/70 transition-colors hover:bg-brand-cream hover:text-brand-orange"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                href="/about"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-slate/70 transition-colors hover:bg-brand-cream hover:text-brand-orange"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                About Us
+              </Link>
+              <Link
                 href="/agents"
                 className="rounded-xl px-4 py-3 text-sm font-medium text-brand-slate/70 transition-colors hover:bg-brand-cream hover:text-brand-orange"
                 onClick={() => setMobileMenuOpen(false)}
@@ -252,25 +266,11 @@ export function Header() {
                 Browse Agents
               </Link>
               <Link
-                href="/#how-it-works"
-                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-slate/70 transition-colors hover:bg-brand-cream hover:text-brand-orange"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                How It Works
-              </Link>
-              <Link
-                href="/about"
-                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-teal transition-colors hover:bg-brand-cream hover:text-brand-teal/80"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                About Us
-              </Link>
-              <Link
                 href="/pricing"
                 className="rounded-xl px-4 py-3 text-sm font-medium text-brand-orange transition-colors hover:bg-brand-cream hover:text-brand-orange/80"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Pricing
+                Pricings
               </Link>
 
               {user && userRole && (
