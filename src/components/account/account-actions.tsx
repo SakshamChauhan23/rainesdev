@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   createPortalSession,
@@ -8,7 +8,13 @@ import {
   reactivateSubscription,
 } from '@/app/subscribe/actions'
 import { CreditCard, Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 interface AccountActionsProps {
   hasAccess: boolean
@@ -18,6 +24,7 @@ interface AccountActionsProps {
 
 export function AccountActions({ hasAccess, isLegacy, cancelAtPeriodEnd }: AccountActionsProps) {
   const [isPending, startTransition] = useTransition()
+  const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handleManageBilling = () => {
@@ -40,6 +47,7 @@ export function AccountActions({ hasAccess, isLegacy, cancelAtPeriodEnd }: Accou
         setError(result.error || 'Failed to cancel')
         return
       }
+      setShowCancelDialog(false)
       window.location.reload()
     })
   }
@@ -86,7 +94,7 @@ export function AccountActions({ hasAccess, isLegacy, cancelAtPeriodEnd }: Accou
             Manage Billing
           </Button>
 
-          {/* Cancel or Reactivate — single click */}
+          {/* Cancel or Reactivate */}
           {cancelAtPeriodEnd ? (
             <Button
               className="flex-1 rounded-xl bg-brand-teal font-semibold text-white hover:bg-brand-teal/90"
@@ -100,15 +108,41 @@ export function AccountActions({ hasAccess, isLegacy, cancelAtPeriodEnd }: Accou
             <Button
               variant="outline"
               className="flex-1 rounded-xl border-red-200 text-red-600 hover:bg-red-50"
-              onClick={handleCancel}
+              onClick={() => setShowCancelDialog(true)}
               disabled={isPending}
             >
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Cancel Subscription
             </Button>
           )}
         </div>
       )}
+
+      {/* Cancel Confirmation Dialog */}
+      <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cancel subscription?</DialogTitle>
+            <DialogDescription>
+              You&apos;ll keep access until the end of your current billing period. You can
+              reactivate anytime before then.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-3 pt-4">
+            <Button variant="outline" className="flex-1" onClick={() => setShowCancelDialog(false)}>
+              Keep Subscription
+            </Button>
+            <Button
+              variant="destructive"
+              className="flex-1"
+              onClick={handleCancel}
+              disabled={isPending}
+            >
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Yes, Cancel
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
