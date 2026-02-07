@@ -31,7 +31,7 @@ export default function SubscribeSuccessPage() {
               size="lg"
               className="group w-full rounded-2xl bg-brand-orange px-8 py-6 text-base font-semibold text-white shadow-lg shadow-brand-orange/30 transition-all hover:-translate-y-0.5 hover:bg-brand-orange/90"
             >
-              Explore Your Library
+              Access Agent&apos;s
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Button>
           </Link>
