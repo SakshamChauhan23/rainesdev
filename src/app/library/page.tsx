@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Package, Bot, ArrowRight, Crown } from 'lucide-react'
 import Link from 'next/link'
+import { Suspense } from 'react'
+import { WelcomeBanner } from '@/components/library/welcome-banner'
 
 export const dynamic = 'force-dynamic'
 
@@ -76,6 +78,9 @@ export default async function LibraryPage() {
         </div>
 
         <Container className="py-8">
+          <Suspense>
+            <WelcomeBanner />
+          </Suspense>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {allAgents.map(agent => (
               <Card key={agent.id} className="flex flex-col transition-colors hover:bg-muted/50">

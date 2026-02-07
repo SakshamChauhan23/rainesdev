@@ -57,7 +57,7 @@ export async function createCheckoutSession(): Promise<{ url: string } | { error
     const session = await createSubscriptionCheckoutSession({
       customerId,
       priceId: SUBSCRIPTION_PRICE_ID,
-      successUrl: `${APP_URL}/subscribe/success?session_id={CHECKOUT_SESSION_ID}`,
+      successUrl: `${APP_URL}/library?subscribed=true`,
       cancelUrl: `${APP_URL}/subscribe/cancel`,
       trialDays: SUBSCRIPTION_CONFIG.trialDays,
       userId: user.id,
