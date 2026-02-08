@@ -122,6 +122,14 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <a
+                    href="mailto:team@rouze.ai"
+                    className="text-brand-slate/70 transition-colors hover:text-brand-orange"
+                  >
+                    Customer Support
+                  </a>
+                </li>
+                <li>
                   <Link
                     href="/legal/privacy"
                     className="text-brand-slate/70 transition-colors hover:text-brand-orange"

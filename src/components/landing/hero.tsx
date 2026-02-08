@@ -85,7 +85,7 @@ export function Hero() {
                     <TrendingUp className="h-4 w-4 text-brand-orange" />
                   </div>
                 </div>
-                <span className="font-medium text-brand-slate">50+ AI agents ready to deploy</span>
+                <span className="font-medium text-brand-slate">200+ AI agents ready to deploy</span>
               </div>
             </div>
           </div>

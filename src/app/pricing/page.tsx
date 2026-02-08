@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Check, ArrowRight, Sparkles, Bot, Shield, Zap } from 'lucide-react'
 
 const features = [
-  'Access to all 50+ AI agents',
+  'Access to all 200+ AI agents',
   'New agents added regularly',
   'Complete setup guides & workflows',
   'Community support',
@@ -95,7 +95,7 @@ export default function PricingPage() {
             </div>
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5 text-brand-orange" />
-              <span>50+ agents and growing</span>
+              <span>200+ agents and growing</span>
             </div>
             <div className="flex items-center gap-2">
               <Zap className="h-5 w-5 text-brand-teal" />

@@ -250,7 +250,7 @@ export default function PrivacyPolicyPage() {
           </p>
           <div className="mt-4 rounded-lg bg-gray-50 p-4">
             <p className="font-medium">Rouze.ai</p>
-            <p>Email: privacy@rouze.ai</p>
+            <p>Email: team@rouze.ai</p>
           </div>
         </section>
 

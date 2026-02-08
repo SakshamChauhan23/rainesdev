@@ -311,8 +311,8 @@ export default function AboutPage() {
                   <h3 className="font-bold text-brand-slate">Transparency builds trust</h3>
                 </div>
                 <p className="text-brand-slate/70">
-                  Clear pricing. Verified reviews. 7-day money-back guarantees. You know exactly
-                  what you&apos;re hiring and what it costs before you commit.
+                  Clear pricing. 14-day free trial. Cancel anytime. You know exactly what
+                  you&apos;re getting and what it costs before you commit.
                 </p>
               </div>
 

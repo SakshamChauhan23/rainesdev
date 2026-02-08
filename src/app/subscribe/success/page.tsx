@@ -58,7 +58,7 @@ export default async function SubscribeSuccessPage() {
               <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-orange/10">
                 <Bot className="h-5 w-5 text-brand-orange" />
               </div>
-              <p className="text-sm font-semibold text-brand-slate">50+ Agents</p>
+              <p className="text-sm font-semibold text-brand-slate">200+ Agents</p>
               <p className="text-xs text-brand-slate/50">All unlocked</p>
             </div>
             <div className="rounded-2xl border border-brand-slate/10 bg-white p-4 shadow-sm">

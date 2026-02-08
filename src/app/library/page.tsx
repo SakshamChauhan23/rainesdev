@@ -101,7 +101,7 @@ export default async function LibraryPage() {
             </div>
             <h3 className="mb-2 text-2xl font-bold text-brand-slate">Unlock All AI Agents</h3>
             <p className="mb-2 max-w-md text-brand-slate/70">
-              Get instant access to our entire library of 50+ AI agents with setup guides and
+              Get instant access to our entire library of 200+ AI agents with setup guides and
               workflows.
             </p>
             <p className="mb-8 text-2xl font-bold text-brand-slate">
