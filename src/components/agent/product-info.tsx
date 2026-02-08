@@ -3,7 +3,18 @@
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Star, CheckCircle2, Share2, Heart, Check, Copy, Zap, Shield, Clock } from 'lucide-react'
+import {
+  CheckCircle2,
+  Share2,
+  Heart,
+  Check,
+  Copy,
+  Zap,
+  Shield,
+  Clock,
+  TrendingUp,
+  Wrench,
+} from 'lucide-react'
 import Link from 'next/link'
 import {
   Dialog,
@@ -24,7 +35,6 @@ interface ProductInfoProps {
   agentSlug: string
   hasAccess: boolean
   isApproved: boolean
-  reviewStats?: { averageRating: number; totalReviews: number } | null
 }
 
 export function ProductInfo({
@@ -37,7 +47,6 @@ export function ProductInfo({
   agentSlug,
   hasAccess,
   isApproved,
-  reviewStats,
 }: ProductInfoProps) {
   const [copied, setCopied] = useState(false)
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
@@ -62,54 +71,56 @@ export function ProductInfo({
     }
   }
 
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex items-center gap-0.5">
-        {[1, 2, 3, 4, 5].map(star => (
-          <Star
-            key={star}
-            className={`h-4 w-4 ${
-              star <= Math.round(rating)
-                ? 'fill-yellow-400 text-yellow-400'
-                : 'fill-gray-200 text-gray-200'
-            }`}
-          />
-        ))}
-      </div>
-    )
-  }
-
   return (
     <div className="space-y-6">
-      {/* Category Badge */}
-      <Link href={`/agents?category=${category.slug}`}>
-        <Badge
-          variant="secondary"
-          className="bg-primary/10 text-primary transition-colors hover:bg-primary/20"
-        >
-          {category.name}
+      {/* Category Badge + Setup Tag */}
+      <div className="flex flex-wrap items-center gap-2">
+        <Link href={`/agents?category=${category.slug}`}>
+          <Badge
+            variant="secondary"
+            className="bg-primary/10 text-primary transition-colors hover:bg-primary/20"
+          >
+            {category.name}
+          </Badge>
+        </Link>
+        <Badge className="border-brand-teal/20 bg-brand-teal/10 text-brand-teal">
+          <Wrench className="mr-1 h-3 w-3" />
+          Setup completed by Rouze.ai team
         </Badge>
-      </Link>
+      </div>
 
       {/* Title */}
       <h1 className="text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">{title}</h1>
 
-      {/* Rating & Stats */}
+      {/* Stats */}
       <div className="flex flex-wrap items-center gap-3 text-sm">
-        {reviewStats && reviewStats.totalReviews > 0 ? (
-          <>
-            {renderStars(reviewStats.averageRating)}
-            <span className="font-medium text-primary">{reviewStats.averageRating.toFixed(1)}</span>
-            <span className="text-gray-400">|</span>
-            <span className="text-gray-600">{reviewStats.totalReviews} reviews</span>
-          </>
-        ) : (
-          <span className="text-gray-500">No reviews yet</span>
-        )}
-        <span className="text-gray-400">|</span>
         <span className="text-gray-600">{purchaseCount} purchases</span>
         <span className="text-gray-400">|</span>
         <span className="text-gray-600">{viewCount} views</span>
+      </div>
+
+      {/* Typical Results */}
+      <div className="rounded-2xl border border-brand-teal/20 bg-brand-teal/5 p-4">
+        <div className="mb-3 flex items-center gap-2">
+          <TrendingUp className="h-4 w-4 text-brand-teal" />
+          <span className="text-sm font-semibold text-brand-slate">
+            Typical results after 2 weeks:
+          </span>
+        </div>
+        <ul className="space-y-2 text-sm text-brand-slate/80">
+          <li className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-brand-teal" />
+            Saves ~6–10 hours/week
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-brand-teal" />
+            Handles ~40–60% of support tickets
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-brand-teal" />
+            Reduces manual follow-ups by ~30%
+          </li>
+        </ul>
       </div>
 
       {/* Included Badge */}

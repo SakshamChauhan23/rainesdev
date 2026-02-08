@@ -3,7 +3,7 @@ import { logger } from '@/lib/logger'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Share2, Star, CheckCircle2, Check, Copy } from 'lucide-react'
+import { Share2, CheckCircle2, Check, Copy, Wrench } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import {
@@ -64,22 +64,23 @@ export function AgentHero({
     <div className="space-y-6">
       <div className="flex flex-col gap-4 border-b border-gray-300 pb-8 md:flex-row md:items-start md:justify-between">
         <div className="space-y-4">
-          <Link href={`/agents?category=${category.slug}`}>
-            <Badge
-              variant="secondary"
-              className="mb-2 bg-gray-100 font-light text-gray-600 transition-colors hover:bg-[#8DEC42]/10 hover:text-[#8DEC42]"
-            >
-              {category.name}
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            <Link href={`/agents?category=${category.slug}`}>
+              <Badge
+                variant="secondary"
+                className="bg-gray-100 font-light text-gray-600 transition-colors hover:bg-[#8DEC42]/10 hover:text-[#8DEC42]"
+              >
+                {category.name}
+              </Badge>
+            </Link>
+            <Badge className="border-brand-teal/20 bg-brand-teal/10 text-brand-teal">
+              <Wrench className="mr-1 h-3 w-3" />
+              Setup completed by Rouze.ai team
             </Badge>
-          </Link>
+          </div>
           <h1 className="text-3xl font-light tracking-tight text-black sm:text-4xl">{title}</h1>
           <p className="max-w-2xl text-lg font-light text-gray-700">{shortDescription}</p>
           <div className="flex items-center gap-4 text-sm font-light text-gray-600">
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="font-normal text-black">New</span>
-            </div>
-            <span>•</span>
             <span>{viewCount} views</span>
             <span>•</span>
             <span>{purchaseCount} purchases</span>

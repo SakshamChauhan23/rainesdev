@@ -12,12 +12,10 @@ import { UnlockedSetupGuide } from '@/components/agent/unlocked-setup-guide'
 import { PurchaseSuccessBanner } from '@/components/agent/purchase-success-banner'
 import { getCachedAgentBySlug } from '@/lib/agents'
 import { createClient } from '@/lib/supabase/server'
-import { ReviewSection } from '@/components/reviews/review-section'
 import { prisma } from '@/lib/prisma'
 import { getSubscriptionState } from '@/lib/subscription'
 import { Metadata } from 'next'
 import { unstable_cache } from 'next/cache'
-import type { Review, ReviewStats, ReviewPagination } from '@/components/reviews/review-list'
 
 // Force dynamic rendering since this page uses cookies() for auth
 export const dynamic = 'force-dynamic'
@@ -31,16 +29,6 @@ interface AgentPageProps {
   }
 }
 
-// Server-side review data fetching (P2.27)
-const REVIEW_PAGE_SIZE = 10
-
-// Cached version of getInitialReviews
-const getCachedInitialReviews = unstable_cache(
-  async (agentId: string) => getInitialReviews(agentId),
-  ['agent-reviews'],
-  { revalidate: 60, tags: ['reviews'] }
-)
-
 // Cached version of getRecommendedAgents
 const getCachedRecommendedAgents = unstable_cache(
   async (categoryId: string, currentAgentId: string) =>
@@ -48,80 +36,6 @@ const getCachedRecommendedAgents = unstable_cache(
   ['recommended-agents'],
   { revalidate: 120, tags: ['agents'] }
 )
-
-async function getInitialReviews(agentId: string): Promise<{
-  reviews: Review[]
-  stats: ReviewStats | null
-  pagination: ReviewPagination
-}> {
-  const whereClause = {
-    agentId: agentId,
-    agent: {
-      status: 'APPROVED' as const,
-    },
-  }
-
-  // Fetch reviews and stats in parallel
-  const [reviews, statsResult] = await Promise.all([
-    prisma.review.findMany({
-      where: whereClause,
-      include: {
-        buyer: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-      orderBy: { createdAt: 'desc' },
-      take: REVIEW_PAGE_SIZE + 1, // +1 to check if there are more
-    }),
-    prisma.review.aggregate({
-      where: whereClause,
-      _avg: { rating: true },
-      _count: { id: true },
-    }),
-  ])
-
-  const hasMore = reviews.length > REVIEW_PAGE_SIZE
-  const reviewsToReturn = hasMore ? reviews.slice(0, REVIEW_PAGE_SIZE) : reviews
-  const nextCursor = hasMore ? reviewsToReturn[reviewsToReturn.length - 1]?.id : null
-
-  // Format reviews for client component
-  const formattedReviews: Review[] = reviewsToReturn.map(review => ({
-    id: review.id,
-    rating: review.rating,
-    comment: review.comment,
-    verifiedPurchase: review.verifiedPurchase,
-    createdAt: review.createdAt.toISOString(),
-    buyer: {
-      id: review.buyer.id,
-      name: review.buyer.name,
-      email: review.buyer.email,
-    },
-  }))
-
-  const stats: ReviewStats | null =
-    statsResult._count.id > 0
-      ? {
-          averageRating: statsResult._avg.rating
-            ? parseFloat(statsResult._avg.rating.toFixed(1))
-            : 0,
-          totalReviews: statsResult._count.id,
-        }
-      : null
-
-  return {
-    reviews: formattedReviews,
-    stats,
-    pagination: {
-      hasMore,
-      nextCursor,
-      pageSize: REVIEW_PAGE_SIZE,
-    },
-  }
-}
 
 // Fetch recommended agents from same/similar categories
 async function getRecommendedAgents(categoryId: string, currentAgentId: string) {
@@ -231,39 +145,15 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
   } = await supabase.auth.getUser()
   const showSuccessBanner = searchParams?.unlocked === 'true'
 
-  // Fetch initial reviews and recommended agents server-side (cached)
-  const [initialReviewData, recommendedAgents] = await Promise.all([
-    getCachedInitialReviews(agent.id),
-    getCachedRecommendedAgents(agent.categoryId, agent.id),
-  ])
+  // Fetch recommended agents server-side (cached)
+  const recommendedAgents = await getCachedRecommendedAgents(agent.categoryId, agent.id)
 
-  // Check subscription access and user data
+  // Check subscription access
   let hasAccess = false
-  let userWithRole = null
 
   if (user) {
-    const [subState, userData] = await Promise.all([
-      getSubscriptionState(user.id),
-      prisma.user.findUnique({
-        where: { id: user.id },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          avatarUrl: true,
-          role: true,
-          sellerProfile: {
-            select: {
-              id: true,
-              portfolioUrlSlug: true,
-            },
-          },
-        },
-      }),
-    ])
-
+    const subState = await getSubscriptionState(user.id)
     hasAccess = subState.hasAccess
-    userWithRole = userData
   }
 
   return (
@@ -296,7 +186,6 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
               agentSlug={agent.slug}
               hasAccess={hasAccess}
               isApproved={agent.status === 'APPROVED'}
-              reviewStats={initialReviewData.stats}
             />
           </div>
 
@@ -344,18 +233,6 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
           ) : (
             <LockedSetupGuide agentId={agent.id} isApproved={agent.status === 'APPROVED'} />
           )}
-        </div>
-
-        {/* Reviews Section */}
-        <div className="mt-10">
-          <ReviewSection
-            agentId={agent.id}
-            userId={user?.id || null}
-            userRole={userWithRole?.role}
-            initialReviews={initialReviewData.reviews}
-            initialStats={initialReviewData.stats}
-            initialPagination={initialReviewData.pagination}
-          />
         </div>
       </Container>
     </div>
