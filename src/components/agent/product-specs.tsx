@@ -4,10 +4,9 @@ import { Cpu, Clock, Layers, Settings, Users, Globe, FileText, HelpCircle } from
 
 interface ProductSpecsProps {
   category: string
-  purchaseCount: number
 }
 
-export function ProductSpecs({ category, purchaseCount }: ProductSpecsProps) {
+export function ProductSpecs({ category }: ProductSpecsProps) {
   const specs = [
     {
       icon: Layers,
@@ -31,8 +30,8 @@ export function ProductSpecs({ category, purchaseCount }: ProductSpecsProps) {
     },
     {
       icon: Users,
-      label: 'Active Users',
-      value: `${purchaseCount}+`,
+      label: 'Setup By',
+      value: 'Rouze.ai Team',
     },
     {
       icon: Globe,

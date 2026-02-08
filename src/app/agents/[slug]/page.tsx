@@ -209,7 +209,7 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
 
         {/* Specifications Section */}
         <div className="mt-10">
-          <ProductSpecs category={agent.category.name} purchaseCount={agent.purchaseCount} />
+          <ProductSpecs category={agent.category.name} />
         </div>
 
         {/* Compare with Similar Products */}

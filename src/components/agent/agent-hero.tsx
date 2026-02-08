@@ -80,11 +80,6 @@ export function AgentHero({
           </div>
           <h1 className="text-3xl font-light tracking-tight text-black sm:text-4xl">{title}</h1>
           <p className="max-w-2xl text-lg font-light text-gray-700">{shortDescription}</p>
-          <div className="flex items-center gap-4 text-sm font-light text-gray-600">
-            <span>{viewCount} views</span>
-            <span>•</span>
-            <span>{purchaseCount} purchases</span>
-          </div>
         </div>
 
         <div className="flex shrink-0 flex-col gap-3 sm:flex-row md:flex-col md:items-end">

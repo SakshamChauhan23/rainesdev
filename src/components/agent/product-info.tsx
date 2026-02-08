@@ -92,13 +92,6 @@ export function ProductInfo({
       {/* Title */}
       <h1 className="text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">{title}</h1>
 
-      {/* Stats */}
-      <div className="flex flex-wrap items-center gap-3 text-sm">
-        <span className="text-gray-600">{purchaseCount} purchases</span>
-        <span className="text-gray-400">|</span>
-        <span className="text-gray-600">{viewCount} views</span>
-      </div>
-
       {/* Typical Results */}
       <div className="rounded-2xl border border-brand-teal/20 bg-brand-teal/5 p-4">
         <div className="mb-3 flex items-center gap-2">
