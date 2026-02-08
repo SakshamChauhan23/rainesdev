@@ -3,11 +3,12 @@ import { redirect } from 'next/navigation'
 import { getSubscriptionState } from '@/lib/subscription'
 import { prisma } from '@/lib/prisma'
 import { Container } from '@/components/layout/container'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Crown } from 'lucide-react'
 import Link from 'next/link'
+import { LibraryAgentGrid } from '@/components/library/library-agent-grid'
 
 export const dynamic = 'force-dynamic'
 
@@ -76,42 +77,7 @@ export default async function LibraryPage() {
         </div>
 
         <Container className="py-8">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {allAgents.map(agent => (
-              <Card key={agent.id} className="flex flex-col transition-colors hover:bg-muted/50">
-                <CardHeader>
-                  {agent.thumbnailUrl && (
-                    <img
-                      src={agent.thumbnailUrl}
-                      alt={agent.title}
-                      className="mb-4 h-40 w-full rounded-lg object-cover"
-                    />
-                  )}
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1">
-                      <CardTitle className="line-clamp-1">{agent.title}</CardTitle>
-                      <CardDescription className="mt-1">{agent.category.name}</CardDescription>
-                    </div>
-                    <Badge variant="secondary" className="text-xs">
-                      v{agent.version}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="flex-1">
-                  <p className="line-clamp-2 text-sm text-muted-foreground">
-                    {agent.shortDescription}
-                  </p>
-                </CardContent>
-                <div className="border-t p-4">
-                  <Link href={`/agents/${agent.slug}`}>
-                    <Button className="w-full" variant="default">
-                      View Setup Guide
-                    </Button>
-                  </Link>
-                </div>
-              </Card>
-            ))}
-          </div>
+          <LibraryAgentGrid agents={allAgents} />
         </Container>
       </div>
     )

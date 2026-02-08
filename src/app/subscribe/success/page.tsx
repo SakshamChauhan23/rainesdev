@@ -1,9 +1,23 @@
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Container } from '@/components/layout/container'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, ArrowRight, Bot, Sparkles, Zap, Shield } from 'lucide-react'
 
-export default function SubscribeSuccessPage() {
+export const dynamic = 'force-dynamic'
+
+export default async function SubscribeSuccessPage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+
+  if (!user || error) {
+    redirect('/login?next=/subscribe/success')
+  }
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-brand-cream">
       {/* Background decorations */}

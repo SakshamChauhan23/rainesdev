@@ -39,8 +39,8 @@ export async function handlePostLoginRedirect(nextUrl?: string) {
   } else if (prismaUser.role === 'SELLER') {
     redirect('/dashboard')
   } else {
-    // BUYER - redirect to marketplace
-    redirect('/agents')
+    // BUYER - redirect to library
+    redirect('/library')
   }
 }
 
@@ -75,7 +75,7 @@ export async function loginAction(email: string, password: string, nextUrl?: str
     }
 
     // Determine redirect URL based on role
-    let redirectUrl = '/agents'
+    let redirectUrl = '/library'
 
     if (nextUrl) {
       redirectUrl = nextUrl
@@ -142,7 +142,7 @@ export async function signupAction(email: string, password: string, name?: strin
       return {
         success: true,
         message: 'Account created successfully!',
-        redirectUrl: '/agents', // Buyers go to marketplace
+        redirectUrl: '/library', // Buyers go to library
       }
     } else {
       // Email confirmation required
