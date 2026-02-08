@@ -2,12 +2,94 @@
 
 import { Container } from '@/components/layout/container'
 import { useEffect, useRef, useState } from 'react'
-import { Search, ShoppingCart, CreditCard, Rocket } from 'lucide-react'
+import {
+  Search,
+  ShoppingCart,
+  CreditCard,
+  Rocket,
+  Hammer,
+  FileText,
+  ShieldCheck,
+  TrendingUp,
+} from 'lucide-react'
+
+const buyerSteps = [
+  {
+    number: 1,
+    icon: Search,
+    title: 'Discover',
+    description: 'Browse our marketplace and find the perfect AI agent for your needs',
+    detail: 'Search by category, filter by features, or explore trending agents',
+    color: 'orange',
+  },
+  {
+    number: 2,
+    icon: ShoppingCart,
+    title: 'Review & Select',
+    description: 'Check ratings, read reviews, and compare different options',
+    detail: 'See verified buyer feedback and detailed agent capabilities',
+    color: 'teal',
+  },
+  {
+    number: 3,
+    icon: CreditCard,
+    title: 'Checkout',
+    description: 'Complete your purchase with our secure payment system',
+    detail: 'One-click checkout with transparent pricing and instant confirmation',
+    color: 'orange',
+  },
+  {
+    number: 4,
+    icon: Rocket,
+    title: 'Launch & Scale',
+    description: 'Deploy your AI agent and watch it transform your workflow',
+    detail: 'Get instant access, monitor performance, and scale as needed',
+    color: 'teal',
+  },
+]
+
+const sellerSteps = [
+  {
+    number: 1,
+    icon: Hammer,
+    title: 'Create & Build',
+    description: 'Develop your AI agent and prepare it for the marketplace',
+    detail: 'Build your solution, define features, and test thoroughly before listing',
+    color: 'orange',
+  },
+  {
+    number: 2,
+    icon: FileText,
+    title: 'List & Optimize',
+    description: 'Publish your agent with compelling descriptions and competitive pricing',
+    detail: 'Add screenshots, demos, and detailed documentation to attract buyers',
+    color: 'teal',
+  },
+  {
+    number: 3,
+    icon: ShieldCheck,
+    title: 'Get Approved',
+    description: 'Our team reviews your agent for quality and marketplace standards',
+    detail: 'Quality assurance process ensures reliability and security for buyers',
+    color: 'orange',
+  },
+  {
+    number: 4,
+    icon: TrendingUp,
+    title: 'Earn & Grow',
+    description: 'Start generating revenue and scale your AI agent business',
+    detail: 'Keep majority of each sale while we handle payments, support, and marketing',
+    color: 'teal',
+  },
+]
 
 export function HowItWorksTimeline() {
   const [isVisible, setIsVisible] = useState(false)
   const [activeStep, setActiveStep] = useState(0)
+  const [activeTab, setActiveTab] = useState<'buyers' | 'sellers'>('buyers')
   const sectionRef = useRef<HTMLDivElement>(null)
+
+  const steps = activeTab === 'buyers' ? buyerSteps : sellerSteps
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -35,40 +117,9 @@ export function HowItWorksTimeline() {
     }
   }, [isVisible])
 
-  const steps = [
-    {
-      number: 1,
-      icon: Search,
-      title: 'Discover',
-      description: 'Browse our marketplace and find the perfect AI agent for your needs',
-      detail: 'Search by category, filter by features, or explore trending agents',
-      color: 'orange',
-    },
-    {
-      number: 2,
-      icon: ShoppingCart,
-      title: 'Review & Select',
-      description: 'Check ratings, read reviews, and compare different options',
-      detail: 'See verified buyer feedback and detailed agent capabilities',
-      color: 'teal',
-    },
-    {
-      number: 3,
-      icon: CreditCard,
-      title: 'Checkout',
-      description: 'Complete your purchase with our secure payment system',
-      detail: 'One-click checkout with transparent pricing and instant confirmation',
-      color: 'orange',
-    },
-    {
-      number: 4,
-      icon: Rocket,
-      title: 'Launch & Scale',
-      description: 'Deploy your AI agent and watch it transform your workflow',
-      detail: 'Get instant access, monitor performance, and scale as needed',
-      color: 'teal',
-    },
-  ]
+  useEffect(() => {
+    setActiveStep(0)
+  }, [activeTab])
 
   return (
     <section
@@ -86,7 +137,7 @@ export function HowItWorksTimeline() {
       <Container>
         {/* Section Header */}
         <div
-          className={`mx-auto mb-20 max-w-3xl text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+          className={`mx-auto mb-10 max-w-3xl text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
         >
           <h2 className="mb-4 text-3xl font-bold tracking-tight text-brand-slate sm:text-4xl md:text-5xl">
             How It{' '}
@@ -95,8 +146,42 @@ export function HowItWorksTimeline() {
               <span className="absolute bottom-2 left-0 right-0 -z-0 h-3 bg-brand-orange/20" />
             </span>
           </h2>
+        </div>
+
+        {/* Tabs */}
+        <div
+          className={`mx-auto mb-16 flex max-w-md justify-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+        >
+          <div className="inline-flex rounded-2xl border border-brand-slate/10 bg-white p-1.5 shadow-sm">
+            <button
+              onClick={() => setActiveTab('buyers')}
+              className={`rounded-xl px-6 py-3 text-sm font-semibold transition-all ${
+                activeTab === 'buyers'
+                  ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/30'
+                  : 'text-brand-slate/70 hover:text-brand-orange'
+              }`}
+            >
+              For Buyers
+            </button>
+            <button
+              onClick={() => setActiveTab('sellers')}
+              className={`rounded-xl px-6 py-3 text-sm font-semibold transition-all ${
+                activeTab === 'sellers'
+                  ? 'bg-brand-teal text-white shadow-lg shadow-brand-teal/30'
+                  : 'text-brand-slate/70 hover:text-brand-teal'
+              }`}
+            >
+              For Sellers
+            </button>
+          </div>
+        </div>
+
+        {/* Subtitle under tabs */}
+        <div className="mx-auto mb-16 max-w-3xl text-center">
           <p className="text-lg text-brand-slate/70 sm:text-xl">
-            From discovery to deployment in 4 simple steps
+            {activeTab === 'buyers'
+              ? 'From discovery to deployment in 4 simple steps'
+              : 'From building to earning in 4 simple steps'}
           </p>
         </div>
 
@@ -114,7 +199,7 @@ export function HowItWorksTimeline() {
 
               return (
                 <div
-                  key={index}
+                  key={`${activeTab}-${index}`}
                   className={`relative transition-all duration-1000 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}
                   style={{ transitionDelay: `${200 + index * 150}ms` }}
                   onMouseEnter={() => setActiveStep(index)}

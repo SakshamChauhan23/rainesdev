@@ -213,15 +213,10 @@ export default function RefundPolicyPage() {
             <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
               <p className="font-medium">Support Team</p>
               <p>
-                Use the contact form on our website or book a call at{' '}
-                <Link
-                  href={process.env.NEXT_PUBLIC_BOOKING_CALENDAR_URL || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  our booking calendar
-                </Link>
+                Email us at{' '}
+                <a href="mailto:team@rouze.ai" className="text-blue-600 hover:underline">
+                  team@rouze.ai
+                </a>
               </p>
             </div>
           </div>

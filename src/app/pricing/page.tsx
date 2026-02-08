@@ -81,8 +81,8 @@ export default function PricingPage() {
                 </Button>
               </Link>
 
-              <p className="mt-4 text-center text-xs text-brand-slate/50">
-                No credit card required for trial. Cancel anytime.
+              <p className="mt-4 text-center text-sm font-medium text-brand-slate/60">
+                Cancel at anytime. No questions asked.
               </p>
             </div>
           </div>

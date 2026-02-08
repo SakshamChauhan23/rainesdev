@@ -21,12 +21,12 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/agents?category=sales-marketing"
+                  <a
+                    href="mailto:team@rouze.ai"
                     className="text-brand-slate/70 transition-colors hover:text-brand-orange"
                   >
                     Sales & Marketing
-                  </Link>
+                  </a>
                 </li>
                 <li>
                   <Link

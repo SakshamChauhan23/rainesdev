@@ -157,9 +157,11 @@ export function Hero() {
                         <span className="text-sm font-normal text-brand-slate/60">/mo</span>
                       </p>
                     </div>
-                    <Button className="rounded-xl bg-brand-orange text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90">
-                      Start Free Trial
-                    </Button>
+                    <Link href="/subscribe">
+                      <Button className="rounded-xl bg-brand-orange text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90">
+                        Start Free Trial
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>

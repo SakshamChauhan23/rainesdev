@@ -17,7 +17,7 @@ import {
 export const metadata: Metadata = {
   title: 'About Us | Rouze.ai',
   description:
-    'Hire AI. Get to work. Rouze is where small businesses hire digital workers. Think of us as the Shopify for AI.',
+    'Hire AI. Get to work. Rouze is where businesses hire digital workers. Think of us as the Shopify for AI.',
 }
 
 export default function AboutPage() {
@@ -40,7 +40,7 @@ export default function AboutPage() {
               </span>
             </h1>
             <p className="text-xl leading-relaxed text-brand-slate/70">
-              Rouze is where small businesses hire digital workers. Think of us as the{' '}
+              Rouze is where businesses hire digital workers. Think of us as the{' '}
               <span className="font-semibold text-brand-teal">Shopify for AI</span>, a marketplace
               where you find and hire digital workers in minutes, not months.
             </p>
@@ -218,7 +218,7 @@ export default function AboutPage() {
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-orange/10">
                     <Users className="h-6 w-6 text-brand-orange" />
                   </div>
-                  <h3 className="text-xl font-bold text-brand-slate">For Small Businesses</h3>
+                  <h3 className="text-xl font-bold text-brand-slate">For Businesses</h3>
                 </div>
                 <div className="space-y-4 text-brand-slate/80">
                   <p>
@@ -367,8 +367,8 @@ export default function AboutPage() {
             <h2 className="mb-4 text-xl font-bold text-brand-slate">Contact Us</h2>
             <p className="text-brand-slate/70">
               Have questions or feedback? We&apos;d love to hear from you. Reach out to us at{' '}
-              <a href="mailto:support@rouze.ai" className="text-brand-orange hover:underline">
-                support@rouze.ai
+              <a href="mailto:team@rouze.ai" className="text-brand-orange hover:underline">
+                team@rouze.ai
               </a>
             </p>
           </div>
