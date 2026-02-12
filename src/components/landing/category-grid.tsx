@@ -2,37 +2,54 @@
 
 import Link from 'next/link'
 import { Container } from '@/components/layout/container'
-import { MessageSquare, TrendingUp, BarChart3, Zap, ArrowRight } from 'lucide-react'
+import { Code2, User, TrendingUp, ShoppingBag, Network, Blocks, ArrowRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { logger } from '@/lib/logger'
 
 const categoryDefinitions = [
   {
-    name: 'Customer Support Agents',
-    slug: 'customer-support',
-    description: 'Handle FAQs, tickets, and follow-ups automatically, 24/7.',
-    icon: MessageSquare,
+    name: 'Development Tools',
+    slug: 'development-tools',
+    description:
+      'Frameworks, SDKs, and coding agents to build and ship AI-powered software faster.',
+    icon: Code2,
     color: 'orange',
   },
   {
-    name: 'Sales & Lead Follow-Up Agents',
-    slug: 'sales-marketing',
-    description: 'Capture leads, send reminders, and book meetings without you chasing anyone.',
-    icon: TrendingUp,
+    name: 'Personal Assistants',
+    slug: 'personal-assistant',
+    description:
+      'Scheduling, research, note-taking, and travel agents that handle your day-to-day.',
+    icon: User,
     color: 'teal',
   },
   {
-    name: 'Operations & Insights Agents',
-    slug: 'data-analysis',
-    description: 'Turn messy business data into daily summaries you can actually act on.',
-    icon: BarChart3,
+    name: 'Sales & Marketing',
+    slug: 'sales-marketing',
+    description:
+      'Lead follow-up, outreach, invoicing, and pipeline agents that close deals for you.',
+    icon: TrendingUp,
     color: 'orange',
   },
   {
-    name: 'Productivity & Admin Agents',
-    slug: 'productivity',
-    description: 'Automate scheduling, reminders, and internal coordination.',
-    icon: Zap,
+    name: 'E-Commerce',
+    slug: 'e-commerce',
+    description: 'Product listing, inventory, and customer engagement agents for online stores.',
+    icon: ShoppingBag,
+    color: 'teal',
+  },
+  {
+    name: 'Multi-Agent Systems',
+    slug: 'multi-agent-systems',
+    description: 'Orchestrate multiple AI agents working together on complex workflows.',
+    icon: Network,
+    color: 'orange',
+  },
+  {
+    name: 'Low-Code / No-Code',
+    slug: 'low-code-no-code',
+    description: 'Drag-and-drop builders and visual tools to create agents without writing code.',
+    icon: Blocks,
     color: 'teal',
   },
 ]
@@ -127,7 +144,7 @@ export function CategoryGrid() {
   }, [])
 
   return (
-    <section className="relative overflow-hidden bg-white py-20 sm:py-28 lg:py-32">
+    <section className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-24">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute right-1/4 top-0 h-full w-px bg-gradient-to-b from-transparent via-brand-orange/10 to-transparent" />
@@ -135,24 +152,8 @@ export function CategoryGrid() {
       </div>
 
       <Container>
-        {/* Section Header */}
-        <div
-          className={`mx-auto mb-16 max-w-3xl text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
-        >
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-brand-slate sm:text-4xl md:text-5xl">
-            Popular{' '}
-            <span className="relative inline-block">
-              <span className="relative z-10 text-brand-orange">Services</span>
-              <span className="absolute bottom-2 left-0 right-0 -z-0 h-3 bg-brand-orange/20" />
-            </span>
-          </h2>
-          <p className="text-lg text-brand-slate/70 sm:text-xl">
-            Explore AI agents across different categories
-          </p>
-        </div>
-
         {/* Category Cards Grid */}
-        <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
+        <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {categoryDefinitions.map((category, index) => {
             const Icon = category.icon
             const count = categoryCounts[category.slug] ?? 0

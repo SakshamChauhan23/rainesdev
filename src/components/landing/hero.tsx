@@ -14,7 +14,7 @@ export function Hero() {
   }, [])
 
   return (
-    <section className="relative overflow-hidden bg-brand-cream py-20 sm:py-28 lg:py-32">
+    <section className="relative overflow-hidden bg-brand-cream py-16 sm:py-20 lg:py-24">
       {/* Decorative background elements */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute right-10 top-20 h-72 w-72 rounded-full bg-brand-orange/10 blur-3xl" />

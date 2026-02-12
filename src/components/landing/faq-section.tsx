@@ -70,7 +70,7 @@ export function FAQSection() {
   ]
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-20 sm:py-28 lg:py-32">
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-24">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute right-10 top-1/3 h-96 w-96 rounded-full bg-brand-orange/5 blur-3xl" />

@@ -4,18 +4,9 @@ import Link from 'next/link'
 import { Container } from '@/components/layout/container'
 import { Button } from '@/components/ui/button'
 import { useEffect, useRef, useState } from 'react'
-import {
-  Search,
-  Zap,
-  CheckCircle2,
-  ArrowRight,
-  Hammer,
-  FileText,
-  ShieldCheck,
-  TrendingUp,
-} from 'lucide-react'
+import { Search, Zap, CheckCircle2, ArrowRight } from 'lucide-react'
 
-const buyerSteps = [
+const steps = [
   {
     number: 1,
     icon: Search,
@@ -40,43 +31,9 @@ const buyerSteps = [
   },
 ]
 
-const sellerSteps = [
-  {
-    number: 1,
-    icon: Hammer,
-    title: 'Create & Build',
-    description: 'Develop your AI agent and prepare it for the marketplace.',
-    color: 'orange',
-  },
-  {
-    number: 2,
-    icon: FileText,
-    title: 'List & Optimize',
-    description: 'Publish your agent with compelling descriptions and competitive pricing.',
-    color: 'teal',
-  },
-  {
-    number: 3,
-    icon: ShieldCheck,
-    title: 'Get Approved',
-    description: 'Our team reviews your agent for quality and marketplace standards.',
-    color: 'orange',
-  },
-  {
-    number: 4,
-    icon: TrendingUp,
-    title: 'Earn & Grow',
-    description: 'Start generating revenue and scale your AI agent business.',
-    color: 'teal',
-  },
-]
-
 export function HowItWorksTimeline() {
   const [isVisible, setIsVisible] = useState(false)
-  const [activeTab, setActiveTab] = useState<'buyers' | 'sellers'>('buyers')
   const sectionRef = useRef<HTMLDivElement>(null)
-
-  const steps = activeTab === 'buyers' ? buyerSteps : sellerSteps
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -99,7 +56,7 @@ export function HowItWorksTimeline() {
     <section
       id="how-it-works"
       ref={sectionRef}
-      className="relative scroll-mt-20 overflow-hidden bg-brand-cream py-20 sm:py-28 lg:py-32"
+      className="relative scroll-mt-20 overflow-hidden bg-brand-cream py-16 sm:py-20 lg:py-24"
     >
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
@@ -111,7 +68,7 @@ export function HowItWorksTimeline() {
       <Container>
         {/* Section Header */}
         <div
-          className={`mx-auto mb-10 max-w-3xl text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+          className={`mx-auto mb-12 max-w-3xl text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
         >
           <h2 className="mb-4 text-3xl font-bold tracking-tight text-brand-slate sm:text-4xl md:text-5xl">
             Simple enough for{' '}
@@ -120,34 +77,6 @@ export function HowItWorksTimeline() {
               <span className="absolute bottom-2 left-0 right-0 -z-0 h-3 bg-brand-orange/20" />
             </span>
           </h2>
-        </div>
-
-        {/* Tabs */}
-        <div
-          className={`mx-auto mb-16 flex max-w-md justify-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
-        >
-          <div className="inline-flex rounded-2xl border border-brand-slate/10 bg-white p-1.5 shadow-sm">
-            <button
-              onClick={() => setActiveTab('buyers')}
-              className={`rounded-xl px-6 py-3 text-sm font-semibold transition-all ${
-                activeTab === 'buyers'
-                  ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/30'
-                  : 'text-brand-slate/70 hover:text-brand-orange'
-              }`}
-            >
-              For Buyers
-            </button>
-            <button
-              onClick={() => setActiveTab('sellers')}
-              className={`rounded-xl px-6 py-3 text-sm font-semibold transition-all ${
-                activeTab === 'sellers'
-                  ? 'bg-brand-teal text-white shadow-lg shadow-brand-teal/30'
-                  : 'text-brand-slate/70 hover:text-brand-teal'
-              }`}
-            >
-              For Sellers
-            </button>
-          </div>
         </div>
 
         {/* Zigzag Timeline */}
@@ -166,7 +95,7 @@ export function HowItWorksTimeline() {
 
               return (
                 <div
-                  key={`${activeTab}-${index}`}
+                  key={index}
                   className={`relative transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
                   style={{ transitionDelay: `${200 + index * 200}ms` }}
                 >
@@ -185,14 +114,14 @@ export function HowItWorksTimeline() {
                     {/* Center icon - always 10% width, centered */}
                     <div className="flex w-[10%] justify-center">
                       <div
-                        className={`relative z-10 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl shadow-lg transition-all duration-500 ${
+                        className={`relative z-10 flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-2xl shadow-lg transition-all duration-500 ${
                           isOrange
                             ? 'bg-brand-orange shadow-brand-orange/30'
                             : 'bg-brand-teal shadow-brand-teal/30'
                         }`}
                       >
-                        <Icon className="h-8 w-8 text-white" />
-                        <div className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-brand-slate text-xs font-bold text-white">
+                        <Icon className="h-10 w-10 text-white" />
+                        <div className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-brand-slate text-sm font-bold text-white">
                           {step.number}
                         </div>
                       </div>
@@ -214,14 +143,14 @@ export function HowItWorksTimeline() {
                     {/* Icon */}
                     <div className="relative z-10 flex-shrink-0">
                       <div
-                        className={`flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg ${
+                        className={`flex h-20 w-20 items-center justify-center rounded-2xl shadow-lg ${
                           isOrange
                             ? 'bg-brand-orange shadow-brand-orange/30'
                             : 'bg-brand-teal shadow-brand-teal/30'
                         }`}
                       >
-                        <Icon className="h-8 w-8 text-white" />
-                        <div className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-brand-slate text-xs font-bold text-white">
+                        <Icon className="h-10 w-10 text-white" />
+                        <div className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-brand-slate text-sm font-bold text-white">
                           {step.number}
                         </div>
                       </div>
@@ -243,25 +172,23 @@ export function HowItWorksTimeline() {
 
         {/* Bottom Line */}
         <div
-          className={`mx-auto mt-12 max-w-2xl text-center transition-all delay-700 duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+          className={`mx-auto mt-10 max-w-2xl text-center transition-all delay-700 duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
         >
           <p className="text-lg font-semibold text-brand-slate sm:text-xl">
-            {activeTab === 'buyers'
-              ? 'You\u2019re in control. Always. No contracts. No complexity.'
-              : 'From building to earning in 4 simple steps.'}
+            You{'\u2019'}re in control. Always. No contracts. No complexity.
           </p>
         </div>
 
         {/* CTA */}
         <div
-          className={`mt-12 flex flex-col items-center justify-center gap-4 transition-all delay-1000 duration-1000 sm:flex-row sm:gap-6 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+          className={`mt-10 flex flex-col items-center justify-center gap-4 transition-all delay-1000 duration-1000 sm:flex-row sm:gap-6 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
         >
-          <Link href={activeTab === 'buyers' ? '/agents' : '/become-seller'}>
+          <Link href="/agents">
             <Button
               size="lg"
               className="group rounded-2xl bg-brand-orange px-8 py-6 text-base font-semibold text-white shadow-lg shadow-brand-orange/30 transition-all hover:-translate-y-0.5 hover:bg-brand-orange/90 hover:shadow-xl hover:shadow-brand-orange/40"
             >
-              {activeTab === 'buyers' ? 'Browse Agents' : 'Start Selling'}
+              Browse Agents
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Button>
           </Link>

@@ -152,7 +152,7 @@ export function Header() {
               href="/pricing"
               className="text-sm font-medium text-brand-orange transition-all hover:scale-105 hover:text-brand-orange/80"
             >
-              Pricings
+              Pricing
             </Link>
           </nav>
 
@@ -283,7 +283,7 @@ export function Header() {
                 className="rounded-xl px-4 py-3 text-sm font-medium text-brand-orange transition-colors hover:bg-brand-cream hover:text-brand-orange/80"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Pricings
+                Pricing
               </Link>
 
               {user && userRole && (

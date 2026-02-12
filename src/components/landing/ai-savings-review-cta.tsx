@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Container } from '@/components/layout/container'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Sparkles, BarChart3, Target } from 'lucide-react'
+import { ArrowRight, Sparkles, BarChart3, Target, TrendingUp } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export function AISavingsReviewCTA() {
@@ -14,7 +14,7 @@ export function AISavingsReviewCTA() {
   }, [])
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-brand-slate via-brand-slate to-brand-slate/95 py-20 sm:py-28">
+    <section className="relative overflow-hidden bg-gradient-to-br from-brand-slate via-brand-slate to-brand-slate/95 py-16 sm:py-20">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-0">
         <div className="absolute right-10 top-10 h-72 w-72 rounded-full bg-brand-orange/10 blur-3xl" />
@@ -30,16 +30,21 @@ export function AISavingsReviewCTA() {
             <div>
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-orange/30 bg-brand-orange/10 px-4 py-2 text-sm font-medium text-brand-orange">
                 <Sparkles className="h-4 w-4" />
-                <span>New: Expert Consulting</span>
+                <span>Expert AI Consulting</span>
               </div>
 
               <h2 className="mb-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
                 Not sure where to start with AI?
               </h2>
 
-              <p className="mb-8 text-lg leading-relaxed text-white/70">
+              <p className="mb-4 text-lg leading-relaxed text-white/70">
                 Our AI Savings Review analyzes your workflows and tells you exactly which agents
-                will save you the most time and money. Starting at $499.
+                will save you the most time and money.
+              </p>
+
+              <p className="mb-8 text-base font-semibold text-brand-orange">
+                Clients typically save $3,000{'\u2013'}5,000/month after implementing
+                recommendations. Starting at $499.
               </p>
 
               <Link href="/ai-savings-review">
@@ -57,6 +62,11 @@ export function AISavingsReviewCTA() {
             <div className="space-y-4">
               {[
                 {
+                  icon: TrendingUp,
+                  title: 'Most businesses uncover 10x+ in savings',
+                  description: 'The review pays for itself many times over.',
+                },
+                {
                   icon: BarChart3,
                   title: 'Personalized ROI Report',
                   description: 'See projected savings for your specific workflows.',
@@ -68,8 +78,8 @@ export function AISavingsReviewCTA() {
                 },
                 {
                   icon: Sparkles,
-                  title: 'Expert Consultation',
-                  description: '1-on-1 call with our AI strategy team.',
+                  title: 'Expert 1-on-1 Consultation',
+                  description: 'A strategy call to scope the right engagement for you.',
                 },
               ].map((feature, index) => {
                 const Icon = feature.icon
