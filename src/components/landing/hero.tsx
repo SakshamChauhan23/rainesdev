@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Container } from '@/components/layout/container'
-import { ArrowRight, Sparkles, Zap, Bot, TrendingUp } from 'lucide-react'
+import { ArrowRight, Sparkles, Zap, Bot, TrendingUp, Users, Clock } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export function Hero() {
@@ -30,23 +30,24 @@ export function Hero() {
             {/* Badge */}
             <div className="mb-6 inline-flex items-center gap-2 self-start rounded-full border border-brand-orange/20 bg-brand-orange/10 px-4 py-2 text-sm font-medium text-brand-orange">
               <Sparkles className="h-4 w-4" />
-              <span>Build teams of AI agents</span>
+              <span>AI Agent Marketplace</span>
             </div>
 
             {/* Headline */}
-            <h1 className="mb-6 text-4xl font-bold tracking-tight text-brand-slate sm:text-5xl md:text-6xl lg:text-7xl">
-              Build teams of{' '}
+            <h1 className="mb-6 text-4xl font-bold tracking-tight text-brand-slate sm:text-5xl md:text-6xl lg:text-6xl">
+              The AI Agent Marketplace for business owners who{' '}
               <span className="relative inline-block">
-                <span className="relative z-10 text-brand-orange">AI agents</span>
+                <span className="relative z-10 text-brand-orange">
+                  don&apos;t want to fall behind.
+                </span>
                 <span className="absolute bottom-2 left-0 right-0 -z-0 h-3 bg-brand-orange/20" />
-              </span>{' '}
-              that deliver human-quality work
+              </span>
             </h1>
 
             {/* Subheadline */}
             <p className="mb-10 max-w-2xl text-lg leading-relaxed text-brand-slate/70 sm:text-xl">
-              Deploy AI agents for any business task in minutes. No coding required. Browse hundreds
-              of plug-and-play agents built for your team.
+              Browse ready-to-use AI agents built for real businesses. Test free. Keep what saves
+              you time. Cancel what doesn&apos;t. No contracts.
             </p>
 
             {/* CTA Buttons */}
@@ -56,36 +57,42 @@ export function Hero() {
                   size="lg"
                   className="group rounded-2xl bg-brand-orange px-8 py-6 text-base font-semibold text-white shadow-lg shadow-brand-orange/30 transition-all hover:-translate-y-0.5 hover:bg-brand-orange/90 hover:shadow-xl hover:shadow-brand-orange/40"
                 >
-                  Browse Agents
+                  Browse Agents for your industry
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Link href="/pricing">
+              <Link href="#how-it-works">
                 <Button
                   size="lg"
                   variant="outline"
                   className="rounded-2xl border-2 border-brand-slate/20 bg-white px-8 py-6 text-base font-semibold text-brand-slate transition-all hover:border-brand-teal hover:bg-brand-teal/5"
                 >
-                  Request a demo
+                  See how it works
                 </Button>
               </Link>
             </div>
 
-            {/* Trust Indicators */}
-            <div className="mt-12 flex items-center gap-6 text-sm text-brand-slate/60">
+            {/* Social Proof Line */}
+            <div className="mt-12 flex flex-wrap items-center gap-4 text-sm text-brand-slate/60 sm:gap-6">
               <div className="flex items-center gap-2">
-                <div className="flex -space-x-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-orange/20">
-                    <Bot className="h-4 w-4 text-brand-orange" />
-                  </div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-teal/20">
-                    <Zap className="h-4 w-4 text-brand-teal" />
-                  </div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-orange/20">
-                    <TrendingUp className="h-4 w-4 text-brand-orange" />
-                  </div>
+                <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-orange/20">
+                  <Users className="h-4 w-4 text-brand-orange" />
                 </div>
-                <span className="font-medium text-brand-slate">200+ AI agents ready to deploy</span>
+                <span className="font-medium text-brand-slate">1,000+ SMBs running agents</span>
+              </div>
+              <div className="hidden h-4 w-px bg-brand-slate/20 sm:block" />
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-teal/20">
+                  <Bot className="h-4 w-4 text-brand-teal" />
+                </div>
+                <span className="font-medium text-brand-slate">50+ agents available</span>
+              </div>
+              <div className="hidden h-4 w-px bg-brand-slate/20 sm:block" />
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-orange/20">
+                  <Clock className="h-4 w-4 text-brand-orange" />
+                </div>
+                <span className="font-medium text-brand-slate">14-day free trial (no card)</span>
               </div>
             </div>
           </div>
