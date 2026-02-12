@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, Crown } from 'lucide-react'
 import Link from 'next/link'
 import { LibraryAgentGrid } from '@/components/library/library-agent-grid'
+import { SavingsReviewStatusCard } from '@/components/savings-review/status-card'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,6 +25,20 @@ export default async function LibraryPage() {
   }
 
   const subscriptionState = await getSubscriptionState(user.id)
+
+  // Fetch user's savings reviews
+  const savingsReviews = await prisma.savingsReview.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      tier: true,
+      status: true,
+      companyName: true,
+      deliverableUrl: true,
+      createdAt: true,
+    },
+  })
 
   // If subscribed, show ALL approved agents
   if (subscriptionState.hasAccess) {
@@ -77,6 +92,13 @@ export default async function LibraryPage() {
         </div>
 
         <Container className="py-8">
+          {savingsReviews.length > 0 && (
+            <div className="mb-8 space-y-4">
+              {savingsReviews.map(review => (
+                <SavingsReviewStatusCard key={review.id} review={review} />
+              ))}
+            </div>
+          )}
           <LibraryAgentGrid agents={allAgents} />
         </Container>
       </div>
@@ -94,6 +116,13 @@ export default async function LibraryPage() {
       </div>
 
       <Container className="py-8">
+        {savingsReviews.length > 0 && (
+          <div className="mb-8 space-y-4">
+            {savingsReviews.map(review => (
+              <SavingsReviewStatusCard key={review.id} review={review} />
+            ))}
+          </div>
+        )}
         <Card className="border-2 border-brand-orange/20 bg-gradient-to-br from-brand-orange/5 to-brand-teal/5">
           <CardContent className="flex min-h-[400px] flex-col items-center justify-center text-center">
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-brand-orange/10">

@@ -27,6 +27,7 @@ model User {
   supportRequestsAssigned SupportRequest[]    @relation("AssignedSupport")
   supportRequestsAsBuyer  SupportRequest[]    @relation("BuyerSupport")
   supportRequestsAsSeller SupportRequest[]    @relation("SellerSupport")
+  savingsReviews          SavingsReview[]
 
   @@map("users")
 }
@@ -298,10 +299,54 @@ enum AdminAction {
   GRANT_SUBSCRIPTION
   REVOKE_SUBSCRIPTION
   EXTEND_GRACE_PERIOD
+  UPDATE_SAVINGS_REVIEW
 }
 
 enum SellerApplicationStatus {
   PENDING_REVIEW
   APPROVED
   REJECTED
+}
+
+enum SavingsReviewTier {
+  SNAPSHOT
+  FULL_REVIEW
+}
+
+enum SavingsReviewStatus {
+  AWAITING_BOOKING
+  AWAITING_PAYMENT
+  PAID
+  IN_PROGRESS
+  COMPLETED
+}
+
+model SavingsReview {
+  id                     String               @id @default(cuid())
+  userId                 String               @map("user_id")
+  tier                   SavingsReviewTier
+  status                 SavingsReviewStatus  @default(AWAITING_BOOKING)
+  companyName            String               @map("company_name")
+  industry               String
+  companySize            String               @map("company_size")
+  currentTools           String               @map("current_tools")
+  painPoints             String               @map("pain_points")
+  aiExperience           String               @map("ai_experience")
+  goals                  String
+  additionalNotes        String?              @map("additional_notes")
+  amountPaid             Decimal?             @map("amount_paid") @db.Decimal(10, 2)
+  stripeSessionId        String?              @map("stripe_session_id")
+  stripePaymentIntentId  String?              @unique @map("stripe_payment_intent_id")
+  paidAt                 DateTime?            @map("paid_at")
+  adminNotes             String?              @map("admin_notes")
+  deliverableUrl         String?              @map("deliverable_url")
+  completedAt            DateTime?            @map("completed_at")
+  createdAt              DateTime             @default(now()) @map("created_at")
+  updatedAt              DateTime             @updatedAt @map("updated_at")
+  user                   User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("savings_reviews")
 }

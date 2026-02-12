@@ -20,6 +20,20 @@ if (!globalForStripe.stripe) {
 // Subscription configuration
 export const SUBSCRIPTION_PRICE_ID = process.env.STRIPE_PRICE_ID!
 
+// Savings Review configuration
+export const SAVINGS_REVIEW_CONFIG = {
+  SNAPSHOT: {
+    priceAmount: 49900, // $499 in cents
+    name: 'AI Savings Review — Snapshot',
+    description: 'Quick-hit AI savings audit for your business',
+  },
+  FULL_REVIEW: {
+    priceAmount: 99900, // $999 in cents
+    name: 'AI Savings Review — Full Review',
+    description: 'Comprehensive AI savings audit with implementation roadmap',
+  },
+} as const
+
 export const SUBSCRIPTION_CONFIG = {
   priceAmount: 1299, // $12.99 in cents
   currency: 'usd' as const,
@@ -128,4 +142,47 @@ export async function reactivateSubscription(subscriptionId: string): Promise<St
   return stripe.subscriptions.update(subscriptionId, {
     cancel_at_period_end: false,
   })
+}
+
+/**
+ * Create a Stripe Checkout Session for a one-time Savings Review payment.
+ */
+export async function createSavingsReviewCheckoutSession(params: {
+  customerId: string
+  tier: 'SNAPSHOT' | 'FULL_REVIEW'
+  reviewId: string
+  userId: string
+  successUrl: string
+  cancelUrl: string
+}): Promise<Stripe.Checkout.Session> {
+  const config = SAVINGS_REVIEW_CONFIG[params.tier]
+
+  const session = await stripe.checkout.sessions.create({
+    customer: params.customerId,
+    mode: 'payment',
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: config.name,
+            description: config.description,
+          },
+          unit_amount: config.priceAmount,
+        },
+        quantity: 1,
+      },
+    ],
+    success_url: params.successUrl,
+    cancel_url: params.cancelUrl,
+    metadata: {
+      type: 'savings_review',
+      reviewId: params.reviewId,
+      userId: params.userId,
+      tier: params.tier,
+    },
+  })
+
+  return session
 }

@@ -110,6 +110,33 @@ export async function POST(request: NextRequest) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
+
+        // Handle Savings Review one-time payment
+        if (session.metadata?.type === 'savings_review' && session.mode === 'payment') {
+          const reviewId = session.metadata.reviewId
+          if (!reviewId) {
+            logger.error('No reviewId in savings review checkout metadata')
+            break
+          }
+
+          await prisma.savingsReview.update({
+            where: { id: reviewId },
+            data: {
+              status: 'PAID',
+              stripeSessionId: session.id,
+              stripePaymentIntentId:
+                typeof session.payment_intent === 'string'
+                  ? session.payment_intent
+                  : session.payment_intent?.id || null,
+              amountPaid: session.amount_total ? session.amount_total / 100 : null,
+              paidAt: new Date(),
+            },
+          })
+          logger.info(`Savings review ${reviewId} marked as PAID`)
+          break
+        }
+
+        // Handle subscription checkout
         if (session.mode === 'subscription' && session.subscription) {
           const userId = session.metadata?.userId
           if (!userId) {

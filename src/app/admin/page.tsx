@@ -17,6 +17,7 @@ import {
   Eye,
   Shield,
   UserPlus,
+  FileText,
 } from 'lucide-react'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
@@ -103,6 +104,8 @@ export default async function AdminDashboard() {
     prisma.subscription.count({ where: { status: 'ACTIVE' } }),
     prisma.subscription.count({ where: { status: 'TRIALING' } }),
     prisma.subscription.count({ where: { status: 'LEGACY_GRACE' } }),
+    prisma.savingsReview.count({ where: { status: { in: ['PAID', 'IN_PROGRESS'] } } }),
+    prisma.savingsReview.count(),
   ])
 
   const [
@@ -116,6 +119,8 @@ export default async function AdminDashboard() {
     activeSubscribers,
     trialUsers,
     legacyUsers,
+    activeSavingsReviews,
+    totalSavingsReviews,
   ] = stats
 
   const mrr = activeSubscribers * 12.99
@@ -231,6 +236,35 @@ export default async function AdminDashboard() {
             </div>
           </div>
         </div>
+
+        {/* Savings Reviews Card */}
+        {totalSavingsReviews > 0 && (
+          <div className="mb-12">
+            <Link href="/admin/savings-reviews">
+              <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-orange to-brand-orange/90 p-6 text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
+                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+                <div className="relative flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                      <FileText className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold">
+                        AI Savings Reviews — {activeSavingsReviews} active
+                      </p>
+                      <p className="text-sm text-white/70">
+                        {totalSavingsReviews} total review{totalSavingsReviews !== 1 ? 's' : ''}
+                      </p>
+                    </div>
+                  </div>
+                  <Button variant="secondary" size="sm" className="rounded-xl">
+                    Manage
+                  </Button>
+                </div>
+              </div>
+            </Link>
+          </div>
+        )}
 
         {/* Seller Applications Card */}
         {pendingSellerApplications > 0 && (

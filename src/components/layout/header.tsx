@@ -143,6 +143,12 @@ export function Header() {
               Browse Agents
             </Link>
             <Link
+              href="/ai-savings-review"
+              className="text-sm font-medium text-brand-slate/70 transition-all hover:scale-105 hover:text-brand-orange"
+            >
+              AI Savings Review
+            </Link>
+            <Link
               href="/pricing"
               className="text-sm font-medium text-brand-orange transition-all hover:scale-105 hover:text-brand-orange/80"
             >
@@ -264,6 +270,13 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Browse Agents
+              </Link>
+              <Link
+                href="/ai-savings-review"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-slate/70 transition-colors hover:bg-brand-cream hover:text-brand-orange"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                AI Savings Review
               </Link>
               <Link
                 href="/pricing"
