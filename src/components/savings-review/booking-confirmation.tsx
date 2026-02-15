@@ -39,7 +39,7 @@ export function BookingConfirmation({ reviewId }: { reviewId: string }) {
           the call.
         </p>
         <a
-          href="https://cal.com/rainesdev/meet"
+          href="https://cal.com/rouze-team/30min"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-xl bg-brand-teal px-6 py-3 font-semibold text-white shadow-lg shadow-brand-teal/30 transition-all hover:-translate-y-0.5 hover:bg-brand-teal/90"
