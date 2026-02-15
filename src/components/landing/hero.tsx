@@ -35,10 +35,10 @@ export function Hero() {
 
             {/* Headline */}
             <h1 className="mb-6 text-4xl font-bold tracking-tight text-brand-slate sm:text-5xl md:text-6xl lg:text-6xl">
-              The AI Agent Marketplace for business owners who{' '}
+              The AI agent marketplace for business owners{' '}
               <span className="relative inline-block">
                 <span className="relative z-10 text-brand-orange">
-                  don&apos;t want to fall behind.
+                  who want to grow without hiring.
                 </span>
                 <span className="absolute bottom-2 left-0 right-0 -z-0 h-3 bg-brand-orange/20" />
               </span>
@@ -85,7 +85,7 @@ export function Hero() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-teal/20">
                   <Bot className="h-4 w-4 text-brand-teal" />
                 </div>
-                <span className="font-medium text-brand-slate">50+ agents available</span>
+                <span className="font-medium text-brand-slate">200+ agents available</span>
               </div>
               <div className="hidden h-4 w-px bg-brand-slate/20 sm:block" />
               <div className="flex items-center gap-2">
@@ -160,9 +160,13 @@ export function Hero() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-2xl font-bold text-brand-slate">
+                        <span className="mr-2 text-base font-normal text-brand-slate/40 line-through">
+                          $19.99
+                        </span>
                         $12.99
                         <span className="text-sm font-normal text-brand-slate/60">/mo</span>
                       </p>
+                      <p className="text-xs font-medium text-brand-orange">Early user discount</p>
                     </div>
                     <Link href="/subscribe">
                       <Button className="rounded-xl bg-brand-orange text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90">

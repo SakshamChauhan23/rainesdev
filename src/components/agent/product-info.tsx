@@ -154,7 +154,8 @@ export function ProductInfo({
         ) : isApproved ? (
           <Link href="/subscribe">
             <Button size="lg" className="w-full bg-primary text-white hover:bg-primary/90">
-              Subscribe to Unlock — $12.99/mo
+              Subscribe to Unlock — <span className="line-through opacity-60">$19.99</span>{' '}
+              $12.99/mo
             </Button>
           </Link>
         ) : (

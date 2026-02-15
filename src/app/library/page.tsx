@@ -134,6 +134,9 @@ export default async function LibraryPage() {
               workflows.
             </p>
             <p className="mb-8 text-2xl font-bold text-brand-slate">
+              <span className="mr-1 text-lg font-normal text-brand-slate/40 line-through">
+                $19.99
+              </span>
               $12.99<span className="text-base font-normal text-brand-slate/60">/month</span>
             </p>
             <Link href="/subscribe">

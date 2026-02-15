@@ -22,7 +22,8 @@ export function LockedSetupGuide({ agentId, isApproved }: LockedSetupGuideProps)
         {isApproved ? (
           <Link href="/subscribe">
             <Button size="lg" className="mt-4 bg-gray-900 hover:bg-gray-800">
-              Subscribe to Unlock — $12.99/mo
+              Subscribe to Unlock — <span className="line-through opacity-60">$19.99</span>{' '}
+              $12.99/mo
             </Button>
           </Link>
         ) : (

@@ -52,10 +52,13 @@ export default function PricingPage() {
               <div className="mb-8 text-center">
                 <h2 className="mb-2 text-2xl font-bold text-brand-slate">Rouze.ai All-Access</h2>
                 <div className="flex items-baseline justify-center gap-1">
+                  <span className="text-2xl font-normal text-brand-slate/40 line-through">
+                    $19.99
+                  </span>
                   <span className="text-5xl font-bold text-brand-slate">$12.99</span>
                   <span className="text-lg text-brand-slate/60">/month</span>
                 </div>
-                <p className="mt-2 text-sm text-brand-slate/60">per user, billed monthly</p>
+                <p className="mt-2 text-sm font-medium text-brand-orange">Early user discount</p>
               </div>
 
               {/* Features */}
