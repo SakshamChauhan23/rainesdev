@@ -59,7 +59,17 @@ export async function getOrCreateStripeCustomer(
   })
 
   if (user?.stripeCustomerId) {
-    return user.stripeCustomerId
+    // Verify the customer still exists in the current Stripe account
+    try {
+      await stripe.customers.retrieve(user.stripeCustomerId)
+      return user.stripeCustomerId
+    } catch {
+      // Customer not found in this Stripe account (e.g. after account switch) — create a new one
+      await prisma.user.update({
+        where: { id: userId },
+        data: { stripeCustomerId: null },
+      })
+    }
   }
 
   // Create a new Stripe customer
