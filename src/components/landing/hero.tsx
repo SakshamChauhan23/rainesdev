@@ -72,8 +72,24 @@ export function Hero() {
               </Link>
             </div>
 
+            {/* Product Hunt Badge */}
+            <div className="mt-10">
+              <a
+                href="https://www.producthunt.com/products/rouze-ai?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-rouze-ai"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  alt="Rouze.ai - Automation-in-a-box for small businesses using AI agents. | Product Hunt"
+                  width={250}
+                  height={54}
+                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1082190&theme=light&t=1771692500117"
+                />
+              </a>
+            </div>
+
             {/* Social Proof Line */}
-            <div className="mt-12 flex flex-wrap items-center gap-4 text-sm text-brand-slate/60 sm:gap-6">
+            <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-brand-slate/60 sm:gap-6">
               <div className="flex items-center gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-brand-orange/20">
                   <Users className="h-4 w-4 text-brand-orange" />
