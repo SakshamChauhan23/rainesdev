@@ -4,46 +4,27 @@ import Link from 'next/link'
 import { Container } from '@/components/layout/container'
 import { Button } from '@/components/ui/button'
 import { useEffect, useRef, useState } from 'react'
-import { Search, Shield, CreditCard, Zap, Settings, MessageSquare } from 'lucide-react'
 
-const features = [
+const stats = [
   {
-    icon: Search,
-    title: 'Agents Built for Your Industry',
-    description:
-      'Not generic AI tools — agents designed for dental offices, real estate teams, e-commerce stores, and more.',
+    value: '200+',
+    label: 'Ready-to-use agents',
     color: 'orange',
   },
   {
-    icon: Shield,
-    title: 'Tested Before You See Them',
-    description:
-      'Every agent is vetted and verified before it hits the marketplace. No guesswork on your end.',
+    value: '14 days',
+    label: 'Free trial, no card needed',
     color: 'teal',
   },
   {
-    icon: CreditCard,
-    title: 'No Surprise Costs',
-    description: 'Simple monthly pricing. Cancel anytime. What you see is what you pay.',
+    value: 'Same day',
+    label: 'Go live, no IT team required',
+    color: 'teal',
+  },
+  {
+    value: '$0',
+    label: 'Setup or onboarding cost',
     color: 'orange',
-  },
-  {
-    icon: Zap,
-    title: 'Live in Minutes, Not Weeks',
-    description: "No IT team needed. Pick an agent, connect it, and it's working the same day.",
-    color: 'teal',
-  },
-  {
-    icon: Settings,
-    title: 'Zero Technical Skill Required',
-    description: 'If you can use email, you can set up an agent. Point, click, done.',
-    color: 'orange',
-  },
-  {
-    icon: MessageSquare,
-    title: 'Real Reviews from Real Owners',
-    description: 'See what other business owners are saying before you commit.',
-    color: 'teal',
   },
 ]
 
@@ -78,7 +59,7 @@ export function PlatformFeatures() {
 
       <Container>
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Left Column — Features */}
+          {/* Left Column */}
           <div
             className={`flex flex-col transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
           >
@@ -94,32 +75,30 @@ export function PlatformFeatures() {
               Built for people who run businesses, not for engineers.
             </p>
 
-            {/* Feature List */}
-            <div className="space-y-6">
-              {features.map((feature, index) => {
-                const Icon = feature.icon
-                const isOrange = feature.color === 'orange'
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 gap-4">
+              {stats.map((stat, index) => {
+                const isOrange = stat.color === 'orange'
                 return (
                   <div
                     key={index}
-                    className={`flex items-start gap-4 transition-all duration-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
-                    style={{ transitionDelay: `${200 + index * 80}ms` }}
+                    className={`rounded-2xl border-2 p-6 transition-all duration-500 ${
+                      isOrange
+                        ? 'border-brand-orange/20 bg-brand-orange/5'
+                        : 'border-brand-teal/20 bg-brand-teal/5'
+                    } ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
+                    style={{ transitionDelay: `${200 + index * 100}ms` }}
                   >
-                    <div
-                      className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                        isOrange
-                          ? 'bg-brand-orange/10 text-brand-orange'
-                          : 'bg-brand-teal/10 text-brand-teal'
+                    <p
+                      className={`mb-1 text-3xl font-extrabold tracking-tight sm:text-4xl ${
+                        isOrange ? 'text-brand-orange' : 'text-brand-teal'
                       }`}
                     >
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h3 className="mb-1 font-semibold text-brand-slate">{feature.title}</h3>
-                      <p className="text-sm leading-relaxed text-brand-slate/60">
-                        {feature.description}
-                      </p>
-                    </div>
+                      {stat.value}
+                    </p>
+                    <p className="text-sm font-medium leading-snug text-brand-slate/70">
+                      {stat.label}
+                    </p>
                   </div>
                 )
               })}
