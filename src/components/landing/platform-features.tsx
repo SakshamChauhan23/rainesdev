@@ -5,27 +5,13 @@ import { Container } from '@/components/layout/container'
 import { Button } from '@/components/ui/button'
 import { useEffect, useRef, useState } from 'react'
 
-const stats = [
-  {
-    value: '200+',
-    label: 'Ready-to-use agents',
-    color: 'orange',
-  },
-  {
-    value: '14 days',
-    label: 'Free trial, no card needed',
-    color: 'teal',
-  },
-  {
-    value: 'Same day',
-    label: 'Go live, no IT team required',
-    color: 'teal',
-  },
-  {
-    value: '$0',
-    label: 'Setup or onboarding cost',
-    color: 'orange',
-  },
+const reasons = [
+  { title: 'Agents Built for Your Industry', color: 'orange' },
+  { title: 'Tested Before You See Them', color: 'teal' },
+  { title: 'No Surprise Costs', color: 'orange' },
+  { title: 'Live in Minutes, Not Weeks', color: 'teal' },
+  { title: 'Zero Technical Skill Required', color: 'orange' },
+  { title: 'Real Reviews from Real Owners', color: 'teal' },
 ]
 
 export function PlatformFeatures() {
@@ -75,30 +61,29 @@ export function PlatformFeatures() {
               Built for people who run businesses, not for engineers.
             </p>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {stats.map((stat, index) => {
-                const isOrange = stat.color === 'orange'
+            {/* Numbered List */}
+            <div className="flex flex-col divide-y divide-brand-slate/10">
+              {reasons.map((reason, index) => {
+                const isOrange = reason.color === 'orange'
+                const num = String(index + 1).padStart(2, '0')
                 return (
                   <div
                     key={index}
-                    className={`rounded-2xl border-2 p-6 transition-all duration-500 ${
-                      isOrange
-                        ? 'border-brand-orange/20 bg-brand-orange/5'
-                        : 'border-brand-teal/20 bg-brand-teal/5'
-                    } ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
-                    style={{ transitionDelay: `${200 + index * 100}ms` }}
+                    className={`group flex items-center gap-5 py-4 transition-all duration-500 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'}`}
+                    style={{ transitionDelay: `${150 + index * 80}ms` }}
                   >
-                    <p
-                      className={`mb-1 text-3xl font-extrabold tracking-tight sm:text-4xl ${
-                        isOrange ? 'text-brand-orange' : 'text-brand-teal'
+                    <span
+                      className={`shrink-0 text-2xl font-black tabular-nums transition-colors ${
+                        isOrange
+                          ? 'text-brand-orange/30 group-hover:text-brand-orange'
+                          : 'text-brand-teal/30 group-hover:text-brand-teal'
                       }`}
                     >
-                      {stat.value}
-                    </p>
-                    <p className="text-sm font-medium leading-snug text-brand-slate/70">
-                      {stat.label}
-                    </p>
+                      {num}
+                    </span>
+                    <span className="text-base font-semibold text-brand-slate transition-colors group-hover:text-brand-slate/80 sm:text-lg">
+                      {reason.title}
+                    </span>
                   </div>
                 )
               })}
