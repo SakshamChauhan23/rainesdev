@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Container } from '@/components/layout/container'
 import { Button } from '@/components/ui/button'
 import { useEffect, useRef, useState } from 'react'
+import { Check } from 'lucide-react'
 
 const reasons = [
   { title: 'Agents Built for Your Industry', color: 'orange' },
@@ -57,31 +58,30 @@ export function PlatformFeatures() {
                 <span className="absolute bottom-2 left-0 right-0 -z-0 h-3 bg-brand-orange/20" />
               </span>
             </h2>
-            <p className="mb-10 text-lg text-brand-slate/70">
+            <p className="mb-8 text-lg text-brand-slate/70">
               Built for people who run businesses, not for engineers.
             </p>
 
-            {/* Numbered List */}
-            <div className="flex flex-col divide-y divide-brand-slate/10">
+            {/* Stacked card list */}
+            <div className="overflow-hidden rounded-2xl border border-brand-slate/10 shadow-md">
               {reasons.map((reason, index) => {
                 const isOrange = reason.color === 'orange'
-                const num = String(index + 1).padStart(2, '0')
                 return (
                   <div
                     key={index}
-                    className={`group flex items-center gap-5 py-4 transition-all duration-500 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'}`}
+                    className={`border-brand-slate/8 group flex items-center gap-4 border-b px-5 py-4 transition-all duration-300 last:border-b-0 hover:brightness-95 ${
+                      isOrange ? 'bg-brand-orange/6' : 'bg-brand-teal/6'
+                    } ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'}`}
                     style={{ transitionDelay: `${150 + index * 80}ms` }}
                   >
-                    <span
-                      className={`shrink-0 text-2xl font-black tabular-nums transition-colors ${
-                        isOrange
-                          ? 'text-brand-orange/30 group-hover:text-brand-orange'
-                          : 'text-brand-teal/30 group-hover:text-brand-teal'
+                    <div
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110 ${
+                        isOrange ? 'bg-brand-orange' : 'bg-brand-teal'
                       }`}
                     >
-                      {num}
-                    </span>
-                    <span className="text-base font-semibold text-brand-slate transition-colors group-hover:text-brand-slate/80 sm:text-lg">
+                      <Check className="h-4 w-4 text-white" strokeWidth={3} />
+                    </div>
+                    <span className="text-sm font-semibold text-brand-slate sm:text-base">
                       {reason.title}
                     </span>
                   </div>
@@ -91,7 +91,7 @@ export function PlatformFeatures() {
 
             {/* CTA */}
             <div
-              className={`mt-10 transition-all delay-700 duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+              className={`mt-8 transition-all delay-700 duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
             >
               <Link href="/agents">
                 <Button
