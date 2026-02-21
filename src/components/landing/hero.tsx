@@ -7,7 +7,7 @@ import { ArrowRight, Sparkles, Zap, Bot, TrendingUp, Users, Clock } from 'lucide
 import { useEffect, useState } from 'react'
 
 export function Hero() {
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(true)
 
   useEffect(() => {
     setMounted(true)
