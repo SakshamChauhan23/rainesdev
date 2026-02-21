@@ -32,7 +32,7 @@ const steps = [
 ]
 
 export function HowItWorksTimeline() {
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
   const sectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

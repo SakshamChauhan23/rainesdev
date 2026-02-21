@@ -7,7 +7,7 @@ import { ArrowRight, Sparkles, BarChart3, Target, TrendingUp } from 'lucide-reac
 import { useEffect, useState } from 'react'
 
 export function AISavingsReviewCTA() {
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
     setIsVisible(true)

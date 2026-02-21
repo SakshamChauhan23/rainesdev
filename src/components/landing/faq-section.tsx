@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ChevronDown, HelpCircle } from 'lucide-react'
 
 export function FAQSection() {
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
   const [openIndex, setOpenIndex] = useState<number | null>(0)
   const sectionRef = useRef<HTMLDivElement>(null)
 
