@@ -56,7 +56,7 @@ const categoryDefinitions = [
 
 export function CategoryGrid() {
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
     setIsVisible(true)

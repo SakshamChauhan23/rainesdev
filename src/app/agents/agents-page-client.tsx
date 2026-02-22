@@ -68,7 +68,7 @@ export function AgentsPageClient({
   const [totalPages, setTotalPages] = useState(initialPagination.totalPages)
   const [showFilters, setShowFilters] = useState(!!initialCategorySlug)
   const [totalAgents, setTotalAgents] = useState(initialPagination.total)
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
     setIsVisible(true)
