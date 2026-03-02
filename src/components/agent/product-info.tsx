@@ -14,7 +14,6 @@ import {
   Clock,
   TrendingUp,
   Wrench,
-  ExternalLink,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -36,7 +35,6 @@ interface ProductInfoProps {
   agentSlug: string
   hasAccess: boolean
   isApproved: boolean
-  platformUrl?: string
 }
 
 export function ProductInfo({
@@ -49,7 +47,6 @@ export function ProductInfo({
   agentSlug,
   hasAccess,
   isApproved,
-  platformUrl,
 }: ProductInfoProps) {
   const [copied, setCopied] = useState(false)
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
@@ -147,14 +144,6 @@ export function ProductInfo({
 
       {/* Action Buttons */}
       <div className="space-y-3">
-        {hasAccess && platformUrl && (
-          <Link href={platformUrl}>
-            <Button size="lg" className="w-full bg-brand-teal text-white hover:bg-brand-teal/90">
-              <ExternalLink className="mr-2 h-5 w-5" />
-              Launch Platform
-            </Button>
-          </Link>
-        )}
         {hasAccess ? (
           <a href="#setup-guide">
             <Button size="lg" className="w-full bg-green-600 hover:bg-green-700">

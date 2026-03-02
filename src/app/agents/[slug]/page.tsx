@@ -130,12 +130,6 @@ export async function generateMetadata({ params }: AgentPageProps): Promise<Meta
   }
 }
 
-// Agents with a linked microsite platform — map slug → platform URL
-const AGENT_PLATFORM_URLS: Record<string, string> = {
-  'rouze-dental': '/dental/login',
-  'rouze-dental-revenue-reactivation': '/dental/login',
-}
-
 export default async function AgentPage({ params, searchParams }: AgentPageProps) {
   const { slug } = params
   const agent = await getCachedAgentBySlug(slug)
@@ -192,7 +186,6 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
               agentSlug={agent.slug}
               hasAccess={hasAccess}
               isApproved={agent.status === 'APPROVED'}
-              platformUrl={AGENT_PLATFORM_URLS[agent.slug]}
             />
           </div>
 

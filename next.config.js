@@ -8,24 +8,6 @@ const nextConfig = {
   // Standalone output for optimized VPS deployment (smaller footprint, faster cold starts)
   output: 'standalone',
 
-  // Multi-zone: proxy /dental/* to the Rouze Dental microsite.
-  // beforeFiles ensures the dental app intercepts these routes before local pages are checked.
-  async rewrites() {
-    const dentalUrl = process.env.DENTAL_APP_URL || 'http://localhost:3001'
-    return {
-      beforeFiles: [
-        {
-          source: '/dental',
-          destination: `${dentalUrl}/dental`,
-        },
-        {
-          source: '/dental/:path*',
-          destination: `${dentalUrl}/dental/:path*`,
-        },
-      ],
-    }
-  },
-
   eslint: {
     ignoreDuringBuilds: true,
   },
