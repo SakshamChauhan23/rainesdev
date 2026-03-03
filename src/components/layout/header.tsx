@@ -148,12 +148,6 @@ export function Header() {
             >
               AI Savings Review
             </Link>
-            <Link
-              href="/pricing"
-              className="text-sm font-medium text-brand-orange transition-all hover:scale-105 hover:text-brand-orange/80"
-            >
-              Pricing
-            </Link>
           </nav>
 
           {/* Auth Buttons */}
@@ -278,14 +272,6 @@ export function Header() {
               >
                 AI Savings Review
               </Link>
-              <Link
-                href="/pricing"
-                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-orange transition-colors hover:bg-brand-cream hover:text-brand-orange/80"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Pricing
-              </Link>
-
               {user && userRole && (
                 <>
                   <div className="mt-2 border-t border-brand-slate/10 pt-2">

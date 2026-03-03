@@ -157,84 +157,27 @@ export default async function AgentPage({ params, searchParams }: AgentPageProps
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Container className="py-6 md:py-10">
-        {showSuccessBanner && hasAccess && <PurchaseSuccessBanner />}
-
-        {/* Main Product Section - Amazon/Samsung Style */}
-        <div className="grid gap-8 lg:grid-cols-12">
-          {/* Left Column - Gallery */}
-          <div className="lg:col-span-5">
-            <div className="sticky top-24">
-              <ProductGallery
-                thumbnailUrl={agent.thumbnailUrl}
-                demoVideoUrl={agent.demoVideoUrl}
-                title={agent.title}
-              />
-            </div>
-          </div>
-
-          {/* Center Column - Product Info */}
-          <div className="lg:col-span-4">
-            <ProductInfo
-              title={agent.title}
-              shortDescription={agent.shortDescription}
-              category={agent.category}
-              viewCount={agent.viewCount}
-              purchaseCount={agent.purchaseCount}
-              agentId={agent.id}
-              agentSlug={agent.slug}
-              hasAccess={hasAccess}
-              isApproved={agent.status === 'APPROVED'}
-            />
-          </div>
-
-          {/* Right Column - Sidebar */}
-          <div className="space-y-4 lg:col-span-3">
-            {/* Similar Items */}
-            <SimilarItemsSidebar agents={recommendedAgents} />
-
-            {/* Seller Card */}
-            <SellerCard
-              name={agent.seller.name || 'Anonymous Seller'}
-              avatarUrl={agent.seller.avatarUrl}
-              bio={agent.seller.sellerProfile?.bio || null}
-              portfolioSlug={agent.seller.sellerProfile?.portfolioUrlSlug || '#'}
-              socialLinks={
-                agent.seller.sellerProfile?.socialLinks as import('@/types').SocialLinks | null
-              }
-            />
-          </div>
-        </div>
-
-        {/* Specifications Section */}
-        <div className="mt-10">
-          <ProductSpecs category={agent.category.name} />
-        </div>
-
-        {/* Compare with Similar Products */}
-        <div className="mt-10">
-          <CompareAgents agents={recommendedAgents} categoryName={agent.category.name} />
-        </div>
-
-        {/* Product Features Section */}
-        <div className="mt-10">
-          <ProductFeatures
-            workflowOverview={agent.workflowOverview}
-            useCase={agent.useCase}
-            title={agent.title}
+    <div className="flex min-h-[70vh] flex-col items-center justify-center bg-background px-6 text-center">
+      <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-brand-orange/10">
+        <svg
+          className="h-10 w-10 text-brand-orange"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1.5}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z"
           />
-        </div>
-
-        {/* Setup Guide - Locked or Unlocked */}
-        <div className="mt-10">
-          {hasAccess ? (
-            <UnlockedSetupGuide setupGuide={agent.setupGuide} />
-          ) : (
-            <LockedSetupGuide agentId={agent.id} isApproved={agent.status === 'APPROVED'} />
-          )}
-        </div>
-      </Container>
+        </svg>
+      </div>
+      <h1 className="mb-3 text-3xl font-bold text-brand-slate sm:text-4xl">{agent.title}</h1>
+      <p className="mb-2 text-xl font-semibold text-brand-orange">Coming Soon</p>
+      <p className="max-w-md text-brand-slate/60">
+        This agent page is under construction. Check back soon for full details and setup guides.
+      </p>
     </div>
   )
 }
