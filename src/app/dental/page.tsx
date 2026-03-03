@@ -273,43 +273,106 @@ export default function DentalPage() {
 
       {/* ── HOW IT WORKS ── */}
       <section id="how-it-works" className="bg-brand-cream py-20">
-        <div className="mx-auto max-w-4xl px-6">
-          <h2 className="mb-4 text-center text-3xl font-bold text-slate-900 sm:text-4xl">
-            How It Works
-          </h2>
-          <p className="mb-12 text-center text-slate-600">Three steps. That&apos;s it.</p>
-          <div className="grid gap-6 sm:grid-cols-3">
-            {[
-              {
-                step: '01',
-                icon: Phone,
-                title: 'Connect to your PMS',
-                desc: 'We integrate with Dentrix, Eaglesoft, OpenDental, and more in under a day.',
-              },
-              {
-                step: '02',
-                icon: BarChart3,
-                title: 'Identify revenue gaps',
-                desc: 'Our system surfaces every overdue hygiene patient, unscheduled treatment, and at-risk appointment.',
-              },
-              {
-                step: '03',
-                icon: Zap,
-                title: 'Automatically reactivate patients',
-                desc: 'Smart, HIPAA-conscious messaging goes out automatically — 24/7, no staff time required.',
-              },
-            ].map((item) => (
-              <div key={item.step} className="relative rounded-2xl bg-white p-8 shadow-sm">
-                <div className="mb-4 text-5xl font-extrabold text-brand-orange/10">{item.step}</div>
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-orange/10">
-                  <item.icon className="h-5 w-5 text-brand-orange" />
-                </div>
-                <h3 className="mb-2 font-bold text-slate-900">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-600">{item.desc}</p>
-              </div>
-            ))}
+        <div className="mx-auto max-w-5xl px-6">
+
+          {/* Header */}
+          <div className="mb-14 text-center">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-brand-teal">
+              Simple Steps
+            </p>
+            <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">How It Works</h2>
+            <p className="text-slate-500">
+              No complicated tech. No extra staff. Just results.
+            </p>
           </div>
-          <div className="mt-8 rounded-2xl bg-slate-900 p-6 text-center text-slate-300">
+
+          {/* Two-column */}
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+
+            {/* Left — product mockup */}
+            <div className="relative">
+              <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl">
+                {/* Mock browser bar */}
+                <div className="flex items-center gap-2 bg-slate-900 px-5 py-3.5">
+                  <span className="h-3 w-3 rounded-full bg-red-400" />
+                  <span className="h-3 w-3 rounded-full bg-yellow-400" />
+                  <span className="h-3 w-3 rounded-full bg-green-400" />
+                  <span className="ml-3 text-xs text-slate-400">Dental Revenue Dashboard</span>
+                </div>
+                {/* Mock content */}
+                <div className="p-5 space-y-3">
+                  <div className="flex items-center justify-between py-1">
+                    <span className="text-sm font-semibold text-slate-700">Overdue Patients</span>
+                    <span className="text-sm font-bold text-brand-orange">247 patients</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-100">
+                    <div className="h-2 w-3/4 rounded-full bg-brand-orange" />
+                  </div>
+                  <div className="pt-1 space-y-2">
+                    {[
+                      'Sarah M. — Hygiene overdue 8 months',
+                      'James T. — Crown follow-up pending',
+                      'Lisa K. — Treatment unscheduled',
+                    ].map((p) => (
+                      <div
+                        key={p}
+                        className="flex items-center gap-3 rounded-xl bg-slate-50 px-4 py-3"
+                      >
+                        <span className="h-2 w-2 flex-shrink-0 rounded-full bg-brand-teal" />
+                        <span className="text-xs text-slate-600">{p}</span>
+                        <span className="ml-auto flex-shrink-0 text-xs font-medium text-brand-teal">
+                          Auto-sending
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              {/* Floating badge */}
+              <div className="absolute -bottom-4 -right-4 rounded-2xl bg-brand-orange px-5 py-3 shadow-lg shadow-brand-orange/30">
+                <p className="text-xs font-semibold text-white">3 messages sent tonight</p>
+              </div>
+            </div>
+
+            {/* Right — steps list */}
+            <div className="flex gap-6">
+              {/* Vertical accent line */}
+              <div className="mt-1 w-px flex-shrink-0 bg-slate-200" />
+              <div className="space-y-10">
+                {[
+                  {
+                    icon: Phone,
+                    title: 'Connect to your PMS',
+                    desc: 'We integrate with Dentrix, Eaglesoft, OpenDental, and more in under a day.',
+                  },
+                  {
+                    icon: BarChart3,
+                    title: 'Identify revenue gaps',
+                    desc: 'Our system surfaces every overdue hygiene patient, unscheduled treatment, and at-risk appointment.',
+                  },
+                  {
+                    icon: Zap,
+                    title: 'Automatically reactivate patients',
+                    desc: 'Smart, HIPAA-conscious messaging goes out automatically — 24/7, no staff time required.',
+                  },
+                ].map((item) => (
+                  <div key={item.title} className="flex gap-4">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-orange/10">
+                      <item.icon className="h-5 w-5 text-brand-orange" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-slate-900">{item.title}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-slate-600">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+
+          {/* Bottom banner + CTA */}
+          <div className="mt-14 rounded-2xl bg-slate-900 p-6 text-center text-slate-300">
             <p className="font-medium">
               No additional hiring.&nbsp;·&nbsp; No manual chasing.&nbsp;·&nbsp; No complicated
               tech stack.
@@ -347,7 +410,7 @@ export default function DentalPage() {
               Plans and Pricing
             </h2>
             <p className="text-slate-500">
-              We price against what you&apos;re losing — one recovered chair per day pays for this.
+              We price against what you&apos;re losing, one recovered chair per day pays for this.
             </p>
           </div>
 

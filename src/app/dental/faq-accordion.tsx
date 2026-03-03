@@ -31,7 +31,7 @@ export function DentalFAQ() {
             {[
               'Personalized to each patient',
               'HIPAA-conscious at every step',
-              'Human in tone — not robotic',
+              'Human in tone, not robotic',
               'Stops immediately on reply',
             ].map((i) => (
               <li key={i} className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export function DentalFAQ() {
           <ul className="space-y-1">
             {[
               'Consent-based outreach only',
-              'Smart cadence controls — no flooding',
+              'Smart cadence controls no flooding',
               'Controlled follow-up logic with opt-out built in',
             ].map((i) => (
               <li key={i} className="flex items-center gap-2">
@@ -61,7 +61,7 @@ export function DentalFAQ() {
       />
       <FAQItem
         q="Will this replace my team?"
-        a="No — it makes your team more productive. Your staff handles inbound responses and relationship-building while the system eliminates all the manual chasing. Think of it as adding a full-time recall coordinator who never sleeps."
+        a="No, it makes your team more productive. Your staff handles inbound responses and relationship-building while the system eliminates all the manual chasing. Think of it as adding a full-time recall coordinator who never sleeps."
       />
     </div>
   )
