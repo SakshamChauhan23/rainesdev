@@ -92,8 +92,8 @@ let composedConfig = nextConfig
 // Apply bundle analyzer
 composedConfig = withBundleAnalyzer(composedConfig)
 
-// Apply Sentry if DSN is configured
-if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+// Apply Sentry only in production (it wraps webpack which slows down local dev)
+if (process.env.NEXT_PUBLIC_SENTRY_DSN && process.env.NODE_ENV === 'production') {
   composedConfig = withSentryConfig(composedConfig, sentryWebpackPluginOptions)
 }
 
