@@ -34,6 +34,24 @@ export const SAVINGS_REVIEW_CONFIG = {
   },
 } as const
 
+export const DENTAL_CONFIG = {
+  SETUP: {
+    priceAmount: 29900, // $299 in cents
+    name: 'Dental Revenue Reactivation System™ — Setup',
+    description: 'One-time setup: PMS connection, workflow config, compliance setup, staff walkthrough, 30-day tuning',
+  },
+  STARTER: {
+    priceAmount: 9900, // $99 in cents
+    name: 'Dental Revenue Reactivation System™ — Starter',
+    description: 'Monthly recall reactivation: overdue hygiene follow-up, unscheduled treatment outreach, multi-touch cadence',
+  },
+  STANDARD: {
+    priceAmount: 14900, // $149 in cents
+    name: 'Dental Revenue Reactivation System™ — Standard',
+    description: 'Monthly recall + no-show prevention: everything in Starter plus intelligent reminders and confirmation automation',
+  },
+} as const
+
 export const SUBSCRIPTION_CONFIG = {
   priceAmount: 1299, // $12.99 in cents
   currency: 'usd' as const,

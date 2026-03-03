@@ -10,6 +10,7 @@ import {
   MapPin,
 } from 'lucide-react'
 import { DentalFAQ } from './faq-accordion'
+import { BuyButton } from './buy-button'
 
 export const metadata = {
   title: 'Dental Revenue Reactivation System™ | Rouze.ai',
@@ -440,6 +441,11 @@ export default function DentalPage() {
                     </li>
                   ))}
                 </ul>
+                <BuyButton
+                  plan="SETUP"
+                  className="mt-6 w-full rounded-xl bg-brand-teal py-3 text-center text-sm font-bold text-white transition-all hover:bg-brand-teal/90 disabled:opacity-60"
+                  label="Buy Now — $299"
+                />
               </div>
             </div>
 
@@ -468,11 +474,16 @@ export default function DentalPage() {
                   ))}
                 </ul>
               </div>
+              <BuyButton
+                plan="STARTER"
+                className="mt-6 w-full rounded-xl bg-brand-orange py-3 text-center text-sm font-bold text-white transition-all hover:bg-brand-orange/90 disabled:opacity-60"
+                label="Buy Now — $99/mo"
+              />
               <a
                 href="https://dental-system3.vercel.app/login"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 block rounded-xl border-2 border-slate-200 py-3 text-center text-sm font-semibold text-slate-700 transition-all hover:border-brand-orange hover:text-brand-orange"
+                className="mt-3 block rounded-xl border-2 border-slate-200 py-3 text-center text-sm font-semibold text-slate-700 transition-all hover:border-brand-orange hover:text-brand-orange"
               >
                 Experience Interactive Demo
               </a>
@@ -508,11 +519,16 @@ export default function DentalPage() {
                   ))}
                 </ul>
               </div>
+              <BuyButton
+                plan="STANDARD"
+                className="mt-6 w-full rounded-xl bg-white py-3 text-center text-sm font-bold text-slate-900 transition-all hover:bg-slate-100 disabled:opacity-60"
+                label="Buy Now — $149/mo"
+              />
               <a
                 href="https://dental-system3.vercel.app/login"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 block rounded-xl bg-white py-3 text-center text-sm font-bold text-slate-900 transition-all hover:bg-slate-100"
+                className="mt-3 block rounded-xl border border-white/20 py-3 text-center text-sm font-semibold text-white/70 transition-all hover:border-white/40 hover:text-white"
               >
                 Experience Interactive Demo
               </a>
