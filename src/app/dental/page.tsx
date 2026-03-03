@@ -1,11 +1,7 @@
-'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
   CheckCircle2,
-  ChevronDown,
   ArrowRight,
   Zap,
   Shield,
@@ -16,26 +12,15 @@ import {
   Phone,
   MapPin,
 } from 'lucide-react'
+import { DentalFAQ } from './faq-accordion'
+
+export const metadata = {
+  title: 'Dental Revenue Reactivation System™ | Rouze.ai',
+  description:
+    'Automatically re-engage overdue hygiene and unscheduled treatment patients. Fill your chairs without hiring more staff.',
+}
 
 const AUDIT_LINK = 'https://cal.com/rouze/dental-audit' // update with real booking link
-
-function FAQItem({ q, a }: { q: string; a: string | React.ReactNode }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="border-b border-slate-200 last:border-0">
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between py-5 text-left text-lg font-semibold text-slate-800 transition-colors hover:text-brand-orange"
-      >
-        {q}
-        <ChevronDown
-          className={`h-5 w-5 flex-shrink-0 text-brand-orange transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
-        />
-      </button>
-      {open && <div className="pb-5 text-slate-600 leading-relaxed">{a}</div>}
-    </div>
-  )
-}
 
 export default function DentalPage() {
   return (
@@ -70,9 +55,8 @@ export default function DentalPage() {
             Dental Revenue Reactivation System™
           </div>
           <h1 className="mb-6 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Your Next{' '}
-            <span className="text-brand-orange">$250,000</span>{' '}
-            Is Already in Your<br className="hidden sm:block" /> Patient Database.
+            Your Next <span className="text-brand-orange">$250,000</span> Is Already in Your
+            <br className="hidden sm:block" /> Patient Database.
           </h1>
           <p className="mx-auto mb-10 max-w-2xl text-lg text-slate-300 sm:text-xl">
             Automatically re-engage overdue hygiene and unscheduled treatment patients — and fill
@@ -115,19 +99,22 @@ export default function DentalPage() {
               {
                 icon: Users,
                 label: 'Overdue Hygiene Patients',
-                description: 'Patients who are due for a cleaning but haven\'t scheduled — and won\'t unless someone reaches out.',
+                description:
+                  "Patients who are due for a cleaning but haven't scheduled — and won't unless someone reaches out.",
                 color: 'orange',
               },
               {
                 icon: BarChart3,
                 label: 'Unscheduled Treatment Plans',
-                description: 'Diagnosed work sitting in your PMS with no follow-up. Revenue you\'ve already earned — just not collected.',
+                description:
+                  "Diagnosed work sitting in your PMS with no follow-up. Revenue you've already earned — just not collected.",
                 color: 'teal',
               },
               {
                 icon: Clock,
                 label: 'No-Shows & Cancellations',
-                description: 'Same-day cancellations and no-shows that leave chairs empty and your schedule in chaos.',
+                description:
+                  'Same-day cancellations and no-shows that leave chairs empty and your schedule in chaos.',
                 color: 'orange',
               },
             ].map((item) => (
@@ -163,7 +150,7 @@ export default function DentalPage() {
                   The Revenue Sitting Idle in Your Database
                 </h2>
                 <p className="mb-6 text-slate-400">
-                  Here's what a typical practice looks like — and most owners have no idea.
+                  Here&apos;s what a typical practice looks like — and most owners have no idea.
                 </p>
                 <a
                   href={AUDIT_LINK}
@@ -211,13 +198,20 @@ export default function DentalPage() {
           </h2>
           <blockquote className="mx-auto mb-6 max-w-2xl rounded-2xl border-l-4 border-brand-orange bg-white px-8 py-6 text-left shadow-sm">
             <p className="text-xl font-semibold italic text-slate-800">
-              "The coordinator who works the 11pm shift your front desk never will."
+              &ldquo;The coordinator who works the 11pm shift your front desk never will.&rdquo;
             </p>
           </blockquote>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-600">
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-brand-teal" /> Not software</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-brand-teal" /> Not an AI gadget</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-brand-teal" /> A Revenue Recovery & Protection System</span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4 text-brand-teal" /> Not software
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4 text-brand-teal" /> Not an AI gadget
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4 text-brand-teal" /> A Revenue Recovery &amp;
+              Protection System
+            </span>
           </div>
         </div>
       </section>
@@ -229,10 +223,9 @@ export default function DentalPage() {
             What It Includes
           </h2>
           <div className="grid gap-8 lg:grid-cols-2">
-            {/* System 1 */}
             <div className="rounded-2xl border-2 border-brand-orange/20 bg-white p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-orange text-white font-bold text-lg">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-orange text-lg font-bold text-white">
                   1
                 </div>
                 <h3 className="text-xl font-bold text-slate-900">
@@ -255,10 +248,9 @@ export default function DentalPage() {
                 ))}
               </ul>
             </div>
-            {/* System 2 */}
             <div className="rounded-2xl border-2 border-brand-teal/20 bg-white p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal text-white font-bold text-lg">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-teal text-lg font-bold text-white">
                   2
                 </div>
                 <h3 className="text-xl font-bold text-slate-900">
@@ -281,7 +273,12 @@ export default function DentalPage() {
               <div className="mt-6 rounded-xl bg-brand-teal/5 p-4">
                 <p className="text-sm font-semibold text-brand-teal">Together, these systems:</p>
                 <ul className="mt-2 space-y-1 text-sm text-slate-600">
-                  {['Recover lost production', 'Protect tomorrow\'s schedule', 'Increase staff efficiency', 'Stabilize monthly revenue'].map((b) => (
+                  {[
+                    'Recover lost production',
+                    "Protect tomorrow's schedule",
+                    'Increase staff efficiency',
+                    'Stabilize monthly revenue',
+                  ].map((b) => (
                     <li key={b} className="flex items-center gap-2">
                       <span className="h-1.5 w-1.5 rounded-full bg-brand-teal" />
                       {b}
@@ -300,12 +297,27 @@ export default function DentalPage() {
           <h2 className="mb-4 text-center text-3xl font-bold text-slate-900 sm:text-4xl">
             How It Works
           </h2>
-          <p className="mb-12 text-center text-slate-600">Three steps. That's it.</p>
+          <p className="mb-12 text-center text-slate-600">Three steps. That&apos;s it.</p>
           <div className="grid gap-6 sm:grid-cols-3">
             {[
-              { step: '01', icon: Phone, title: 'Connect to your PMS', desc: 'We integrate with Dentrix, Eaglesoft, OpenDental, and more in under a day.' },
-              { step: '02', icon: BarChart3, title: 'Identify revenue gaps', desc: 'Our system surfaces every overdue hygiene patient, unscheduled treatment, and at-risk appointment.' },
-              { step: '03', icon: Zap, title: 'Automatically reactivate patients', desc: 'Smart, HIPAA-conscious messaging goes out automatically — 24/7, no staff time required.' },
+              {
+                step: '01',
+                icon: Phone,
+                title: 'Connect to your PMS',
+                desc: 'We integrate with Dentrix, Eaglesoft, OpenDental, and more in under a day.',
+              },
+              {
+                step: '02',
+                icon: BarChart3,
+                title: 'Identify revenue gaps',
+                desc: 'Our system surfaces every overdue hygiene patient, unscheduled treatment, and at-risk appointment.',
+              },
+              {
+                step: '03',
+                icon: Zap,
+                title: 'Automatically reactivate patients',
+                desc: 'Smart, HIPAA-conscious messaging goes out automatically — 24/7, no staff time required.',
+              },
             ].map((item) => (
               <div key={item.step} className="relative rounded-2xl bg-white p-8 shadow-sm">
                 <div className="mb-4 text-5xl font-extrabold text-brand-orange/10">{item.step}</div>
@@ -318,43 +330,21 @@ export default function DentalPage() {
             ))}
           </div>
           <div className="mt-8 rounded-2xl bg-slate-900 p-6 text-center text-slate-300">
-            <p className="font-medium">No additional hiring. &nbsp;·&nbsp; No manual chasing. &nbsp;·&nbsp; No complicated tech stack.</p>
+            <p className="font-medium">
+              No additional hiring.&nbsp;·&nbsp; No manual chasing.&nbsp;·&nbsp; No complicated
+              tech stack.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── FAQ ── */}
+      {/* ── FAQ — client island ── */}
       <section className="bg-white py-20">
         <div className="mx-auto max-w-3xl px-6">
           <h2 className="mb-12 text-center text-3xl font-bold text-slate-900 sm:text-4xl">
             Common Questions
           </h2>
-          <div className="rounded-2xl border border-slate-200 bg-white px-8 shadow-sm">
-            <FAQItem
-              q="Will patients hate automation?"
-              a={
-                <ul className="space-y-1">
-                  {['Personalized to each patient', 'HIPAA-conscious at every step', 'Human in tone — not robotic', 'Stops immediately on reply'].map((i) => (
-                    <li key={i} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-teal" />{i}</li>
-                  ))}
-                </ul>
-              }
-            />
-            <FAQItem
-              q="Is this spam?"
-              a={
-                <ul className="space-y-1">
-                  {['Consent-based outreach only', 'Smart cadence controls — no flooding', 'Controlled follow-up logic with opt-out built in'].map((i) => (
-                    <li key={i} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-teal" />{i}</li>
-                  ))}
-                </ul>
-              }
-            />
-            <FAQItem
-              q="Will this replace my team?"
-              a="No — it makes your team more productive. Your staff handles inbound responses and relationship-building while the system eliminates all the manual chasing. Think of it as adding a full-time recall coordinator who never sleeps."
-            />
-          </div>
+          <DentalFAQ />
         </div>
       </section>
 
@@ -362,41 +352,66 @@ export default function DentalPage() {
       <section className="bg-brand-cream py-20">
         <div className="mx-auto max-w-5xl px-6">
           <div className="mb-4 text-center">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-orange">Pricing & Packaging</p>
+            <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-brand-orange">
+              Pricing &amp; Packaging
+            </p>
             <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
-              We Price Against What You're Losing
+              We Price Against What You&apos;re Losing
             </h2>
             <p className="mx-auto max-w-xl text-slate-600">
-              Not against software. Against one front desk hire (~$70,000/yr), one empty hygiene chair (~$150/hr), and lost production. One recovered chair per day pays for this.
+              Not against software. Against one front desk hire (~$70,000/yr), one empty hygiene
+              chair (~$150/hr), and lost production. One recovered chair per day pays for this.
             </p>
           </div>
 
           {/* Setup fee */}
           <div className="mx-auto mb-8 mt-10 max-w-xl rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <p className="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-500">One-Time</p>
+            <p className="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-500">
+              One-Time
+            </p>
             <p className="mb-2 text-4xl font-extrabold text-slate-900">$299</p>
-            <p className="mb-6 font-semibold text-slate-700">Setup & Implementation Fee</p>
-            <ul className="space-y-2 text-sm text-slate-600 text-left max-w-xs mx-auto">
-              {['PMS connection', 'Workflow configuration', 'Message customization', 'Compliance setup', 'Launch calibration', 'Staff walkthrough', '30-day performance tuning'].map((i) => (
-                <li key={i} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-brand-teal" />{i}</li>
+            <p className="mb-6 font-semibold text-slate-700">Setup &amp; Implementation Fee</p>
+            <ul className="mx-auto max-w-xs space-y-2 text-left text-sm text-slate-600">
+              {[
+                'PMS connection',
+                'Workflow configuration',
+                'Message customization',
+                'Compliance setup',
+                'Launch calibration',
+                'Staff walkthrough',
+                '30-day performance tuning',
+              ].map((i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-brand-teal" />
+                  {i}
+                </li>
               ))}
             </ul>
           </div>
 
           {/* Monthly plans */}
           <div className="grid gap-6 lg:grid-cols-2">
-            {/* Starter */}
             <div className="rounded-2xl border-2 border-slate-200 bg-white p-8 shadow-sm">
               <p className="mb-1 text-sm font-semibold text-slate-500">Starter</p>
               <div className="mb-1 flex items-baseline gap-1">
                 <span className="text-4xl font-extrabold text-slate-900">$99</span>
                 <span className="text-slate-500">/month</span>
               </div>
-              <p className="mb-6 text-sm text-slate-500">Best for smaller practices fixing recall leakage.</p>
+              <p className="mb-6 text-sm text-slate-500">
+                Best for smaller practices fixing recall leakage.
+              </p>
               <ul className="mb-8 space-y-3">
-                {['Dental Revenue Reactivation System™', 'Overdue hygiene follow-up', 'Unscheduled treatment reactivation', 'Smart cadence messaging', 'Monthly reporting', 'Email & SMS support'].map((f) => (
-                  <li key={f} className="flex items-center gap-3 text-slate-700 text-sm">
-                    <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-brand-orange" />{f}
+                {[
+                  'Dental Revenue Reactivation System™',
+                  'Overdue hygiene follow-up',
+                  'Unscheduled treatment reactivation',
+                  'Smart cadence messaging',
+                  'Monthly reporting',
+                  'Email & SMS support',
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-3 text-sm text-slate-700">
+                    <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-brand-orange" />
+                    {f}
                   </li>
                 ))}
               </ul>
@@ -409,7 +424,6 @@ export default function DentalPage() {
                 Get Started
               </a>
             </div>
-            {/* Standard */}
             <div className="relative rounded-2xl border-2 border-brand-orange bg-white p-8 shadow-lg">
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-brand-orange px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
                 Most Popular
@@ -419,11 +433,23 @@ export default function DentalPage() {
                 <span className="text-4xl font-extrabold text-slate-900">$149</span>
                 <span className="text-slate-500">/month</span>
               </div>
-              <p className="mb-6 text-sm text-slate-500">Recover revenue AND protect tomorrow's schedule.</p>
+              <p className="mb-6 text-sm text-slate-500">
+                Recover revenue AND protect tomorrow&apos;s schedule.
+              </p>
               <ul className="mb-8 space-y-3">
-                {['Everything in Starter', 'Dental Appointment No-Show Preventer', 'Intelligent reminders', 'Confirmation automation', 'Reschedule capture', 'Same-day cancellation reduction'].map((f) => (
-                  <li key={f} className="flex items-center gap-3 text-slate-700 text-sm">
-                    <CheckCircle2 className={`h-4 w-4 flex-shrink-0 ${f === 'Everything in Starter' ? 'text-brand-teal' : 'text-brand-orange'}`} />{f}
+                {[
+                  { text: 'Everything in Starter', teal: true },
+                  { text: 'Dental Appointment No-Show Preventer', teal: false },
+                  { text: 'Intelligent reminders', teal: false },
+                  { text: 'Confirmation automation', teal: false },
+                  { text: 'Reschedule capture', teal: false },
+                  { text: 'Same-day cancellation reduction', teal: false },
+                ].map((f) => (
+                  <li key={f.text} className="flex items-center gap-3 text-sm text-slate-700">
+                    <CheckCircle2
+                      className={`h-4 w-4 flex-shrink-0 ${f.teal ? 'text-brand-teal' : 'text-brand-orange'}`}
+                    />
+                    {f.text}
                   </li>
                 ))}
               </ul>
@@ -451,8 +477,8 @@ export default function DentalPage() {
             We Only Partner With One Practice Per Zip Code.
           </h2>
           <p className="text-slate-400">
-            If your competitor implements this first, you're competing against a stabilized revenue
-            engine. The window in your area may already be closing.
+            If your competitor implements this first, you&apos;re competing against a stabilized
+            revenue engine. The window in your area may already be closing.
           </p>
         </div>
       </section>
@@ -465,7 +491,7 @@ export default function DentalPage() {
             Free Revenue Gap Audit
           </div>
           <h2 className="mb-4 text-3xl font-bold text-slate-900 sm:text-4xl">
-            See Exactly How Much Revenue You're Leaving on the Table.
+            See Exactly How Much Revenue You&apos;re Leaving on the Table.
           </h2>
           <p className="mb-8 text-lg text-slate-600">
             Book your Free Revenue Gap Audit today. No commitment. Just math.
@@ -487,18 +513,21 @@ export default function DentalPage() {
 
       {/* ── FOOTER ── */}
       <footer className="border-t border-slate-100 bg-slate-50 py-8">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-sm text-slate-500">
-          <Link href="/" className="flex items-center gap-2 hover:text-slate-700">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 text-sm text-slate-500 sm:flex-row">
+          <Link href="/">
             <Image src="/logo.png" alt="Rouze.ai" width={80} height={24} className="h-6 w-auto" />
           </Link>
           <p>© {new Date().getFullYear()} Rouze.ai · All rights reserved</p>
           <div className="flex gap-4">
-            <Link href="/legal" className="hover:text-slate-700">Privacy</Link>
-            <Link href="/terms" className="hover:text-slate-700">Terms</Link>
+            <Link href="/legal" className="hover:text-slate-700">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-slate-700">
+              Terms
+            </Link>
           </div>
         </div>
       </footer>
-
     </div>
   )
 }
