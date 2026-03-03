@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -24,8 +23,8 @@ interface AgentCardProps {
 
 export function AgentCard({ agent, priority = false }: AgentCardProps) {
   return (
-    <Link href={`/agents/${agent.slug}`} className="group" prefetch={true}>
-      <Card className="h-full border-gray-300 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#8DEC42] hover:shadow-lg">
+    <div className="group cursor-default">
+      <Card className="h-full border-gray-300 bg-white">
         {/* Thumbnail */}
         <div className="relative aspect-video w-full overflow-hidden rounded-t-lg bg-gray-100">
           {agent.thumbnailUrl ? (
@@ -34,15 +33,19 @@ export function AgentCard({ agent, priority = false }: AgentCardProps) {
               alt={agent.title}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-110"
+              className="object-cover"
               priority={priority}
               loading={priority ? 'eager' : 'lazy'}
             />
           ) : (
             <div className="flex h-full items-center justify-center">
-              <span className="text-4xl transition-transform group-hover:scale-110">🤖</span>
+              <span className="text-4xl">🤖</span>
             </div>
           )}
+          {/* Coming Soon overlay badge */}
+          <div className="absolute left-3 top-3 rounded-full bg-slate-900/80 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+            Coming Soon
+          </div>
         </div>
 
         <CardContent className="p-4">
@@ -68,7 +71,7 @@ export function AgentCard({ agent, priority = false }: AgentCardProps) {
           </div>
 
           {/* Title */}
-          <h3 className="mb-2 line-clamp-2 text-base font-normal text-black transition-colors group-hover:text-[#8DEC42]">
+          <h3 className="mb-2 line-clamp-2 text-base font-normal text-black">
             {agent.title}
           </h3>
 
@@ -84,10 +87,9 @@ export function AgentCard({ agent, priority = false }: AgentCardProps) {
         </CardContent>
 
         <CardFooter className="flex items-center justify-between border-t border-gray-300 p-4">
-          {/* Included Badge */}
           <span className="text-sm font-medium text-brand-teal">Included with Rouze.ai</span>
         </CardFooter>
       </Card>
-    </Link>
+    </div>
   )
 }
