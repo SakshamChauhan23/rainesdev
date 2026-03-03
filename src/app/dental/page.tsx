@@ -17,7 +17,7 @@ export const metadata = {
     'Automatically re-engage overdue hygiene and unscheduled treatment patients. Fill your chairs without hiring more staff.',
 }
 
-const AUDIT_LINK = 'https://cal.com/rouze/dental-audit' // update with real booking link
+const AUDIT_LINK = 'https://cal.com/rouze-team/30min'
 
 export default function DentalPage() {
   return (
@@ -315,6 +315,17 @@ export default function DentalPage() {
               tech stack.
             </p>
           </div>
+          <div className="mt-6 text-center">
+            <a
+              href="https://dental-system3.vercel.app/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-2xl bg-brand-orange px-8 py-4 text-base font-bold text-white shadow-xl shadow-brand-orange/30 transition-all hover:-translate-y-1 hover:shadow-2xl"
+            >
+              Experience Interactive Demo
+              <ArrowRight className="h-5 w-5" />
+            </a>
+          </div>
         </div>
       </section>
 
@@ -329,91 +340,121 @@ export default function DentalPage() {
       </section>
 
       {/* ── PRICING ── */}
-      <section className="bg-brand-cream py-14">
+      <section className="bg-brand-cream py-20">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="mb-8 text-center">
-            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-brand-orange">
-              Pricing &amp; Packaging
-            </p>
-            <h2 className="mb-2 text-3xl font-bold text-slate-900">
-              We Price Against What You&apos;re Losing
+          <div className="mb-12 text-center">
+            <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:text-4xl">
+              Plans and Pricing
             </h2>
-            <p className="text-sm text-slate-500">
-              One recovered chair per day pays for this.
+            <p className="text-slate-500">
+              We price against what you&apos;re losing — one recovered chair per day pays for this.
             </p>
           </div>
 
-          {/* Compact three-column pricing table */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div className="grid grid-cols-3 divide-x divide-slate-100">
+          <div className="grid grid-cols-3 gap-6 items-stretch">
 
-              {/* Setup */}
-              <div className="p-6 text-center">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-slate-400">One-Time</p>
-                <p className="text-3xl font-extrabold text-slate-900">$299</p>
-                <p className="mb-4 mt-1 text-sm font-medium text-slate-600">Setup Fee</p>
-                <ul className="space-y-1.5 text-left text-xs text-slate-500">
-                  {['PMS connection', 'Workflow config', 'Message customization', 'Compliance setup', 'Staff walkthrough', '30-day tuning'].map((i) => (
-                    <li key={i} className="flex items-center gap-1.5">
-                      <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-brand-teal" />{i}
+            {/* Setup — One-Time */}
+            <div className="flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+              <div>
+                <p className="mb-1 text-sm font-semibold text-slate-500">Setup</p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-extrabold text-slate-900">$299</span>
+                </div>
+                <p className="mt-1 text-sm text-slate-400">One-time fee</p>
+                <p className="mt-4 text-sm font-medium text-slate-700">Everything to get you live</p>
+                <ul className="mt-4 space-y-3">
+                  {[
+                    'PMS connection',
+                    'Workflow configuration',
+                    'Message customization',
+                    'Compliance setup',
+                    'Staff walkthrough',
+                    '30-day tuning period',
+                  ].map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-slate-600">
+                      <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-brand-teal" />
+                      {f}
                     </li>
                   ))}
                 </ul>
-              </div>
-
-              {/* Starter */}
-              <div className="p-6 text-center">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-slate-400">Starter</p>
-                <div className="flex items-baseline justify-center gap-1">
-                  <p className="text-3xl font-extrabold text-slate-900">$99</p>
-                  <span className="text-sm text-slate-400">/mo</span>
-                </div>
-                <p className="mb-4 mt-1 text-sm font-medium text-slate-600">Recall Reactivation</p>
-                <ul className="space-y-1.5 text-left text-xs text-slate-500">
-                  {['Overdue hygiene follow-up', 'Unscheduled treatment outreach', 'Multi-touch cadence', 'Monthly reporting', 'Email & SMS support'].map((f) => (
-                    <li key={f} className="flex items-center gap-1.5">
-                      <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-brand-orange" />{f}
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href="https://dental-system3.vercel.app/login"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 block rounded-lg border-2 border-brand-orange py-2 text-center text-sm font-semibold text-brand-orange transition-all hover:bg-brand-orange hover:text-white"
-                >
-                  Experience Interactive Demo
-                </a>
-              </div>
-
-              {/* Standard */}
-              <div className="relative bg-brand-orange/5 p-6 text-center">
-                <div className="absolute right-4 top-4 rounded-full bg-brand-orange px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
-                  Popular
-                </div>
-                <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-slate-400">Standard</p>
-                <div className="flex items-baseline justify-center gap-1">
-                  <p className="text-3xl font-extrabold text-slate-900">$149</p>
-                  <span className="text-sm text-slate-400">/mo</span>
-                </div>
-                <p className="mb-4 mt-1 text-sm font-medium text-slate-600">Recall + No-Show Prevention</p>
-                <ul className="space-y-1.5 text-left text-xs text-slate-500">
-                  {['Everything in Starter', 'No-Show Preventer', 'Intelligent reminders', 'Confirmation automation', 'Same-day cancellation recovery'].map((f) => (
-                    <li key={f} className="flex items-center gap-1.5">
-                      <CheckCircle2 className={`h-3.5 w-3.5 flex-shrink-0 ${f === 'Everything in Starter' ? 'text-brand-teal' : 'text-brand-orange'}`} />{f}
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href="https://dental-system3.vercel.app/login"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 block rounded-lg bg-brand-orange py-2 text-center text-sm font-semibold text-white shadow-md shadow-brand-orange/30 transition-all hover:bg-brand-orange/90"
-                >
-                  Experience Interactive Demo
-                </a>
               </div>
             </div>
+
+            {/* Starter */}
+            <div className="flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+              <div className="flex-1">
+                <p className="mb-1 text-sm font-semibold text-slate-500">Starter</p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-extrabold text-slate-900">$99</span>
+                  <span className="text-slate-400">/month</span>
+                </div>
+                <p className="mt-1 text-sm text-slate-400">Recall Reactivation</p>
+                <p className="mt-4 text-sm font-medium text-slate-700">Great for growing practices</p>
+                <ul className="mt-4 space-y-3">
+                  {[
+                    'Overdue hygiene follow-up',
+                    'Unscheduled treatment outreach',
+                    'Multi-touch cadence messaging',
+                    'Monthly performance reporting',
+                    'Email & SMS support',
+                  ].map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-slate-600">
+                      <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-brand-orange" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <a
+                href="https://dental-system3.vercel.app/login"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 block rounded-xl border-2 border-slate-200 py-3 text-center text-sm font-semibold text-slate-700 transition-all hover:border-brand-orange hover:text-brand-orange"
+              >
+                Experience Interactive Demo
+              </a>
+            </div>
+
+            {/* Standard — Popular, dark card */}
+            <div className="flex flex-col rounded-2xl bg-slate-900 p-8 shadow-xl">
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-semibold text-slate-400">Standard</p>
+                  <span className="rounded-full bg-brand-orange px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white">
+                    Popular
+                  </span>
+                </div>
+                <div className="mt-1 flex items-baseline gap-1">
+                  <span className="text-4xl font-extrabold text-white">$149</span>
+                  <span className="text-slate-400">/month</span>
+                </div>
+                <p className="mt-1 text-sm text-slate-400">Recall + No-Show Prevention</p>
+                <p className="mt-4 text-sm font-medium text-slate-300">For practices that want full protection</p>
+                <ul className="mt-4 space-y-3">
+                  {[
+                    'Everything in Starter',
+                    'No-Show Preventer module',
+                    'Intelligent appointment reminders',
+                    'Confirmation automation',
+                    'Same-day cancellation recovery',
+                  ].map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-slate-300">
+                      <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-brand-orange" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <a
+                href="https://dental-system3.vercel.app/login"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 block rounded-xl bg-white py-3 text-center text-sm font-bold text-slate-900 transition-all hover:bg-slate-100"
+              >
+                Experience Interactive Demo
+              </a>
+            </div>
+
           </div>
         </div>
       </section>
