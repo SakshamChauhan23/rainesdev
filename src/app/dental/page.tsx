@@ -4,7 +4,6 @@ import {
   CheckCircle2,
   ArrowRight,
   Zap,
-  Shield,
   TrendingUp,
   Clock,
   Users,
@@ -25,23 +24,6 @@ const AUDIT_LINK = 'https://cal.com/rouze/dental-audit' // update with real book
 export default function DentalPage() {
   return (
     <div className="min-h-screen bg-white font-sans">
-
-      {/* ── NAV ── */}
-      <nav className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/">
-            <Image src="/logo.png" alt="Rouze.ai" width={120} height={36} className="h-9 w-auto" />
-          </Link>
-          <a
-            href={AUDIT_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-xl bg-brand-orange px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-orange/30 transition-all hover:-translate-y-0.5 hover:bg-brand-orange/90 hover:shadow-lg"
-          >
-            Get Free Audit
-          </a>
-        </div>
-      </nav>
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-24 lg:py-32">
