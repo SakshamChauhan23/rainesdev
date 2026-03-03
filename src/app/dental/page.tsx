@@ -372,7 +372,7 @@ export default function DentalPage() {
           </div>
 
           {/* Monthly plans */}
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid grid-cols-2 gap-6">
             <div className="rounded-2xl border-2 border-slate-200 bg-white p-8 shadow-sm">
               <p className="mb-1 text-sm font-semibold text-slate-500">Starter</p>
               <div className="mb-1 flex items-baseline gap-1">
@@ -398,12 +398,12 @@ export default function DentalPage() {
                 ))}
               </ul>
               <a
-                href={AUDIT_LINK}
+                href="https://dental-system3.vercel.app/login"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block rounded-xl border-2 border-brand-orange py-3 text-center font-semibold text-brand-orange transition-all hover:bg-brand-orange hover:text-white"
               >
-                Get Started
+                Experience Interactive Demo
               </a>
             </div>
             <div className="relative rounded-2xl border-2 border-brand-orange bg-white p-8 shadow-lg">
@@ -436,12 +436,12 @@ export default function DentalPage() {
                 ))}
               </ul>
               <a
-                href={AUDIT_LINK}
+                href="https://dental-system3.vercel.app/login"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block rounded-xl bg-brand-orange py-3 text-center font-semibold text-white shadow-lg shadow-brand-orange/30 transition-all hover:bg-brand-orange/90"
               >
-                Get Started
+                Experience Interactive Demo
               </a>
             </div>
           </div>
