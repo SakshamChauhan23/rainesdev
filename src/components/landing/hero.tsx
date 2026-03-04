@@ -171,26 +171,6 @@ export function Hero() {
                   </div>
                 </div>
 
-                {/* CTA in Card */}
-                <div className="mt-6 border-t border-brand-slate/10 pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-2xl font-bold text-brand-slate">
-                        <span className="mr-2 text-base font-normal text-brand-slate/40 line-through">
-                          $19.99
-                        </span>
-                        $12.99
-                        <span className="text-sm font-normal text-brand-slate/60">/mo</span>
-                      </p>
-                      <p className="text-xs font-medium text-brand-orange">Early user discount</p>
-                    </div>
-                    <Link href="/subscribe">
-                      <Button className="rounded-xl bg-brand-orange text-white shadow-lg shadow-brand-orange/30 hover:bg-brand-orange/90">
-                        Start Free Trial
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
               </div>
 
               {/* Floating Elements */}
