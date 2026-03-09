@@ -12,6 +12,8 @@ import {
 import { DentalFAQ } from './faq-accordion'
 import { BuyButton } from './buy-button'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Dental Revenue Reactivation System™ | Rouze.ai',
   description:

@@ -1,14 +1,22 @@
 'use server'
 
-import { stripe, DENTAL_CONFIG } from '@/lib/stripe'
+import Stripe from 'stripe'
+import { DENTAL_CONFIG } from '@/lib/stripe'
 import { logger } from '@/lib/logger'
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.rouze.ai'
 
 export async function createDentalCheckoutSession(
   plan: 'SETUP' | 'STARTER' | 'STANDARD'
 ): Promise<{ url: string } | { error: string }> {
   try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return { error: 'Payment system is not configured. Please contact support.' }
+    }
+
+    // Initialize Stripe lazily inside the function so module load never throws
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { typescript: true })
+
     const config = DENTAL_CONFIG[plan]
     const isRecurring = plan === 'STARTER' || plan === 'STANDARD'
 
