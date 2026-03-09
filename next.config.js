@@ -66,11 +66,12 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
   // Enable CSS optimization and remove console in production (P3.2)
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production' ? {
-      exclude: ['error', 'warn'],
-    } : false,
-  },
+  // Note: compiler.removeConsole is skipped in dev to stay compatible with Turbopack
+  ...(process.env.NODE_ENV === 'production' && {
+    compiler: {
+      removeConsole: { exclude: ['error', 'warn'] },
+    },
+  }),
 }
 
 // Sentry configuration options
