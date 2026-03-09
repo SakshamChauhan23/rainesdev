@@ -415,7 +415,7 @@ export default function DentalPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-6 items-stretch">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 items-stretch">
 
             {/* Setup — One-Time */}
             <div className="flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
